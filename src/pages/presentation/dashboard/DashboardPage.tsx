@@ -16,6 +16,7 @@ import Modal, {
 	ModalBody,
 	ModalFooter,
 } from '../../../components/bootstrap/Modal';
+import SubItemDetails from '../tracking-list/components/SubItemDetails';
 
 const DashboardPage = () => {
 	const [state, setState] = useState(false);
@@ -85,6 +86,7 @@ const DashboardPage = () => {
 						<code className='ps-3'>DashboardPage.tsx</code>
 					</div>
 				</div>
+				<SubItemDetails />
 
 				<Modal
 					isOpen={state}

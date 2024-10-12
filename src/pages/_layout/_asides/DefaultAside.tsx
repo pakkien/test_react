@@ -9,6 +9,7 @@ import {
 	demoPagesMenu,
 	pageLayoutTypesPagesMenu,
 	adminPagesMenu,
+	trackingListMenu,
 } from '../../../menu';
 import ThemeContext from '../../../contexts/themeContext';
 import Icon from '../../../components/icon/Icon';
@@ -62,6 +63,9 @@ const DefaultAside = () => {
 						</nav>
 					</>
 				)}
+				<NavigationLine />
+				<Navigation menu={trackingListMenu} id='aside-admin' />
+				<NavigationLine />
 				<Navigation menu={adminPagesMenu} id='aside-admin' />
 				<NavigationLine />
 				{asideStatus && doc && <div className='p-4'>Documentation</div>}

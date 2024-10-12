@@ -142,86 +142,69 @@ const ManageUser = () => {
 											/>
 										</FormGroup>
 									</div>
-									<div className='col-12'>
-										<Card>
-											<CardHeader>
-												<CardLabel>
-													<CardTitle tag='div' className='h3'>
-														Manage Access
-													</CardTitle>
-												</CardLabel>
-											</CardHeader>
-											<CardBody className='pb-0' isScrollable>
-												<div className='row g-4'>
-													<div className='col-md-3'>
-														<Checks
-															type='switch'
-															id='viewQuotation'
-															label='View Quotation'
-															name='viewQuotation'
-															onChange={inlineCheckboxes.handleChange}
-															checked={
-																inlineCheckboxes.values
-																	.viewQuotation
-															}
-														/>
-													</div>
-													<div className='col-md-3'>
-														<Checks
-															type='switch'
-															id='createEditQuotation'
-															label='Create / Edit Quotation'
-															name='createEditQuotation'
-															onChange={inlineCheckboxes.handleChange}
-															checked={
-																inlineCheckboxes.values
-																	.createEditQuotation
-															}
-														/>
-													</div>
-													<div className='col-md-3'>
-														<Checks
-															type='switch'
-															id='viewMCCR'
-															label='View MCCR'
-															name='viewMCCR'
-															onChange={inlineCheckboxes.handleChange}
-															checked={
-																inlineCheckboxes.values.viewMCCR
-															}
-														/>
-													</div>
-													<div className='col-md-3'>
-														<Checks
-															type='switch'
-															id='createEditMCCR'
-															label='Create / Edit MCCR'
-															name='createEditMCCR'
-															onChange={inlineCheckboxes.handleChange}
-															checked={
-																inlineCheckboxes.values
-																	.createEditMCCR
-															}
-														/>
-													</div>
-												</div>
-											</CardBody>
-											<CardFooter>
-												<CardFooterRight>
-													<Button
-														color='success'
-														icon='Save'
-														tag='a'
-														target='_blank'
-														onClick={handleButtonClick}>
-														Save
-													</Button>
-												</CardFooterRight>
-											</CardFooter>
-										</Card>
+									<div className='col-md-12'>
+										<h3>Manage Access</h3>
+									</div>
+									<div className='col-md-12'>
+										<div className='row g-4'>
+											<div className='col-md-3'>
+												<Checks
+													type='switch'
+													id='viewQuotation'
+													label='View Quotation'
+													name='viewQuotation'
+													onChange={inlineCheckboxes.handleChange}
+													checked={inlineCheckboxes.values.viewQuotation}
+												/>
+											</div>
+											<div className='col-md-3'>
+												<Checks
+													type='switch'
+													id='createEditQuotation'
+													label='Create / Edit Quotation'
+													name='createEditQuotation'
+													onChange={inlineCheckboxes.handleChange}
+													checked={
+														inlineCheckboxes.values.createEditQuotation
+													}
+												/>
+											</div>
+											<div className='col-md-3'>
+												<Checks
+													type='switch'
+													id='viewMCCR'
+													label='View MCCR'
+													name='viewMCCR'
+													onChange={inlineCheckboxes.handleChange}
+													checked={inlineCheckboxes.values.viewMCCR}
+												/>
+											</div>
+											<div className='col-md-3'>
+												<Checks
+													type='switch'
+													id='createEditMCCR'
+													label='Create / Edit MCCR'
+													name='createEditMCCR'
+													onChange={inlineCheckboxes.handleChange}
+													checked={inlineCheckboxes.values.createEditMCCR}
+												/>
+											</div>
+										</div>
 									</div>
 								</div>
 							</CardBody>
+							<CardFooter>
+								<CardFooterRight>
+									<Button
+										color='success'
+										icon='Save'
+										tag='a'
+										target='_blank'
+										onClick={handleButtonClick}>
+										Save
+									</Button>
+								</CardFooterRight>
+							</CardFooter>
 						</Card>
 					</div>
 				</div>

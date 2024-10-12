@@ -1,5 +1,6 @@
 import React, { lazy } from 'react';
 import {
+	trackingListMenu,
 	adminPagesMenu,
 	dashboardPagesMenu,
 	demoPagesMenu,
@@ -13,6 +14,11 @@ const LANDING = {
 const ADMIN = {
 	ADMIN_PAGE: lazy(() => import('../pages/presentation/admin/AdminPage')),
 	MANAGE_USER: lazy(() => import('../pages/presentation/admin/ManageUser')),
+};
+
+const TRACKING_LIST = {
+	TRACKING_LIST_PAGE: lazy(() => import('../pages/presentation/tracking-list/TrackingList')),
+	VIEW_QUOTATION_PAGE: lazy(() => import('../pages/presentation/tracking-list/ViewQuotation')),
 };
 
 const AUTH = {
@@ -35,6 +41,14 @@ const presentation = [
 	{
 		path: dashboardPagesMenu.dashboard.path,
 		element: <LANDING.DASHBOARD />,
+	},
+	{
+		path: trackingListMenu.trackingList.path,
+		element: <TRACKING_LIST.TRACKING_LIST_PAGE />,
+	},
+	{
+		path: 'trackinglist/view-quotation',
+		element: <TRACKING_LIST.VIEW_QUOTATION_PAGE />,
 	},
 	{
 		path: adminPagesMenu.admin.path,

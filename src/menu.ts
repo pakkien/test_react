@@ -40,6 +40,17 @@ export const dashboardPagesMenu = {
 	},
 };
 
+export const trackingListMenu = {
+	trackingList: {
+		id: 'trackinglist',
+		text: 'Tracking List',
+		path: 'trackinglist',
+		icon: 'TrackChanges',
+		subMenu: null,
+	},
+
+};
+
 export const adminPagesMenu = {
 	admin: {
 		id: 'admin',

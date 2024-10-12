@@ -403,9 +403,7 @@ const AdminPage = () => {
 															initialStatus();
 															setCenteredStatus(true);
 															setState(true);
-														}}>
-														Delete
-													</Button>
+														}}></Button>
 												</div>
 											</div>
 										</td>
