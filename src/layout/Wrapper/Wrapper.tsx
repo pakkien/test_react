@@ -11,11 +11,7 @@ interface IWrapperContainerProps {
 	children: ReactNode;
 	className?: string;
 }
-export const WrapperContainer: FC<IWrapperContainerProps> = ({
-	children,
-	className = undefined,
-	...props
-}) => {
+export const WrapperContainer: FC<IWrapperContainerProps> = ({ children, className, ...props }) => {
 	const { rightPanel } = useContext(ThemeContext);
 	return (
 		<div
@@ -34,9 +30,9 @@ WrapperContainer.propTypes = {
 	children: PropTypes.node.isRequired,
 	className: PropTypes.string,
 };
-// WrapperContainer.defaultProps = {
-// 	className: undefined,
-// };
+WrapperContainer.defaultProps = {
+	className: undefined,
+};
 
 const Wrapper = () => {
 	return (

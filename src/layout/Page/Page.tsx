@@ -32,9 +32,9 @@ Page.propTypes = {
 	]),
 	className: PropTypes.string,
 };
-// Page.defaultProps = {
-// 	container: 'xxl',
-// 	className: undefined,
-// };
+Page.defaultProps = {
+	container: 'xxl',
+	className: undefined,
+};
 
 export default Page;

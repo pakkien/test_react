@@ -35,9 +35,9 @@ const LoginHeader: FC<ILoginHeaderProps> = ({ isNewUser }) => {
 		</>
 	);
 };
-// LoginHeader.defaultProps = {
-// 	isNewUser: false,
-// };
+LoginHeader.defaultProps = {
+	isNewUser: false,
+};
 
 interface ILoginProps {
 	isSignUp?: boolean;

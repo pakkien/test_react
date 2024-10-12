@@ -266,19 +266,19 @@ Item.propTypes = {
 	isMore: PropTypes.bool,
 	hide: PropTypes.bool,
 };
-// Item.defaultProps = {
-// 	children: null,
-// 	to: undefined,
-// 	title: undefined,
-// 	icon: undefined,
-// 	id: undefined,
-// 	parentId: undefined,
-// 	isHorizontal: false,
-// 	notification: false,
-// 	isMore: false,
-// 	hide: false,
-// 	activeItem: undefined,
-// 	setActiveItem: undefined,
-// };
+Item.defaultProps = {
+	children: null,
+	to: undefined,
+	title: undefined,
+	icon: undefined,
+	id: undefined,
+	parentId: undefined,
+	isHorizontal: false,
+	notification: false,
+	isMore: false,
+	hide: false,
+	activeItem: undefined,
+	setActiveItem: undefined,
+};
 
 export default memo(Item);

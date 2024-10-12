@@ -44,8 +44,8 @@ export const adminPagesMenu = {
 	admin: {
 		id: 'admin',
 		text: 'Admin',
-		path: 'admin/users',
-		icon: 'Admin',
+		path: 'admin',
+		icon: 'SupervisedUserCircle',
 		subMenu: null,
 	},
 
