@@ -50,7 +50,7 @@ const ViewQuotation = () => {
 	// });
 
 	return (
-		<PageWrapper title='Admin'>
+		<PageWrapper title='View Quotation'>
 			<SubHeader>
 				<SubHeaderLeft>
 					<Button color='info' isLink icon='ArrowBack' onClick={() => navigate(-1)}>

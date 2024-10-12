@@ -10,6 +10,7 @@ import {
 	pageLayoutTypesPagesMenu,
 	adminPagesMenu,
 	trackingListMenu,
+	quotationMenu,
 } from '../../../menu';
 import ThemeContext from '../../../contexts/themeContext';
 import Icon from '../../../components/icon/Icon';
@@ -64,7 +65,9 @@ const DefaultAside = () => {
 					</>
 				)}
 				<NavigationLine />
-				<Navigation menu={trackingListMenu} id='aside-admin' />
+
+				<Navigation menu={trackingListMenu} id='aside-tracking' />
+				<Navigation menu={quotationMenu} id='aside-quotation' />
 				<NavigationLine />
 				<Navigation menu={adminPagesMenu} id='aside-admin' />
 				<NavigationLine />

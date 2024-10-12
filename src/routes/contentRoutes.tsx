@@ -5,6 +5,7 @@ import {
 	dashboardPagesMenu,
 	demoPagesMenu,
 	pageLayoutTypesPagesMenu,
+	quotationMenu,
 } from '../menu';
 import Login from '../pages/presentation/auth/Login';
 
@@ -19,6 +20,13 @@ const ADMIN = {
 const TRACKING_LIST = {
 	TRACKING_LIST_PAGE: lazy(() => import('../pages/presentation/tracking-list/TrackingList')),
 	VIEW_QUOTATION_PAGE: lazy(() => import('../pages/presentation/tracking-list/ViewQuotation')),
+};
+
+const QUOTATION = {
+	QUOTATION_LIST_PAGE: lazy(() => import('../pages/presentation/quotation/QuotationList')),
+	VIEW_QUOTATION_PAGE: lazy(() => import('../pages/presentation/quotation/ViewQuotation')),
+	EDIT_QUOTATION_PAGE: lazy(() => import('../pages/presentation/quotation/EditQuotation')),
+	CREATE_QUOTATION_PAGE: lazy(() => import('../pages/presentation/quotation/CreateQuotation')),
 };
 
 const AUTH = {
@@ -47,8 +55,24 @@ const presentation = [
 		element: <TRACKING_LIST.TRACKING_LIST_PAGE />,
 	},
 	{
-		path: 'trackinglist/view-quotation',
+		path: 'tracking/view-quotation',
 		element: <TRACKING_LIST.VIEW_QUOTATION_PAGE />,
+	},
+	{
+		path: quotationMenu.quotation.path,
+		element: <QUOTATION.QUOTATION_LIST_PAGE />,
+	},
+	{
+		path: 'quotation/view-quotation',
+		element: <QUOTATION.VIEW_QUOTATION_PAGE />,
+	},
+	{
+		path: 'quotation/edit-quotation',
+		element: <QUOTATION.EDIT_QUOTATION_PAGE />,
+	},
+	{
+		path: 'quotation/create-quotation',
+		element: <QUOTATION.CREATE_QUOTATION_PAGE />,
 	},
 	{
 		path: adminPagesMenu.admin.path,

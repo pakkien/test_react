@@ -44,8 +44,19 @@ export const trackingListMenu = {
 	trackingList: {
 		id: 'trackinglist',
 		text: 'Tracking List',
-		path: 'trackinglist',
+		path: 'tracking',
 		icon: 'TrackChanges',
+		subMenu: null,
+	},
+
+};
+
+export const quotationMenu = {
+	quotation: {
+		id: 'quotation',
+		text: 'Quotation',
+		path: 'quotation',
+		icon: 'LaptopChromebook',
 		subMenu: null,
 	},
 

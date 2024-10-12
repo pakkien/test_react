@@ -20,7 +20,7 @@ const SubItemDetails = () => {
 	const setFirstElement = () => setIsOpen(!isOpen);
 
 	return (
-		<Card shadow='sm'>
+		<Card shadow='sm' borderSize={3}>
 			<CardHeader borderSize={1} borderColor='primary'>
 				<CardLabel>
 					<CardTitle tag='div' className='h3'>

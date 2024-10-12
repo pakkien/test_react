@@ -1,16 +1,22 @@
-import React from 'react';
-import PageWrapper from '../../../layout/PageWrapper/PageWrapper';
+import React, { useState } from 'react';
+import Alert from '../../../components/bootstrap/Alert';
 import Button from '../../../components/bootstrap/Button';
-import Page from '../../../layout/Page/Page';
-import SubHeader, { SubHeaderLeft, SubheaderSeparator } from '../../../layout/SubHeader/SubHeader';
 import Card, {
-	CardActions,
-	CardBody,
-	CardFooter,
 	CardHeader,
 	CardLabel,
 	CardTitle,
+	CardActions,
+	CardBody,
 } from '../../../components/bootstrap/Card';
+import Modal, {
+	ModalHeader,
+	ModalTitle,
+	ModalBody,
+	ModalFooter,
+} from '../../../components/bootstrap/Modal';
+import Page from '../../../layout/Page/Page';
+import PageWrapper from '../../../layout/PageWrapper/PageWrapper';
+import SubHeader, { SubHeaderLeft, SubheaderSeparator } from '../../../layout/SubHeader/SubHeader';
 import { useNavigate } from 'react-router-dom';
 import Badge from '../../../components/bootstrap/Badge';
 
@@ -27,14 +33,11 @@ function ReturnBatchColor(state: string) {
 	}
 }
 
-const TrackingList = () => {
+const QuotationList = () => {
 	const navigate = useNavigate();
+	const [isAlertVisible, setIsAlertVisible] = useState(false);
 
-	const goToViewQuotationPage = () => {
-		navigate('view-quotation');
-	};
-
-	const trackingListData = [
+	const QuotationData = [
 		{
 			id: '1',
 			prepared_by: 'Gary',
@@ -85,26 +88,53 @@ const TrackingList = () => {
 		},
 	];
 
+	const goToViewQuotationPage = () => {
+		navigate('view-quotation');
+	};
+
+	const goToEditQuotationPage = () => {
+		navigate('edit-quotation');
+	};
+
+	const goToCreateQuotationPage = () => {
+		navigate('create-quotation');
+	};
+
 	return (
-		<PageWrapper title='Tracking List'>
+		<PageWrapper title='Quotation'>
 			<SubHeader>
 				<SubHeaderLeft>
 					<Button color='info' isLink icon='ArrowBack' onClick={() => navigate(-1)}>
 						Back
 					</Button>
 					<SubheaderSeparator />
-					<strong className='fs-5'>Tracking List</strong>
+					<strong className='fs-5'>Quotation</strong>
 				</SubHeaderLeft>
 			</SubHeader>
 			<Page container='fluid'>
+				{isAlertVisible && (
+					<Alert color='success' isLight icon='Create' isDismissible>
+						Create Success
+					</Alert>
+				)}
 				<Card stretch>
 					<CardHeader>
 						<CardLabel>
 							<CardTitle tag='div' className='h3'>
-								Tracking List
+								Quotation
 							</CardTitle>
 						</CardLabel>
+						<CardActions>
+							<Button
+								color='success'
+								icon='Create'
+								tag='a'
+								onClick={() => goToCreateQuotationPage()}>
+								Create
+							</Button>
+						</CardActions>
 					</CardHeader>
+
 					<CardBody className='table-responsive' isScrollable>
 						<table className='table table-modern'>
 							<thead>
@@ -127,7 +157,7 @@ const TrackingList = () => {
 								</tr>
 							</thead>
 							<tbody>
-								{trackingListData.map((item, i) => (
+								{QuotationData.map((item, i) => (
 									<tr key={item.id}>
 										<td>{i + 1}</td>
 										<td>{item.prepared_by}</td>
@@ -154,12 +184,23 @@ const TrackingList = () => {
 												<div className='col-auto'>
 													<Button
 														color='primary'
-														icon='Edit'
+														icon='RemoveRedEye'
 														shadow='none'
 														hoverShadow='lg'
 														tag='a'
 														onClick={() =>
 															goToViewQuotationPage()
+														}></Button>
+												</div>
+												<div className='col-auto'>
+													<Button
+														color='primary'
+														icon='Edit'
+														shadow='none'
+														hoverShadow='lg'
+														tag='a'
+														onClick={() =>
+															goToEditQuotationPage()
 														}></Button>
 												</div>
 											</div>
@@ -175,4 +216,4 @@ const TrackingList = () => {
 	);
 };
 
-export default TrackingList;
+export default QuotationList;
