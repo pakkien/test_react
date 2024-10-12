@@ -262,7 +262,7 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 							</CardFooter>
 						</Card>
 						<SingleItem mode={QuotationProps.mode} data={QuotationProps.data.item[0]} />
-						<Summary />
+						<Summary mode={QuotationProps.mode} />
 					</div>
 				</div>
 			</Page>

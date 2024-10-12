@@ -12,8 +12,15 @@ import Card, {
 	CardSubTitle,
 	CardTitle,
 } from '../../../../components/bootstrap/Card';
+import Button from '../../../../components/bootstrap/Button';
 
-const Summary = () => {
+type SummaryProps = {
+	mode: string;
+};
+
+const Summary = (SummaryProps: SummaryProps) => {
+	const isViewMode = SummaryProps.mode.toLowerCase() === 'view' ? true : false;
+
 	return (
 		<Card>
 			<CardHeader>
@@ -48,7 +55,14 @@ const Summary = () => {
 				</div>
 			</CardBody>
 			<CardFooter>
-				<></>
+				<CardFooterRight>
+					<Button color='dark' icon='Edit' tag='a' hidden={isViewMode ? true : false}>
+						Draft
+					</Button>
+					<Button color='success' icon='Save' tag='a' hidden={isViewMode ? true : false}>
+						Save
+					</Button>
+				</CardFooterRight>
 			</CardFooter>
 		</Card>
 	);
