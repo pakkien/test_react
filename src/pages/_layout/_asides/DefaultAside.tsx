@@ -4,7 +4,12 @@ import { useTranslation } from 'react-i18next';
 import Brand from '../../../layout/Brand/Brand';
 import Navigation, { NavigationLine } from '../../../layout/Navigation/Navigation';
 import User from '../../../layout/User/User';
-import { dashboardPagesMenu, demoPagesMenu, pageLayoutTypesPagesMenu } from '../../../menu';
+import {
+	dashboardPagesMenu,
+	demoPagesMenu,
+	pageLayoutTypesPagesMenu,
+	adminPagesMenu,
+} from '../../../menu';
 import ThemeContext from '../../../contexts/themeContext';
 import Icon from '../../../components/icon/Icon';
 import Aside, { AsideBody, AsideFoot, AsideHead } from '../../../layout/Aside/Aside';
@@ -57,6 +62,8 @@ const DefaultAside = () => {
 						</nav>
 					</>
 				)}
+				<Navigation menu={adminPagesMenu} id='aside-admin' />
+				<NavigationLine />
 				{asideStatus && doc && <div className='p-4'>Documentation</div>}
 			</AsideBody>
 			<AsideFoot>

@@ -15,9 +15,9 @@ export const NavigationLine: FC<INavigationLineProps> = ({ className }) => {
 NavigationLine.propTypes = {
 	className: PropTypes.string,
 };
-NavigationLine.defaultProps = {
-	className: undefined,
-};
+// NavigationLine.defaultProps = {
+// 	className: undefined,
+// };
 
 interface INavigationTitleProps extends HTMLAttributes<HTMLSpanElement> {
 	className?: string;
@@ -37,9 +37,9 @@ NavigationTitle.propTypes = {
 	children: PropTypes.node.isRequired,
 	className: PropTypes.string,
 };
-NavigationTitle.defaultProps = {
-	className: undefined,
-};
+// NavigationTitle.defaultProps = {
+// 	className: undefined,
+// };
 
 interface INavigationProps {
 	horizontal?: boolean;
@@ -173,9 +173,9 @@ Navigation.propTypes = {
 	id: PropTypes.string.isRequired,
 	className: PropTypes.string,
 };
-Navigation.defaultProps = {
-	horizontal: false,
-	className: undefined,
-};
+// Navigation.defaultProps = {
+// 	horizontal: false,
+// 	className: undefined,
+// };
 
 export default Navigation;

@@ -1,10 +1,19 @@
 import React, { lazy } from 'react';
-import { dashboardPagesMenu, demoPagesMenu, pageLayoutTypesPagesMenu } from '../menu';
+import {
+	adminPagesMenu,
+	dashboardPagesMenu,
+	demoPagesMenu,
+	pageLayoutTypesPagesMenu,
+} from '../menu';
 import Login from '../pages/presentation/auth/Login';
 
 const LANDING = {
 	DASHBOARD: lazy(() => import('../pages/presentation/dashboard/DashboardPage')),
 };
+const ADMIN = {
+	ADMIN_PAGE: lazy(() => import('../pages/presentation/admin/AdminPage')),
+};
+
 const AUTH = {
 	PAGE_404: lazy(() => import('../pages/presentation/auth/Page404')),
 };
@@ -25,6 +34,10 @@ const presentation = [
 	{
 		path: dashboardPagesMenu.dashboard.path,
 		element: <LANDING.DASHBOARD />,
+	},
+	{
+		path: adminPagesMenu.admin.path,
+		element: <ADMIN.ADMIN_PAGE />,
 	},
 	{
 		path: demoPagesMenu.page404.path,

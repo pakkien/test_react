@@ -40,6 +40,16 @@ export const dashboardPagesMenu = {
 	},
 };
 
+export const adminPagesMenu = {
+	admin: {
+		id: 'admin',
+		text: 'Admin',
+		path: 'admin/admin-page',
+		icon: 'Admin',
+		subMenu: null,
+	},
+};
+
 export const demoPagesMenu = {
 	auth: {
 		id: 'auth',

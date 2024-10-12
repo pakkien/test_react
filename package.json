@@ -113,7 +113,7 @@
 		"eslint-plugin-react-hooks": "^4.6.0",
 		"postcss": "^8.4.33",
 		"prettier": "^3.2.4",
-		"sass": "^1.70.0",
+		"sass": "1.77.6",
 		"sass-loader": "^14.0.0",
 		"stylelint": "^16.1.0",
 		"stylelint-config-prettier-scss": "^1.0.0",

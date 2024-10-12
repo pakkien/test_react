@@ -41,14 +41,14 @@ List.propTypes = {
 	rootId: PropTypes.string,
 	horizontal: PropTypes.bool,
 };
-List.defaultProps = {
-	id: undefined,
-	children: null,
-	className: undefined,
-	ariaLabelledby: undefined,
-	parentId: undefined,
-	rootId: undefined,
-	horizontal: false,
-};
+// List.defaultProps = {
+// 	id: undefined,
+// 	children: null,
+// 	className: undefined,
+// 	ariaLabelledby: undefined,
+// 	parentId: undefined,
+// 	rootId: undefined,
+// 	horizontal: false,
+// };
 
 export default List;

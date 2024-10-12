@@ -57,11 +57,11 @@ PageWrapper.propTypes = {
 	children: PropTypes.node.isRequired,
 	className: PropTypes.string,
 };
-PageWrapper.defaultProps = {
-	isProtected: true,
-	title: undefined,
-	description: undefined,
-	className: undefined,
-};
+// PageWrapper.defaultProps = {
+// 	isProtected: true,
+// 	title: undefined,
+// 	description: undefined,
+// 	className: undefined,
+// };
 
 export default PageWrapper;

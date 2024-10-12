@@ -21,8 +21,8 @@ Portal.propTypes = {
 	children: PropTypes.node.isRequired,
 	id: PropTypes.string,
 };
-Portal.defaultProps = {
-	id: 'portal-root',
-};
+// Portal.defaultProps = {
+// 	id: 'portal-root',
+// };
 
 export default Portal;
