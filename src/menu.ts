@@ -44,10 +44,11 @@ export const adminPagesMenu = {
 	admin: {
 		id: 'admin',
 		text: 'Admin',
-		path: 'admin/admin-page',
+		path: 'admin/users',
 		icon: 'Admin',
 		subMenu: null,
 	},
+
 };
 
 export const demoPagesMenu = {

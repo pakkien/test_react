@@ -12,6 +12,7 @@ const LANDING = {
 };
 const ADMIN = {
 	ADMIN_PAGE: lazy(() => import('../pages/presentation/admin/AdminPage')),
+	MANAGE_USER: lazy(() => import('../pages/presentation/admin/ManageUser')),
 };
 
 const AUTH = {
@@ -38,6 +39,10 @@ const presentation = [
 	{
 		path: adminPagesMenu.admin.path,
 		element: <ADMIN.ADMIN_PAGE />,
+	},
+	{
+		path: 'admin/manage-user',
+		element: <ADMIN.MANAGE_USER />,
 	},
 	{
 		path: demoPagesMenu.page404.path,
