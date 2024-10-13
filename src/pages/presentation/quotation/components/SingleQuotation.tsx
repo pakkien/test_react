@@ -96,14 +96,7 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 
 	const [Count, setCount] = useState(0);
 
-	// const DeleteItem = (item_id: string) => {
-	// 	QuotationData.data.item = QuotationData.data.item.filter(
-	// 		(item) => item.item_id !== item_id,
-	// 	);
-	// };
-
 	const handleDelete = (_item: item) => {
-		//console.log(item);
 		QuotationData.data.item = QuotationData.data.item.filter(
 			(item) => item.item_id != _item.item_id,
 		);
@@ -111,14 +104,12 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 	};
 
 	const handleAddItem = () => {
-		//console.log(item);
 		CreateNewItem();
 		setCount(Count + 1); //force rerendering
 	};
 
 	const handleEditItem = (_item: item) => {
 		console.log(_item);
-		//CreateNewItem();
 		setCount(Count + 1); //force rerendering
 	};
 
@@ -146,20 +137,8 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 
 		QuotationData.data.item.push(new_item);
 		setQuotationData(QuotationData);
-		console.log(QuotationData);
-		// await timeout(2000);
-
-		//useEffect(() => window.scrollTo({ top: 1000, behavior: 'smooth' }), []);
-		console.log('#item_id#' + new_id);
 
 		setCount(Count + 1); //force rerendering
-		// setTimeout(2000);
-		// const element = document.getElementById('#item_card_id#' + new_id);
-		// console.log(element);
-
-		// if (element) {
-		// 	element.scrollIntoView({ behavior: 'smooth' });
-		// }
 	};
 
 	const formik = useFormik({

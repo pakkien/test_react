@@ -332,10 +332,6 @@ const SingleItem = (ItemProps: ItemProps) => {
 							activeItemId={ItemProps.data.item_id}
 							color='dark'>
 							<AccordionItem id={ItemProps.data.item_id} title='Sub Item'>
-								{/* <SubItemSection
-									mode={ItemProps.mode}
-									data={ItemProps.data.sub_item}
-								/> */}
 								{ItemProps.data.sub_item.map((sub_item) => (
 									<SingleSubItem
 										key={sub_item.sub_item_id}
