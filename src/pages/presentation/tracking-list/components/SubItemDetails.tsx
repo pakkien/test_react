@@ -22,7 +22,10 @@ const SubItemDetails = () => {
 
 	return (
 		<Accordion id='subitemAccordion' activeItemId='subitemAccordionitem' color='dark'>
-			<AccordionItem id='subitemAccordionitem' title='Sub Item'>
+			<AccordionItem
+				id='subitemAccordionitem'
+				title='10" Active Full Range Monitor Loudspeaker - Breakdown'
+				icon='List'>
 				<div className='row g-4'>
 					<div className='col-md-12'>
 						<FormGroup
