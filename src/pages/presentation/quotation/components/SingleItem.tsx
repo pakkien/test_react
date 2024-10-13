@@ -24,6 +24,8 @@ type ItemProps = {
 	mode: string;
 	data: item;
 	deletefunc: (item: item) => void;
+	// addItemfunc: (item: item) => void;
+	// addSubItemfunc: (item: item) => void;
 };
 
 type item = {
@@ -91,6 +93,14 @@ const SingleItem = (ItemProps: ItemProps) => {
 	const handleButtonClick_deleteItem = (item: item) => {
 		ItemProps.deletefunc(item);
 	};
+
+	// const handleButtonClick_addItem = (item: item) => {
+	// 	ItemProps.addItemfunc(item);
+	// };
+
+	// const handleButtonClick_addSubItem = (item: item) => {
+	// 	ItemProps.addSubItemfunc(item);
+	// };
 
 	return (
 		<Card tag='form' id={'#item_card_id#' + ItemProps.data.item_id}>

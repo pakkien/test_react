@@ -91,8 +91,12 @@ const ItemDetails = () => {
 					</div>
 
 					{/* sub item details */}
-					<SubItemDetails />
+					<div className='col-md-12'>
+						<SubItemDetails />
+					</div>
+					<div className='col-md-12'></div>
 					<Summary />
+					<div className='col-md-12'></div>
 				</div>
 			</CardBody>
 		</Card>

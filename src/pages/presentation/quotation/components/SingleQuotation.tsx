@@ -29,6 +29,7 @@ import showNotification from '../../../../components/extras/showNotification';
 import Icon from '../../../../components/icon/Icon';
 import Item from '../../../../layout/Navigation/Item';
 import { setTimeout } from 'timers/promises';
+import ScrollspyNav from '../../../../components/bootstrap/ScrollspyNav';
 
 type QuotationProps = {
 	mode: string;
@@ -107,6 +108,22 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 			(item) => item.item_id != _item.item_id,
 		);
 		setCount(Count + 1); //force rerendering
+	};
+
+	const handleAddItem = () => {
+		//console.log(item);
+		CreateNewItem();
+		setCount(Count + 1); //force rerendering
+	};
+
+	const handleEditItem = (_item: item) => {
+		console.log(_item);
+		//CreateNewItem();
+		setCount(Count + 1); //force rerendering
+	};
+
+	const handleSave = () => {
+		console.log(QuotationProps);
 	};
 
 	const CreateNewItem = () => {
@@ -326,7 +343,11 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 							/>
 						))}
 						{/* <SingleItem mode={QuotationProps.mode} data={QuotationProps.data.item[0]} /> */}
-						<Summary mode={QuotationData.mode} data={QuotationData.data.summary} />
+						<Summary
+							mode={QuotationData.mode}
+							data={QuotationData.data.summary}
+							savefunc={handleSave}
+						/>
 					</div>
 				</div>
 			</Page>

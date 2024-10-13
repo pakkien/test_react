@@ -21,6 +21,7 @@ import showNotification from '../../../../components/extras/showNotification';
 type SummaryProps = {
 	mode: string;
 	data: summary;
+	savefunc: () => void;
 };
 
 type summary = {
@@ -51,6 +52,10 @@ const Summary = (SummaryProps: SummaryProps) => {
 			);
 		},
 	});
+
+	const handleSave = () => {
+		SummaryProps.savefunc();
+	};
 
 	return (
 		<Card>
@@ -130,7 +135,14 @@ const Summary = (SummaryProps: SummaryProps) => {
 					<Button color='dark' icon='Edit' tag='a' hidden={isViewMode ? true : false}>
 						Draft
 					</Button>
-					<Button color='success' icon='Save' tag='a' hidden={isViewMode ? true : false}>
+					<Button
+						color='success'
+						icon='Save'
+						tag='a'
+						hidden={isViewMode ? true : false}
+						onClick={() => {
+							handleSave();
+						}}>
 						Save
 					</Button>
 				</CardFooterRight>
