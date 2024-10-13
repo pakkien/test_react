@@ -19,6 +19,7 @@ import Icon from '../../../../components/icon/Icon';
 type SubItemProps = {
 	mode: string;
 	data: sub_item;
+	deleteSubItemfunc: (sub_item: sub_item) => void;
 };
 
 type sub_item = {
@@ -65,6 +66,10 @@ const SingleSubItem = (SubItemProps: SubItemProps) => {
 		},
 	});
 
+	const handleButtonClick_deleteItem = (sub_item: sub_item) => {
+		SubItemProps.deleteSubItemfunc(sub_item);
+	};
+
 	return (
 		<Card>
 			<CardHeader>
@@ -74,7 +79,14 @@ const SingleSubItem = (SubItemProps: SubItemProps) => {
 					</CardTitle>
 				</CardLabel>
 				<CardActions>
-					<Button color='danger' icon='Delete' tag='a' hidden={isViewMode ? true : false}>
+					<Button
+						color='danger'
+						icon='Delete'
+						tag='a'
+						hidden={isViewMode ? true : false}
+						onClick={() => {
+							handleButtonClick_deleteItem(SubItemProps.data);
+						}}>
 						Delete Sub-Item
 					</Button>
 				</CardActions>

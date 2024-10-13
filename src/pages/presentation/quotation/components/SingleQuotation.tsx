@@ -340,6 +340,7 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 								mode={QuotationData.mode}
 								data={item}
 								deletefunc={handleDelete}
+								addItemfunc={handleAddItem}
 							/>
 						))}
 						{/* <SingleItem mode={QuotationProps.mode} data={QuotationProps.data.item[0]} /> */}

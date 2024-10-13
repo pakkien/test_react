@@ -13,7 +13,6 @@ import Button from '../../../../components/bootstrap/Button';
 import FormGroup from '../../../../components/bootstrap/forms/FormGroup';
 import Input from '../../../../components/bootstrap/forms/Input';
 import SingleSubItem from './SingleSubItem';
-import SubItemSection from './SubItemSection';
 import { useFormik } from 'formik';
 import showNotification from '../../../../components/extras/showNotification';
 import Icon from '../../../../components/icon/Icon';
@@ -24,7 +23,7 @@ type ItemProps = {
 	mode: string;
 	data: item;
 	deletefunc: (item: item) => void;
-	// addItemfunc: (item: item) => void;
+	addItemfunc: () => void;
 	// addSubItemfunc: (item: item) => void;
 };
 
@@ -63,6 +62,7 @@ const SingleItem = (ItemProps: ItemProps) => {
 	const isViewMode = ItemProps.mode.toLowerCase() === 'view' ? true : false;
 
 	const [ItemData, setItemData] = useState(ItemProps);
+	const [Count, setCount] = useState(0);
 
 	const formik = useFormik({
 		initialValues: {
@@ -94,13 +94,42 @@ const SingleItem = (ItemProps: ItemProps) => {
 		ItemProps.deletefunc(item);
 	};
 
-	// const handleButtonClick_addItem = (item: item) => {
-	// 	ItemProps.addItemfunc(item);
-	// };
+	const handleDeleteSubItem = (_sub_item: sub_item) => {
+		ItemData.data.sub_item = ItemData.data.sub_item.filter(
+			(sub_item) => sub_item.sub_item_id != _sub_item.sub_item_id,
+		);
+		setCount(Count + 1); //force rerendering
+	};
 
-	// const handleButtonClick_addSubItem = (item: item) => {
-	// 	ItemProps.addSubItemfunc(item);
-	// };
+	const handleButtonClick_addItem = () => {
+		ItemProps.addItemfunc();
+	};
+
+	const handleButtonClick_addSubItem = () => {
+		CreateNewSubItem();
+	};
+
+	const CreateNewSubItem = () => {
+		let new_id = crypto.randomUUID();
+		let new_sub_item: sub_item = {
+			sub_item_id: new_id,
+			product_desc: new_id,
+			brand: '',
+			model: '',
+			remarks: '',
+			quantity: 0,
+			unit: '',
+			unit_cost: 0,
+			total_cost: 0,
+			margin: 0,
+			unit_price: 0,
+			total_price: 0,
+		};
+
+		ItemData.data.sub_item.push(new_sub_item);
+		setItemData(ItemData);
+		setCount(Count + 1);
+	};
 
 	return (
 		<Card tag='form' id={'#item_card_id#' + ItemProps.data.item_id}>
@@ -303,10 +332,18 @@ const SingleItem = (ItemProps: ItemProps) => {
 							activeItemId={ItemProps.data.item_id}
 							color='dark'>
 							<AccordionItem id={ItemProps.data.item_id} title='Sub Item'>
-								<SubItemSection
+								{/* <SubItemSection
 									mode={ItemProps.mode}
 									data={ItemProps.data.sub_item}
-								/>
+								/> */}
+								{ItemProps.data.sub_item.map((sub_item) => (
+									<SingleSubItem
+										key={sub_item.sub_item_id}
+										mode={ItemProps.mode}
+										data={sub_item}
+										deleteSubItemfunc={handleDeleteSubItem}
+									/>
+								))}
 							</AccordionItem>
 						</Accordion>
 					</div>
@@ -315,10 +352,24 @@ const SingleItem = (ItemProps: ItemProps) => {
 			</CardBody>
 			<CardFooter>
 				<CardFooterRight>
-					<Button color='info' icon='Add' tag='a' hidden={isViewMode ? true : false}>
+					<Button
+						color='info'
+						icon='Add'
+						tag='a'
+						hidden={isViewMode ? true : false}
+						onClick={() => {
+							handleButtonClick_addItem();
+						}}>
 						Add Item
 					</Button>
-					<Button color='info' icon='Delete' tag='a' hidden={isViewMode ? true : false}>
+					<Button
+						color='info'
+						icon='Delete'
+						tag='a'
+						hidden={isViewMode ? true : false}
+						onClick={() => {
+							handleButtonClick_addSubItem();
+						}}>
 						Add Sub-Item
 					</Button>
 				</CardFooterRight>
