@@ -366,7 +366,6 @@ const AdminPage = () => {
 							</thead>
 							<tbody>
 								{lists.map((item) => (
-									//<li key={item.id}>{item.name}</li>
 									<tr key={item.user_id}>
 										<td>{item.role}</td>
 										<td>{item.name}</td>

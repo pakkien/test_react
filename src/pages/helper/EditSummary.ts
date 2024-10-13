@@ -1,39 +1,25 @@
 interface IValues {
-	product_desc: string;
-	brand: string;
-	model: string;
-	remarks: string;
-	quantity: number;
-	unit: string;
-	unit_cost: number;
-	total_cost: number;
-	margin: number;
-	unit_price: number;
-	total_price: number;
+	reference_status: string;
+	note: string;
+	total: number;
+	g_total: number;
 
 }
 const validate = (values: IValues) => {
 	const errors: IValues = {
-		product_desc: '',
-			brand: '',
-			model: '',
-			remarks: '',
-			quantity: 0,
-			unit: '',
-			unit_cost: 0,
-			total_cost: 0,
-			margin: 0,
-			unit_price: 0,
-			total_price: 0,
+		reference_status: '',
+        note: '',
+        total: 0,
+        g_total: 0,
 	};
 
-	if (!values.brand) {
-		errors.brand = 'Required';
-	} else if (values.brand.length < 3) {
-		errors.brand = 'Must be 3 characters or more';
-	} else if (values.brand.length > 20) {
-		errors.brand = 'Must be 20 characters or less';
-	}
+	// if (!values.brand) {
+	// 	errors.brand = 'Required';
+	// } else if (values.brand.length < 3) {
+	// 	errors.brand = 'Must be 3 characters or more';
+	// } else if (values.brand.length > 20) {
+	// 	errors.brand = 'Must be 20 characters or less';
+	// }
 
     // if (!values.end_user) {
 	// 	errors.end_user = 'Required';

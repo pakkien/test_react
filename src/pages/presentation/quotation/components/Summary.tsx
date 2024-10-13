@@ -13,13 +13,44 @@ import Card, {
 	CardTitle,
 } from '../../../../components/bootstrap/Card';
 import Button from '../../../../components/bootstrap/Button';
+import Icon from '../../../../components/icon/Icon';
+import validate from '../../../helper/EditSummary';
+import { useFormik } from 'formik';
+import showNotification from '../../../../components/extras/showNotification';
 
 type SummaryProps = {
 	mode: string;
+	data: summary;
+};
+
+type summary = {
+	reference_status: string;
+	note: string;
+	total: number;
+	g_total: number;
 };
 
 const Summary = (SummaryProps: SummaryProps) => {
 	const isViewMode = SummaryProps.mode.toLowerCase() === 'view' ? true : false;
+
+	const formik = useFormik({
+		initialValues: {
+			reference_status: SummaryProps.data.reference_status,
+			note: SummaryProps.data.note,
+			total: SummaryProps.data.total,
+			g_total: SummaryProps.data.g_total,
+		},
+		validate,
+		onSubmit: () => {
+			showNotification(
+				<span className='d-flex align-items-center'>
+					<Icon icon='Info' size='lg' className='me-1' />
+					<span>Updated Successfully</span>
+				</span>,
+				"The user's account details have been successfully updated.",
+			);
+		},
+	});
 
 	return (
 		<Card>
@@ -33,23 +64,63 @@ const Summary = (SummaryProps: SummaryProps) => {
 			<CardBody className='pb-0'>
 				<div className='row g-4'>
 					<div className='col-md-8'>
-						<FormGroup id='referenceStatus' label='Reference Status' isFloating>
-							<Input placeholder='Name' defaultValue='' />
+						<FormGroup id='reference_status' label='Reference Status' isFloating>
+							<Input
+								placeholder='reference_status'
+								onChange={formik.handleChange}
+								onBlur={formik.handleBlur}
+								value={formik.values.reference_status}
+								isValid={formik.isValid}
+								isTouched={formik.touched.reference_status}
+								invalidFeedback={formik.errors.reference_status}
+								validFeedback='Valid reference status'
+								disabled={isViewMode ? true : false}
+							/>
 						</FormGroup>
 					</div>
 					<div className='col-md-4'>
 						<FormGroup id='total' label='Total (RM)' isFloating>
-							<Input placeholder='Name' defaultValue='' />
+							<Input
+								placeholder='total'
+								onChange={formik.handleChange}
+								onBlur={formik.handleBlur}
+								value={formik.values.total}
+								isValid={formik.isValid}
+								isTouched={formik.touched.total}
+								invalidFeedback={formik.errors.total}
+								validFeedback='Valid total'
+								disabled={isViewMode ? true : false}
+							/>
 						</FormGroup>
 					</div>
 					<div className='col-md-8'>
 						<FormGroup id='note' label='Note' isFloating>
-							<Input placeholder='Name' defaultValue='' />
+							<Input
+								placeholder='note'
+								onChange={formik.handleChange}
+								onBlur={formik.handleBlur}
+								value={formik.values.note}
+								isValid={formik.isValid}
+								isTouched={formik.touched.note}
+								invalidFeedback={formik.errors.note}
+								validFeedback='Valid note'
+								disabled={isViewMode ? true : false}
+							/>
 						</FormGroup>
 					</div>
 					<div className='col-md-4'>
-						<FormGroup id='gtotal' label='G/Total (RM)' isFloating>
-							<Input placeholder='Name' defaultValue='' />
+						<FormGroup id='g_total' label='G/Total (RM)' isFloating>
+							<Input
+								placeholder='g_total'
+								onChange={formik.handleChange}
+								onBlur={formik.handleBlur}
+								value={formik.values.g_total}
+								isValid={formik.isValid}
+								isTouched={formik.touched.g_total}
+								invalidFeedback={formik.errors.g_total}
+								validFeedback='Valid G/total'
+								disabled={isViewMode ? true : false}
+							/>
 						</FormGroup>
 					</div>
 				</div>

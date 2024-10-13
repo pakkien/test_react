@@ -1,4 +1,4 @@
-import React, { JSXElementConstructor, useState } from 'react';
+import React, { JSXElementConstructor, useEffect, useRef, useState } from 'react';
 import Button from '../../../../components/bootstrap/Button';
 import PageWrapper from '../../../../layout/PageWrapper/PageWrapper';
 import SubHeader, {
@@ -27,6 +27,8 @@ import { useFormik } from 'formik';
 import validate from '../../../helper/EditQuotationValidate';
 import showNotification from '../../../../components/extras/showNotification';
 import Icon from '../../../../components/icon/Icon';
+import Item from '../../../../layout/Navigation/Item';
+import { setTimeout } from 'timers/promises';
 
 type QuotationProps = {
 	mode: string;
@@ -89,15 +91,69 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 	const title = QuotationProps.mode + ' Quotation';
 	const isViewMode = QuotationProps.mode.toLowerCase() === 'view' ? true : false;
 
+	const [QuotationData, setQuotationData] = useState(QuotationProps);
+
+	const [Count, setCount] = useState(0);
+
+	// const DeleteItem = (item_id: string) => {
+	// 	QuotationData.data.item = QuotationData.data.item.filter(
+	// 		(item) => item.item_id !== item_id,
+	// 	);
+	// };
+
+	const handleDelete = (_item: item) => {
+		//console.log(item);
+		QuotationData.data.item = QuotationData.data.item.filter(
+			(item) => item.item_id != _item.item_id,
+		);
+		setCount(Count + 1); //force rerendering
+	};
+
+	const CreateNewItem = () => {
+		let new_id = crypto.randomUUID();
+		let new_item: item = {
+			item_id: new_id,
+			product_desc: new_id,
+			brand: '',
+			model: '',
+			remarks: '',
+			quantity: 0,
+			unit: '',
+			unit_cost: 0,
+			total_cost: 0,
+			margin: 0,
+			unit_price: 0,
+			total_price: 0,
+			sub_item: [],
+		};
+
+		QuotationData.data.item.push(new_item);
+		setQuotationData(QuotationData);
+		console.log(QuotationData);
+		// await timeout(2000);
+
+		//useEffect(() => window.scrollTo({ top: 1000, behavior: 'smooth' }), []);
+		console.log('#item_id#' + new_id);
+
+		setCount(Count + 1); //force rerendering
+		// setTimeout(2000);
+		// const element = document.getElementById('#item_card_id#' + new_id);
+		// console.log(element);
+
+		// if (element) {
+		// 	element.scrollIntoView({ behavior: 'smooth' });
+		// }
+	};
+
 	const formik = useFormik({
 		initialValues: {
-			client: QuotationProps.data.client,
-			end_user: QuotationProps.data.end_user,
-			site_location: QuotationProps.data.site_location,
-			building: QuotationProps.data.building,
-			pic: QuotationProps.data.pic,
-			email: QuotationProps.data.email,
-			project_ref: QuotationProps.data.project_ref,
+			client: QuotationData.data.client,
+			end_user: QuotationData.data.end_user,
+			site_location: QuotationData.data.site_location,
+			building: QuotationData.data.building,
+			pic: QuotationData.data.pic,
+			email: QuotationData.data.email,
+			project_ref: QuotationData.data.project_ref,
 		},
 		validate,
 		onSubmit: () => {
@@ -119,7 +175,7 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 						Back
 					</Button>
 					<SubheaderSeparator />
-					<strong className='fs-5'>{QuotationProps.mode} Quotation</strong>
+					<strong className='fs-5'>{QuotationData.mode} Quotation</strong>
 				</SubHeaderLeft>
 			</SubHeader>
 			<Page container='fluid'>
@@ -129,7 +185,7 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 							<CardHeader>
 								<CardLabel>
 									<CardTitle tag='div' className='h3'>
-										{QuotationProps.mode} Quotation
+										{QuotationData.mode} Quotation
 									</CardTitle>
 								</CardLabel>
 							</CardHeader>
@@ -254,15 +310,23 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 										color='info'
 										icon='Add'
 										tag='a'
-										target='_blank'
-										hidden={isViewMode ? true : false}>
+										hidden={isViewMode ? true : false}
+										onClick={CreateNewItem}>
 										Add Item
 									</Button>
 								</CardFooterRight>
 							</CardFooter>
 						</Card>
-						<SingleItem mode={QuotationProps.mode} data={QuotationProps.data.item[0]} />
-						<Summary mode={QuotationProps.mode} />
+						{QuotationData.data.item.map((item) => (
+							<SingleItem
+								key={item.item_id}
+								mode={QuotationData.mode}
+								data={item}
+								deletefunc={handleDelete}
+							/>
+						))}
+						{/* <SingleItem mode={QuotationProps.mode} data={QuotationProps.data.item[0]} /> */}
+						<Summary mode={QuotationData.mode} data={QuotationData.data.summary} />
 					</div>
 				</div>
 			</Page>
