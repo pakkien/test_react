@@ -25,7 +25,6 @@ type ItemProps = {
 	deletefunc: (item: item) => void;
 	addItemfunc: () => void;
 	// addSubItemfunc: (item: item) => void;
-	//formik: formik
 };
 
 type item = {
@@ -81,7 +80,13 @@ const SingleItem = (ItemProps: ItemProps) => {
 		},
 		validate,
 		onSubmit: () => {
-			alert('i am item');
+			showNotification(
+				<span className='d-flex align-items-center'>
+					<Icon icon='Info' size='lg' className='me-1' />
+					<span>Updated Successfully</span>
+				</span>,
+				"The user's account details have been successfully updated.",
+			);
 		},
 	});
 
@@ -108,7 +113,7 @@ const SingleItem = (ItemProps: ItemProps) => {
 		let new_id = crypto.randomUUID();
 		let new_sub_item: sub_item = {
 			sub_item_id: new_id,
-			product_desc: '',
+			product_desc: new_id,
 			brand: '',
 			model: '',
 			remarks: '',
@@ -322,23 +327,21 @@ const SingleItem = (ItemProps: ItemProps) => {
 						</FormGroup>
 					</div>
 					<div className='col-md-12'>
-						{ItemProps.data.sub_item.length > 0 && (
-							<Accordion
-								id='accSample'
-								activeItemId={ItemProps.data.item_id}
-								color='dark'>
-								<AccordionItem id={ItemProps.data.item_id} title='Sub Item'>
-									{ItemProps.data.sub_item.map((sub_item) => (
-										<SingleSubItem
-											key={sub_item.sub_item_id}
-											mode={ItemProps.mode}
-											data={sub_item}
-											deleteSubItemfunc={handleDeleteSubItem}
-										/>
-									))}
-								</AccordionItem>
-							</Accordion>
-						)}
+						<Accordion
+							id='accSample'
+							activeItemId={ItemProps.data.item_id}
+							color='dark'>
+							<AccordionItem id={ItemProps.data.item_id} title='Sub Item'>
+								{ItemProps.data.sub_item.map((sub_item) => (
+									<SingleSubItem
+										key={sub_item.sub_item_id}
+										mode={ItemProps.mode}
+										data={sub_item}
+										deleteSubItemfunc={handleDeleteSubItem}
+									/>
+								))}
+							</AccordionItem>
+						</Accordion>
 					</div>
 					<div className='col-md-12'></div>
 				</div>

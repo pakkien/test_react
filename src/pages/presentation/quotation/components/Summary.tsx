@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { EventHandler } from 'react';
 import FormGroup from '../../../../components/bootstrap/forms/FormGroup';
 import Input from '../../../../components/bootstrap/forms/Input';
 import Card, {
@@ -21,14 +21,13 @@ import showNotification from '../../../../components/extras/showNotification';
 type SummaryProps = {
 	mode: string;
 	data: summary;
-	savefunc: () => void;
 };
 
 type summary = {
 	reference_status: string;
 	note: string;
-	total: number;
-	g_total: number;
+	total: string;
+	g_total: string;
 };
 
 const Summary = (SummaryProps: SummaryProps) => {
@@ -42,20 +41,8 @@ const Summary = (SummaryProps: SummaryProps) => {
 			g_total: SummaryProps.data.g_total,
 		},
 		validate,
-		onSubmit: () => {
-			showNotification(
-				<span className='d-flex align-items-center'>
-					<Icon icon='Info' size='lg' className='me-1' />
-					<span>Updated Successfully</span>
-				</span>,
-				"The user's account details have been successfully updated.",
-			);
-		},
+		onSubmit: () => {},
 	});
-
-	const handleSave = () => {
-		SummaryProps.savefunc();
-	};
 
 	return (
 		<Card>
@@ -86,6 +73,8 @@ const Summary = (SummaryProps: SummaryProps) => {
 					<div className='col-md-4'>
 						<FormGroup id='total' label='Total (RM)' isFloating>
 							<Input
+								type='number'
+								step={2}
 								placeholder='total'
 								onChange={formik.handleChange}
 								onBlur={formik.handleBlur}
@@ -116,6 +105,8 @@ const Summary = (SummaryProps: SummaryProps) => {
 					<div className='col-md-4'>
 						<FormGroup id='g_total' label='G/Total (RM)' isFloating>
 							<Input
+								type='number'
+								step={0.1}
 								placeholder='g_total'
 								onChange={formik.handleChange}
 								onBlur={formik.handleBlur}
@@ -139,10 +130,7 @@ const Summary = (SummaryProps: SummaryProps) => {
 						type='submit'
 						color='success'
 						icon='Save'
-						isDisable={!formik.isValid && !!formik.submitCount}
-						onClick={() => {
-							handleSave();
-						}}>
+						isDisable={!formik.isValid && !!formik.submitCount}>
 						Save
 					</Button>
 				</CardFooterRight>

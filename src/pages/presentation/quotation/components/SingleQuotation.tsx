@@ -1,4 +1,11 @@
-import React, { EventHandler, JSXElementConstructor, useEffect, useRef, useState } from 'react';
+import React, {
+	EventHandler,
+	FormEventHandler,
+	JSXElementConstructor,
+	useEffect,
+	useRef,
+	useState,
+} from 'react';
 import Button from '../../../../components/bootstrap/Button';
 import PageWrapper from '../../../../layout/PageWrapper/PageWrapper';
 import SubHeader, {
@@ -23,7 +30,7 @@ import Input from '../../../../components/bootstrap/forms/Input';
 import SingleItem from './SingleItem';
 import Summary from './Summary';
 import { reference } from '@popperjs/core';
-import { useFormik } from 'formik';
+import { FieldArray, FormikProvider, useFormik } from 'formik';
 import validate from '../../../helper/EditQuotationValidate';
 import showNotification from '../../../../components/extras/showNotification';
 import Icon from '../../../../components/icon/Icon';
@@ -84,8 +91,8 @@ type sub_item = {
 type summary = {
 	reference_status: string;
 	note: string;
-	total: number;
-	g_total: number;
+	total: string;
+	g_total: string;
 };
 
 const SingleQuotation = (QuotationProps: QuotationProps) => {
@@ -114,15 +121,11 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 		setCount(Count + 1); //force rerendering
 	};
 
-	const handleSave = () => {
-		console.log(QuotationProps);
-	};
-
 	const CreateNewItem = () => {
 		let new_id = crypto.randomUUID();
 		let new_item: item = {
 			item_id: new_id,
-			product_desc: new_id,
+			product_desc: '',
 			brand: '',
 			model: '',
 			remarks: '',
@@ -153,14 +156,9 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 			project_ref: QuotationData.data.project_ref,
 		},
 		validate,
-		onSubmit: () => {
-			showNotification(
-				<span className='d-flex align-items-center'>
-					<Icon icon='Info' size='lg' className='me-1' />
-					<span>Updated Successfully</span>
-				</span>,
-				"The user's account details have been successfully updated.",
-			);
+		onSubmit: (values) => {
+			console.log(values);
+			alert(JSON.stringify(values, null, 2));
 		},
 	});
 
@@ -176,7 +174,8 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 				</SubHeaderLeft>
 			</SubHeader>
 			<Page container='fluid'>
-				<form id='quotationFormId' noValidate onSubmit={formik.handleSubmit}>
+				{/* <form className='form' id='quotationFormId' onSubmit={handleSubmit}> */}
+				<form className='form' id='quotationFormId' onSubmit={formik.handleSubmit}>
 					<Card>
 						<CardHeader>
 							<CardLabel>
@@ -310,7 +309,24 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 							</CardFooterRight>
 						</CardFooter>
 					</Card>
-					{QuotationData.data.item.map((item) => (
+					{/* <FormikProvider value={formik}>
+						<FieldArray
+							name=''
+							render={() =>
+								QuotationData.data.item.map((item, idx) => (
+									<SingleItem
+										key={item.item_id}
+										mode={QuotationData.mode}
+										data={item}
+										deletefunc={handleDelete}
+										addItemfunc={handleAddItem}
+									/>
+								))
+							}
+						/>
+					</FormikProvider> */}
+
+					{QuotationData.data.item.map((item, idx) => (
 						<SingleItem
 							key={item.item_id}
 							mode={QuotationData.mode}
@@ -319,11 +335,102 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 							addItemfunc={handleAddItem}
 						/>
 					))}
-					<Summary
-						mode={QuotationData.mode}
-						data={QuotationData.data.summary}
-						savefunc={handleSave}
-					/>
+					<Summary mode={QuotationData.mode} data={QuotationData.data.summary} />
+
+					{/* <Card>
+						<CardHeader>
+							<CardLabel>
+								<CardTitle tag='div' className='h3'>
+									Summary
+								</CardTitle>
+							</CardLabel>
+						</CardHeader>
+						<CardBody className='pb-0'>
+							<div className='row g-4'>
+								<div className='col-md-8'>
+									<FormGroup
+										id='reference_status'
+										label='Reference Status'
+										isFloating>
+										<Input
+											placeholder='reference_status'
+											onChange={formik.handleChange}
+											onBlur={formik.handleBlur}
+											value={formik.values.reference_status}
+											isValid={formik.isValid}
+											isTouched={formik.touched.reference_status}
+											invalidFeedback={formik.errors.reference_status}
+											validFeedback='Valid reference status'
+											disabled={isViewMode ? true : false}
+										/>
+									</FormGroup>
+								</div>
+								<div className='col-md-4'>
+									<FormGroup id='total' label='Total (RM)' isFloating>
+										<Input
+											type='number'
+											step={2}
+											placeholder='total'
+											onChange={formik.handleChange}
+											onBlur={formik.handleBlur}
+											value={formik.values.total}
+											isValid={formik.isValid}
+											isTouched={formik.touched.total}
+											invalidFeedback={formik.errors.total}
+											validFeedback='Valid total'
+											disabled={isViewMode ? true : false}
+										/>
+									</FormGroup>
+								</div>
+								<div className='col-md-8'>
+									<FormGroup id='note' label='Note' isFloating>
+										<Input
+											placeholder='note'
+											onChange={formik.handleChange}
+											onBlur={formik.handleBlur}
+											value={formik.values.note}
+											isValid={formik.isValid}
+											isTouched={formik.touched.note}
+											invalidFeedback={formik.errors.note}
+											validFeedback='Valid note'
+											disabled={isViewMode ? true : false}
+										/>
+									</FormGroup>
+								</div>
+								<div className='col-md-4'>
+									<FormGroup id='g_total' label='G/Total (RM)' isFloating>
+										<Input
+											type='number'
+											step={0.1}
+											placeholder='g_total'
+											onChange={formik.handleChange}
+											onBlur={formik.handleBlur}
+											value={formik.values.g_total}
+											isValid={formik.isValid}
+											isTouched={formik.touched.g_total}
+											invalidFeedback={formik.errors.g_total}
+											validFeedback='Valid G/total'
+											disabled={isViewMode ? true : false}
+										/>
+									</FormGroup>
+								</div>
+							</div>
+						</CardBody>
+						<CardFooter>
+							<CardFooterRight>
+								<Button color='dark' icon='Edit' hidden={isViewMode ? true : false}>
+									Draft
+								</Button>
+								<Button
+									type='submit'
+									color='success'
+									icon='Save'
+									isDisable={!formik.isValid && !!formik.submitCount}>
+									Save
+								</Button>
+							</CardFooterRight>
+						</CardFooter>
+					</Card> */}
 				</form>
 			</Page>
 		</PageWrapper>

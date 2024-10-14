@@ -9,15 +9,26 @@ interface IValues {
 
 }
 const validate = (values: IValues) => {
-	const errors: IValues = {
-		client: '',
-		end_user: '',
-		site_location: '',
-        building: '',
-        pic: '',
-        email: '',
-        project_ref: '',
-	};
+	// const errors: IValues = {
+	// 	client: '',
+	// 	end_user: '',
+	// 	site_location: '',
+    //     building: '',
+    //     pic: '',
+    //     email: '',
+    //     project_ref: '',
+	// };
+
+	const errors: {
+				client?: string;
+				end_user?: string;
+				site_location?: string;
+				building?: string;
+				pic?: string;
+				email?: string;
+				project_ref?: string;
+				g_total?: string;
+			} = {};
 
 	if (!values.client) {
 		errors.client = 'Required';
@@ -68,7 +79,10 @@ const validate = (values: IValues) => {
 		errors.project_ref = 'Must be 20 characters or less';
 	}
 
+	console.log("error:" + JSON.stringify(errors));
 	return errors;
 };
 
 export default validate;
+
+
