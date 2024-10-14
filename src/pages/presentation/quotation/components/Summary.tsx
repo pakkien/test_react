@@ -132,14 +132,14 @@ const Summary = (SummaryProps: SummaryProps) => {
 			</CardBody>
 			<CardFooter>
 				<CardFooterRight>
-					<Button color='dark' icon='Edit' tag='a' hidden={isViewMode ? true : false}>
+					<Button color='dark' icon='Edit' hidden={isViewMode ? true : false}>
 						Draft
 					</Button>
 					<Button
+						type='submit'
 						color='success'
 						icon='Save'
-						tag='a'
-						hidden={isViewMode ? true : false}
+						isDisable={!formik.isValid && !!formik.submitCount}
 						onClick={() => {
 							handleSave();
 						}}>

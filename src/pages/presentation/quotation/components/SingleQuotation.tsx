@@ -1,4 +1,4 @@
-import React, { JSXElementConstructor, useEffect, useRef, useState } from 'react';
+import React, { EventHandler, JSXElementConstructor, useEffect, useRef, useState } from 'react';
 import Button from '../../../../components/bootstrap/Button';
 import PageWrapper from '../../../../layout/PageWrapper/PageWrapper';
 import SubHeader, {
@@ -30,6 +30,7 @@ import Icon from '../../../../components/icon/Icon';
 import Item from '../../../../layout/Navigation/Item';
 import { setTimeout } from 'timers/promises';
 import ScrollspyNav from '../../../../components/bootstrap/ScrollspyNav';
+import { OnValueChange } from 'react-number-format';
 
 type QuotationProps = {
 	mode: string;
@@ -175,161 +176,155 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 				</SubHeaderLeft>
 			</SubHeader>
 			<Page container='fluid'>
-				<div className='row'>
-					<div className='col-xl-12 col-lg-12 col-md-12'>
-						<Card tag='form'>
-							<CardHeader>
-								<CardLabel>
-									<CardTitle tag='div' className='h3'>
-										{QuotationData.mode} Quotation
-									</CardTitle>
-								</CardLabel>
-							</CardHeader>
-							<CardBody className='pb-0'>
-								<div className='row g-4'>
-									<div className='col-md-12'>
-										<FormGroup id='client' label='Client' isFloating>
-											<Input
-												placeholder='client'
-												onChange={formik.handleChange}
-												onBlur={formik.handleBlur}
-												value={formik.values.client}
-												isValid={formik.isValid}
-												isTouched={formik.touched.client}
-												invalidFeedback={formik.errors.client}
-												validFeedback='Valid Client'
-												disabled={isViewMode ? true : false}
-											/>
-										</FormGroup>
-									</div>
-									<div className='col-md-4'>
-										<FormGroup id='end_user' label='End User' isFloating>
-											<Input
-												placeholder='end_user'
-												onChange={formik.handleChange}
-												onBlur={formik.handleBlur}
-												value={formik.values.end_user}
-												isValid={formik.isValid}
-												isTouched={formik.touched.end_user}
-												invalidFeedback={formik.errors.end_user}
-												validFeedback='Valid End User'
-												disabled={isViewMode ? true : false}
-											/>
-										</FormGroup>
-									</div>
-									<div className='col-md-4'>
-										<FormGroup
-											id='site_location'
-											label='Site Location'
-											isFloating>
-											<Input
-												placeholder='site_location'
-												onChange={formik.handleChange}
-												onBlur={formik.handleBlur}
-												value={formik.values.site_location}
-												isValid={formik.isValid}
-												isTouched={formik.touched.site_location}
-												invalidFeedback={formik.errors.site_location}
-												validFeedback='Valid Site Location'
-												disabled={isViewMode ? true : false}
-											/>
-										</FormGroup>
-									</div>
-									<div className='col-md-4'>
-										<FormGroup id='building' label='Building' isFloating>
-											<Input
-												placeholder='building'
-												onChange={formik.handleChange}
-												onBlur={formik.handleBlur}
-												value={formik.values.building}
-												isValid={formik.isValid}
-												isTouched={formik.touched.building}
-												invalidFeedback={formik.errors.building}
-												validFeedback='Valid Building'
-												disabled={isViewMode ? true : false}
-											/>
-										</FormGroup>
-									</div>
-									<div className='col-md-4'>
-										<FormGroup id='pic' label='PIC' isFloating>
-											<Input
-												placeholder='pic'
-												onChange={formik.handleChange}
-												onBlur={formik.handleBlur}
-												value={formik.values.pic}
-												isValid={formik.isValid}
-												isTouched={formik.touched.pic}
-												invalidFeedback={formik.errors.pic}
-												validFeedback='Valid PIC'
-												disabled={isViewMode ? true : false}
-											/>
-										</FormGroup>
-									</div>
-									<div className='col-md-8'>
-										<FormGroup id='email' label='Email' isFloating>
-											<Input
-												placeholder='email'
-												onChange={formik.handleChange}
-												onBlur={formik.handleBlur}
-												value={formik.values.email}
-												isValid={formik.isValid}
-												isTouched={formik.touched.email}
-												invalidFeedback={formik.errors.email}
-												validFeedback='Valid Email'
-												disabled={isViewMode ? true : false}
-											/>
-										</FormGroup>
-									</div>
-									<div className='col-md-12'>
-										<FormGroup
-											id='project_ref'
-											label='Project Reference'
-											isFloating>
-											<Input
-												placeholder='Project Reference'
-												onChange={formik.handleChange}
-												onBlur={formik.handleBlur}
-												value={formik.values.project_ref}
-												isValid={formik.isValid}
-												isTouched={formik.touched.project_ref}
-												invalidFeedback={formik.errors.project_ref}
-												validFeedback='Valid Project Reference'
-												disabled={isViewMode ? true : false}
-											/>
-										</FormGroup>
-									</div>
+				<form id='quotationFormId' noValidate onSubmit={formik.handleSubmit}>
+					<Card>
+						<CardHeader>
+							<CardLabel>
+								<CardTitle tag='div' className='h3'>
+									{QuotationData.mode} Quotation
+								</CardTitle>
+							</CardLabel>
+						</CardHeader>
+						<CardBody className='pb-0'>
+							<div className='row g-4'>
+								<div className='col-md-12'>
+									<FormGroup id='client' label='Client' isFloating>
+										<Input
+											placeholder='client'
+											onChange={formik.handleChange}
+											onBlur={formik.handleBlur}
+											value={formik.values.client}
+											isValid={formik.isValid}
+											isTouched={formik.touched.client}
+											invalidFeedback={formik.errors.client}
+											validFeedback='Valid Client'
+											disabled={isViewMode ? true : false}
+										/>
+									</FormGroup>
 								</div>
-							</CardBody>
-							<CardFooter>
-								<CardFooterRight>
-									<Button
-										color='info'
-										icon='Add'
-										tag='a'
-										hidden={isViewMode ? true : false}
-										onClick={CreateNewItem}>
-										Add Item
-									</Button>
-								</CardFooterRight>
-							</CardFooter>
-						</Card>
-						{QuotationData.data.item.map((item) => (
-							<SingleItem
-								key={item.item_id}
-								mode={QuotationData.mode}
-								data={item}
-								deletefunc={handleDelete}
-								addItemfunc={handleAddItem}
-							/>
-						))}
-						{/* <SingleItem mode={QuotationProps.mode} data={QuotationProps.data.item[0]} /> */}
-						<Summary
+								<div className='col-md-4'>
+									<FormGroup id='end_user' label='End User' isFloating>
+										<Input
+											placeholder='end_user'
+											onChange={formik.handleChange}
+											onBlur={formik.handleBlur}
+											value={formik.values.end_user}
+											isValid={formik.isValid}
+											isTouched={formik.touched.end_user}
+											invalidFeedback={formik.errors.end_user}
+											validFeedback='Valid End User'
+											disabled={isViewMode ? true : false}
+										/>
+									</FormGroup>
+								</div>
+								<div className='col-md-4'>
+									<FormGroup id='site_location' label='Site Location' isFloating>
+										<Input
+											placeholder='site_location'
+											onChange={formik.handleChange}
+											onBlur={formik.handleBlur}
+											value={formik.values.site_location}
+											isValid={formik.isValid}
+											isTouched={formik.touched.site_location}
+											invalidFeedback={formik.errors.site_location}
+											validFeedback='Valid Site Location'
+											disabled={isViewMode ? true : false}
+										/>
+									</FormGroup>
+								</div>
+								<div className='col-md-4'>
+									<FormGroup id='building' label='Building' isFloating>
+										<Input
+											placeholder='building'
+											onChange={formik.handleChange}
+											onBlur={formik.handleBlur}
+											value={formik.values.building}
+											isValid={formik.isValid}
+											isTouched={formik.touched.building}
+											invalidFeedback={formik.errors.building}
+											validFeedback='Valid Building'
+											disabled={isViewMode ? true : false}
+										/>
+									</FormGroup>
+								</div>
+								<div className='col-md-4'>
+									<FormGroup id='pic' label='PIC' isFloating>
+										<Input
+											placeholder='pic'
+											onChange={formik.handleChange}
+											onBlur={formik.handleBlur}
+											value={formik.values.pic}
+											isValid={formik.isValid}
+											isTouched={formik.touched.pic}
+											invalidFeedback={formik.errors.pic}
+											validFeedback='Valid PIC'
+											disabled={isViewMode ? true : false}
+										/>
+									</FormGroup>
+								</div>
+								<div className='col-md-8'>
+									<FormGroup id='email' label='Email' isFloating>
+										<Input
+											placeholder='email'
+											onChange={formik.handleChange}
+											onBlur={formik.handleBlur}
+											value={formik.values.email}
+											isValid={formik.isValid}
+											isTouched={formik.touched.email}
+											invalidFeedback={formik.errors.email}
+											validFeedback='Valid Email'
+											disabled={isViewMode ? true : false}
+										/>
+									</FormGroup>
+								</div>
+								<div className='col-md-12'>
+									<FormGroup
+										id='project_ref'
+										label='Project Reference'
+										isFloating>
+										<Input
+											placeholder='Project Reference'
+											onChange={formik.handleChange}
+											onBlur={formik.handleBlur}
+											value={formik.values.project_ref}
+											isValid={formik.isValid}
+											isTouched={formik.touched.project_ref}
+											invalidFeedback={formik.errors.project_ref}
+											validFeedback='Valid Project Reference'
+											disabled={isViewMode ? true : false}
+										/>
+									</FormGroup>
+								</div>
+							</div>
+						</CardBody>
+						<CardFooter>
+							<CardFooterRight>
+								<Button
+									color='info'
+									icon='Add'
+									tag='a'
+									hidden={isViewMode ? true : false}
+									onClick={CreateNewItem}>
+									Add Item
+								</Button>
+							</CardFooterRight>
+						</CardFooter>
+					</Card>
+					{QuotationData.data.item.map((item) => (
+						<SingleItem
+							key={item.item_id}
 							mode={QuotationData.mode}
-							data={QuotationData.data.summary}
-							savefunc={handleSave}
+							data={item}
+							deletefunc={handleDelete}
+							addItemfunc={handleAddItem}
 						/>
-					</div>
-				</div>
+					))}
+					<Summary
+						mode={QuotationData.mode}
+						data={QuotationData.data.summary}
+						savefunc={handleSave}
+					/>
+				</form>
 			</Page>
 		</PageWrapper>
 	);

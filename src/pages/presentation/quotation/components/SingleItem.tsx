@@ -132,7 +132,7 @@ const SingleItem = (ItemProps: ItemProps) => {
 	};
 
 	return (
-		<Card tag='form' id={'#item_card_id#' + ItemProps.data.item_id}>
+		<Card id={'#item_card_id#' + ItemProps.data.item_id}>
 			<CardHeader>
 				<CardLabel>
 					<CardTitle tag='div' className='h3'>
