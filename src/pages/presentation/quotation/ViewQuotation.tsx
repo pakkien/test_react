@@ -105,8 +105,8 @@ const ViewQuotation = () => {
 		summary: {
 			reference_status: '-',
 			note: '-',
-			total: 12400.0,
-			g_total: 12400.0,
+			total: '12400.0',
+			g_total: '12400.0',
 		},
 	};
 	return <SingleQuotation mode='View' data={QuotationData} />;
