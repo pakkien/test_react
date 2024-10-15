@@ -32,12 +32,22 @@ import Summary from './Summary';
 import { reference } from '@popperjs/core';
 import { FieldArray, FormikProvider, useFormik } from 'formik';
 import validate from '../../../helper/EditQuotationValidate';
+//import validate2 from '../../../helper/EditItemValidate';
 import showNotification from '../../../../components/extras/showNotification';
 import Icon from '../../../../components/icon/Icon';
 import Item from '../../../../layout/Navigation/Item';
 import { setTimeout } from 'timers/promises';
 import ScrollspyNav from '../../../../components/bootstrap/ScrollspyNav';
 import { OnValueChange } from 'react-number-format';
+import SingleItemEditForm from './SingleItemEditForm';
+
+import Modal, {
+	ModalBody,
+	ModalFooter,
+	ModalHeader,
+	ModalTitle,
+} from '../../../../components/bootstrap/Modal';
+import { TModalFullScreen, TModalSize } from '../../../../type/modal-type';
 
 type QuotationProps = {
 	mode: string;
@@ -63,13 +73,13 @@ type item = {
 	brand: string;
 	model: string;
 	remarks: string;
-	quantity: number;
+	quantity: string;
 	unit: string;
-	unit_cost: number;
-	total_cost: number;
-	margin: number;
-	unit_price: number;
-	total_price: number;
+	unit_cost: string;
+	total_cost: string;
+	margin: string;
+	unit_price: string;
+	total_price: string;
 	sub_item: sub_item[];
 };
 
@@ -79,13 +89,13 @@ type sub_item = {
 	brand: string;
 	model: string;
 	remarks: string;
-	quantity: number;
+	quantity: string;
 	unit: string;
-	unit_cost: number;
-	total_cost: number;
-	margin: number;
-	unit_price: number;
-	total_price: number;
+	unit_cost: string;
+	total_cost: string;
+	margin: string;
+	unit_price: string;
+	total_price: string;
 };
 
 type summary = {
@@ -95,10 +105,69 @@ type summary = {
 	g_total: string;
 };
 
+type ItemFormProps = {
+	mode: string;
+	data: item;
+};
+
 const SingleQuotation = (QuotationProps: QuotationProps) => {
 	const navigate = useNavigate();
 	const title = QuotationProps.mode + ' Quotation';
 	const isViewMode = QuotationProps.mode.toLowerCase() === 'view' ? true : false;
+
+	//#region modal
+	const [state, setState] = useState(false);
+
+	const [staticBackdropStatus, setStaticBackdropStatus] = useState(false);
+	const [scrollableStatus, setScrollableStatus] = useState(false);
+	const [centeredStatus, setCenteredStatus] = useState(true);
+	const [sizeStatus, setSizeStatus] = useState<TModalSize>(null);
+	const [fullScreenStatus, setFullScreenStatus] = useState<TModalFullScreen | undefined>(
+		undefined,
+	);
+	const [animationStatus, setAnimationStatus] = useState(true);
+	const [longContentStatus, setLongContentStatus] = useState(false);
+	const [headerCloseStatus, setHeaderCloseStatus] = useState(true);
+
+	const initialStatus = () => {
+		setStaticBackdropStatus(false);
+		setScrollableStatus(false);
+		setCenteredStatus(true);
+		setSizeStatus('xl');
+		setFullScreenStatus(undefined);
+		setAnimationStatus(true);
+		setLongContentStatus(false);
+		setHeaderCloseStatus(true);
+	};
+
+	//#endregion modal
+
+	const getNewItem = () => {
+		let new_id = crypto.randomUUID();
+		let new_item: item = {
+			item_id: new_id,
+			product_desc: '',
+			brand: '',
+			model: '',
+			remarks: '',
+			quantity: '0',
+			unit: '',
+			unit_cost: '0',
+			total_cost: '0',
+			margin: '0',
+			unit_price: '0',
+			total_price: '0',
+			sub_item: [],
+		};
+		return new_item;
+	};
+
+	const itemEditDataProps: ItemFormProps = {
+		mode: 'Create',
+		data: getNewItem(),
+	};
+
+	const [itemEditData, setItemEditData] = useState(itemEditDataProps);
 
 	const [QuotationData, setQuotationData] = useState(QuotationProps);
 
@@ -111,13 +180,35 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 		setCount(Count + 1); //force rerendering
 	};
 
-	const handleAddItem = () => {
-		CreateNewItem();
+	const handleEditItem = (_item: item) => {
+		//console.log(_item);
+
+		itemEditData.mode = 'Edit';
+		itemEditData.data = _item;
+		//console.log('itemEditData:' + JSON.stringify(itemEditData));
+		setItemEditData(itemEditData);
+		setState(true);
+		initialStatus();
+	};
+
+	const updateEditedItem = (_item: item) => {
+		let itemIndex = QuotationData.data.item.findIndex((i) => i.item_id == _item.item_id);
+		QuotationData.data.item[itemIndex] = _item;
 		setCount(Count + 1); //force rerendering
 	};
 
-	const handleEditItem = (_item: item) => {
-		console.log(_item);
+	const handleAddItem = () => {
+		itemEditData.mode = 'Create';
+		itemEditData.data = CreateNewItem();
+		//console.log('itemEditData:' + JSON.stringify(itemEditData));
+		setItemEditData(itemEditData);
+		setState(true);
+		initialStatus();
+	};
+
+	const updateAddedItem = (_item: item) => {
+		QuotationData.data.item.push(_item);
+		setQuotationData(QuotationData);
 		setCount(Count + 1); //force rerendering
 	};
 
@@ -129,20 +220,20 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 			brand: '',
 			model: '',
 			remarks: '',
-			quantity: 0,
+			quantity: '0',
 			unit: '',
-			unit_cost: 0,
-			total_cost: 0,
-			margin: 0,
-			unit_price: 0,
-			total_price: 0,
+			unit_cost: '0',
+			total_cost: '0',
+			margin: '0',
+			unit_price: '0',
+			total_price: '0',
 			sub_item: [],
 		};
+		return new_item;
+		// QuotationData.data.item.push(new_item);
+		// setQuotationData(QuotationData);
 
-		QuotationData.data.item.push(new_item);
-		setQuotationData(QuotationData);
-
-		setCount(Count + 1); //force rerendering
+		// setCount(Count + 1); //force rerendering
 	};
 
 	const formik = useFormik({
@@ -154,10 +245,15 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 			pic: QuotationData.data.pic,
 			email: QuotationData.data.email,
 			project_ref: QuotationData.data.project_ref,
+
+			reference_status: QuotationData.data.summary.reference_status,
+			note: QuotationData.data.summary.note,
+			total: QuotationData.data.summary.total,
+			g_total: QuotationData.data.summary.g_total,
 		},
 		validate,
 		onSubmit: (values) => {
-			console.log(values);
+			console.log(JSON.stringify(QuotationData));
 			alert(JSON.stringify(values, null, 2));
 		},
 	});
@@ -174,7 +270,7 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 				</SubHeaderLeft>
 			</SubHeader>
 			<Page container='fluid'>
-				{/* <form className='form' id='quotationFormId' onSubmit={handleSubmit}> */}
+				{/* <p>{JSON.stringify(QuotationData)}</p> */}
 				<form className='form' id='quotationFormId' onSubmit={formik.handleSubmit}>
 					<Card>
 						<CardHeader>
@@ -303,41 +399,23 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 									icon='Add'
 									tag='a'
 									hidden={isViewMode ? true : false}
-									onClick={CreateNewItem}>
+									onClick={handleAddItem}>
 									Add Item
 								</Button>
 							</CardFooterRight>
 						</CardFooter>
 					</Card>
-					{/* <FormikProvider value={formik}>
-						<FieldArray
-							name=''
-							render={() =>
-								QuotationData.data.item.map((item, idx) => (
-									<SingleItem
-										key={item.item_id}
-										mode={QuotationData.mode}
-										data={item}
-										deletefunc={handleDelete}
-										addItemfunc={handleAddItem}
-									/>
-								))
-							}
-						/>
-					</FormikProvider> */}
-
 					{QuotationData.data.item.map((item, idx) => (
 						<SingleItem
-							key={item.item_id}
+							key={idx + crypto.randomUUID()}
 							mode={QuotationData.mode}
 							data={item}
 							deletefunc={handleDelete}
 							addItemfunc={handleAddItem}
+							editfunc={handleEditItem}
 						/>
 					))}
-					<Summary mode={QuotationData.mode} data={QuotationData.data.summary} />
-
-					{/* <Card>
+					<Card>
 						<CardHeader>
 							<CardLabel>
 								<CardTitle tag='div' className='h3'>
@@ -430,7 +508,51 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 								</Button>
 							</CardFooterRight>
 						</CardFooter>
-					</Card> */}
+					</Card>
+				</form>
+
+				{/* modal form */}
+
+				<form>
+					<Modal
+						isOpen={state}
+						setIsOpen={setState}
+						titleId='exampleModalLabel'
+						isStaticBackdrop={staticBackdropStatus}
+						isScrollable={scrollableStatus}
+						isCentered={centeredStatus}
+						size={sizeStatus}
+						fullScreen={fullScreenStatus}
+						isAnimation={animationStatus}>
+						<ModalHeader setIsOpen={headerCloseStatus ? setState : undefined}>
+							<ModalTitle id='exampleModalLabel'>
+								{itemEditData.mode.toLowerCase() == 'edit'
+									? 'Edit item'
+									: 'Add item'}
+							</ModalTitle>
+						</ModalHeader>
+						<ModalBody>
+							<SingleItemEditForm
+								mode={itemEditData.mode}
+								data={itemEditData.data}
+								editItemfunc={updateEditedItem}
+								createItemfunc={updateAddedItem}
+								setState={setState}
+							/>
+						</ModalBody>
+						{/* <ModalFooter>
+							<Button
+								color='info'
+								isOutline
+								className='border-0'
+								onClick={() => setState(false)}>
+								Close
+							</Button>
+							<Button color='info' icon='Save' type='submit'>
+								{itemEditData.mode.toLowerCase() == 'edit' ? 'Save' : 'Add item'}
+							</Button>
+						</ModalFooter> */}
+					</Modal>
 				</form>
 			</Page>
 		</PageWrapper>

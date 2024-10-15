@@ -28,13 +28,13 @@ type sub_item = {
 	brand: string;
 	model: string;
 	remarks: string;
-	quantity: number;
+	quantity: string;
 	unit: string;
-	unit_cost: number;
-	total_cost: number;
-	margin: number;
-	unit_price: number;
-	total_price: number;
+	unit_cost: string;
+	total_cost: string;
+	margin: string;
+	unit_price: string;
+	total_price: string;
 };
 
 const SingleSubItem = (SubItemProps: SubItemProps) => {

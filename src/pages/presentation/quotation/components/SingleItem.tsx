@@ -24,6 +24,7 @@ type ItemProps = {
 	data: item;
 	deletefunc: (item: item) => void;
 	addItemfunc: () => void;
+	editfunc: (item: item) => void;
 	// addSubItemfunc: (item: item) => void;
 	//formik: formik
 };
@@ -34,13 +35,13 @@ type item = {
 	brand: string;
 	model: string;
 	remarks: string;
-	quantity: number;
+	quantity: string;
 	unit: string;
-	unit_cost: number;
-	total_cost: number;
-	margin: number;
-	unit_price: number;
-	total_price: number;
+	unit_cost: string;
+	total_cost: string;
+	margin: string;
+	unit_price: string;
+	total_price: string;
 	sub_item: sub_item[];
 };
 
@@ -50,17 +51,17 @@ type sub_item = {
 	brand: string;
 	model: string;
 	remarks: string;
-	quantity: number;
+	quantity: string;
 	unit: string;
-	unit_cost: number;
-	total_cost: number;
-	margin: number;
-	unit_price: number;
-	total_price: number;
+	unit_cost: string;
+	total_cost: string;
+	margin: string;
+	unit_price: string;
+	total_price: string;
 };
 
 const SingleItem = (ItemProps: ItemProps) => {
-	const isViewMode = ItemProps.mode.toLowerCase() === 'view' ? true : false;
+	const [mode, setMode] = useState(ItemProps.mode.toLowerCase());
 
 	const [ItemData, setItemData] = useState(ItemProps);
 	const [Count, setCount] = useState(0);
@@ -79,14 +80,21 @@ const SingleItem = (ItemProps: ItemProps) => {
 			unit_price: ItemProps.data.unit_price,
 			total_price: ItemProps.data.total_price,
 		},
+
 		validate,
-		onSubmit: () => {
-			alert('i am item');
+		onSubmit: (values) => {
+			//console.log(JSON.stringify(QuotationData));
+			// alert(JSON.stringify(values, null, 2));
+			// setMode('edit');
 		},
 	});
 
 	const handleButtonClick_deleteItem = (item: item) => {
 		ItemProps.deletefunc(item);
+	};
+
+	const handleButtonClick_editItem = (item: item) => {
+		ItemProps.editfunc(item);
 	};
 
 	const handleDeleteSubItem = (_sub_item: sub_item) => {
@@ -112,13 +120,13 @@ const SingleItem = (ItemProps: ItemProps) => {
 			brand: '',
 			model: '',
 			remarks: '',
-			quantity: 0,
+			quantity: '',
 			unit: '',
-			unit_cost: 0,
-			total_cost: 0,
-			margin: 0,
-			unit_price: 0,
-			total_price: 0,
+			unit_cost: '',
+			total_cost: '',
+			margin: '',
+			unit_price: '',
+			total_price: '',
 		};
 
 		ItemData.data.sub_item.push(new_sub_item);
@@ -127,11 +135,20 @@ const SingleItem = (ItemProps: ItemProps) => {
 	};
 
 	return (
-		<Card id={'#item_card_id#' + ItemProps.data.item_id}>
+		<Card id={'#item_card_id#' + ItemProps.data.item_id} onSubmit={formik.handleSubmit}>
 			<CardHeader>
 				<CardLabel>
 					<CardTitle tag='div' className='h3'>
-						Add Item Details
+						Item Details &nbsp;&nbsp;
+						<Button
+							color='info'
+							icon='Edit'
+							hidden={mode == 'view' ? true : false}
+							onClick={() => {
+								handleButtonClick_editItem(ItemProps.data);
+							}}>
+							Edit
+						</Button>
 					</CardTitle>
 				</CardLabel>
 				<CardActions>
@@ -139,7 +156,7 @@ const SingleItem = (ItemProps: ItemProps) => {
 						color='danger'
 						icon='Delete'
 						tag='a'
-						hidden={isViewMode ? true : false}
+						hidden={mode == 'view' ? true : false}
 						onClick={() => {
 							handleButtonClick_deleteItem(ItemProps.data);
 						}}>
@@ -163,7 +180,7 @@ const SingleItem = (ItemProps: ItemProps) => {
 								isTouched={formik.touched.product_desc}
 								invalidFeedback={formik.errors.product_desc}
 								validFeedback='Valid product description'
-								disabled={isViewMode ? true : false}
+								disabled
 							/>
 						</FormGroup>
 					</div>
@@ -178,7 +195,7 @@ const SingleItem = (ItemProps: ItemProps) => {
 								isTouched={formik.touched.brand}
 								invalidFeedback={formik.errors.brand}
 								validFeedback='Valid brand'
-								disabled={isViewMode ? true : false}
+								disabled
 							/>
 						</FormGroup>
 					</div>
@@ -193,7 +210,7 @@ const SingleItem = (ItemProps: ItemProps) => {
 								isTouched={formik.touched.model}
 								invalidFeedback={formik.errors.model}
 								validFeedback='Valid model'
-								disabled={isViewMode ? true : false}
+								disabled
 							/>
 						</FormGroup>
 					</div>
@@ -208,7 +225,7 @@ const SingleItem = (ItemProps: ItemProps) => {
 								isTouched={formik.touched.remarks}
 								invalidFeedback={formik.errors.remarks}
 								validFeedback='Valid remarks'
-								disabled={isViewMode ? true : false}
+								disabled
 							/>
 						</FormGroup>
 					</div>
@@ -225,7 +242,7 @@ const SingleItem = (ItemProps: ItemProps) => {
 										isTouched={formik.touched.quantity}
 										invalidFeedback={formik.errors.quantity}
 										validFeedback='Valid quantity'
-										disabled={isViewMode ? true : false}
+										disabled
 									/>
 								</FormGroup>
 							</div>
@@ -240,7 +257,7 @@ const SingleItem = (ItemProps: ItemProps) => {
 										isTouched={formik.touched.unit}
 										invalidFeedback={formik.errors.unit}
 										validFeedback='Valid unit'
-										disabled={isViewMode ? true : false}
+										disabled
 									/>
 								</FormGroup>
 							</div>
@@ -255,7 +272,7 @@ const SingleItem = (ItemProps: ItemProps) => {
 										isTouched={formik.touched.unit_cost}
 										invalidFeedback={formik.errors.unit_cost}
 										validFeedback='Valid unit_cost'
-										disabled={isViewMode ? true : false}
+										disabled
 									/>
 								</FormGroup>
 							</div>
@@ -272,7 +289,7 @@ const SingleItem = (ItemProps: ItemProps) => {
 								isTouched={formik.touched.total_cost}
 								invalidFeedback={formik.errors.total_cost}
 								validFeedback='Valid total_cost'
-								disabled={isViewMode ? true : false}
+								disabled
 							/>
 						</FormGroup>
 					</div>
@@ -287,7 +304,7 @@ const SingleItem = (ItemProps: ItemProps) => {
 								isTouched={formik.touched.margin}
 								invalidFeedback={formik.errors.margin}
 								validFeedback='Valid margin'
-								disabled={isViewMode ? true : false}
+								disabled
 							/>
 						</FormGroup>
 					</div>
@@ -302,7 +319,7 @@ const SingleItem = (ItemProps: ItemProps) => {
 								isTouched={formik.touched.unit_price}
 								invalidFeedback={formik.errors.unit_price}
 								validFeedback='Valid unit_price'
-								disabled={isViewMode ? true : false}
+								disabled
 							/>
 						</FormGroup>
 					</div>
@@ -317,11 +334,11 @@ const SingleItem = (ItemProps: ItemProps) => {
 								isTouched={formik.touched.total_price}
 								invalidFeedback={formik.errors.total_price}
 								validFeedback='Valid total_price'
-								disabled={isViewMode ? true : false}
+								disabled
 							/>
 						</FormGroup>
 					</div>
-					<div className='col-md-12'>
+					{/* <div className='col-md-12'>
 						{ItemProps.data.sub_item.length > 0 && (
 							<Accordion
 								id='accSample'
@@ -339,7 +356,7 @@ const SingleItem = (ItemProps: ItemProps) => {
 								</AccordionItem>
 							</Accordion>
 						)}
-					</div>
+					</div> */}
 					<div className='col-md-12'></div>
 				</div>
 			</CardBody>
@@ -349,7 +366,7 @@ const SingleItem = (ItemProps: ItemProps) => {
 						color='info'
 						icon='Add'
 						tag='a'
-						hidden={isViewMode ? true : false}
+						hidden={mode == 'view' ? true : false}
 						onClick={() => {
 							handleButtonClick_addItem();
 						}}>
@@ -359,7 +376,7 @@ const SingleItem = (ItemProps: ItemProps) => {
 						color='info'
 						icon='Delete'
 						tag='a'
-						hidden={isViewMode ? true : false}
+						hidden={mode == 'view' ? true : false}
 						onClick={() => {
 							handleButtonClick_addSubItem();
 						}}>
