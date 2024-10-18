@@ -20,21 +20,23 @@ type SubItemProps = {
 	mode: string;
 	data: sub_item;
 	deleteSubItemfunc: (sub_item: sub_item) => void;
+	editSubItemfunc: (sub_item: sub_item) => void;
 };
 
 type sub_item = {
 	sub_item_id: string;
+	item_id: string;
 	product_desc: string;
 	brand: string;
 	model: string;
 	remarks: string;
-	quantity: number;
+	quantity: string;
 	unit: string;
-	unit_cost: number;
-	total_cost: number;
-	margin: number;
-	unit_price: number;
-	total_price: number;
+	unit_cost: string;
+	total_cost: string;
+	margin: string;
+	unit_price: string;
+	total_price: string;
 };
 
 const SingleSubItem = (SubItemProps: SubItemProps) => {
@@ -66,8 +68,12 @@ const SingleSubItem = (SubItemProps: SubItemProps) => {
 		},
 	});
 
-	const handleButtonClick_deleteItem = (sub_item: sub_item) => {
+	const handleButtonClick_deleteSubItem = (sub_item: sub_item) => {
 		SubItemProps.deleteSubItemfunc(sub_item);
+	};
+
+	const handleButtonClick_editSubItem = (_sub_item: sub_item) => {
+		SubItemProps.editSubItemfunc(_sub_item);
 	};
 
 	return (
@@ -75,7 +81,16 @@ const SingleSubItem = (SubItemProps: SubItemProps) => {
 			<CardHeader>
 				<CardLabel>
 					<CardTitle tag='div' className='h3'>
-						Add Sub-Item Details
+						Sub-Item Details &nbsp;&nbsp;
+						<Button
+							color='info'
+							icon='Edit'
+							hidden={isViewMode ? true : false}
+							onClick={() => {
+								handleButtonClick_editSubItem(SubItemProps.data);
+							}}>
+							Edit
+						</Button>
 					</CardTitle>
 				</CardLabel>
 				<CardActions>
@@ -85,7 +100,7 @@ const SingleSubItem = (SubItemProps: SubItemProps) => {
 						tag='a'
 						hidden={isViewMode ? true : false}
 						onClick={() => {
-							handleButtonClick_deleteItem(SubItemProps.data);
+							handleButtonClick_deleteSubItem(SubItemProps.data);
 						}}>
 						Delete Sub-Item
 					</Button>
@@ -107,7 +122,7 @@ const SingleSubItem = (SubItemProps: SubItemProps) => {
 								isTouched={formik.touched.product_desc}
 								invalidFeedback={formik.errors.product_desc}
 								validFeedback='Valid product description'
-								disabled={isViewMode ? true : false}
+								disabled
 							/>
 						</FormGroup>
 					</div>
@@ -122,7 +137,7 @@ const SingleSubItem = (SubItemProps: SubItemProps) => {
 								isTouched={formik.touched.brand}
 								invalidFeedback={formik.errors.brand}
 								validFeedback='Valid brand'
-								disabled={isViewMode ? true : false}
+								disabled
 							/>
 						</FormGroup>
 					</div>
@@ -137,7 +152,7 @@ const SingleSubItem = (SubItemProps: SubItemProps) => {
 								isTouched={formik.touched.model}
 								invalidFeedback={formik.errors.model}
 								validFeedback='Valid model'
-								disabled={isViewMode ? true : false}
+								disabled
 							/>
 						</FormGroup>
 					</div>
@@ -152,7 +167,7 @@ const SingleSubItem = (SubItemProps: SubItemProps) => {
 								isTouched={formik.touched.remarks}
 								invalidFeedback={formik.errors.remarks}
 								validFeedback='Valid remarks'
-								disabled={isViewMode ? true : false}
+								disabled
 							/>
 						</FormGroup>
 					</div>
@@ -169,7 +184,7 @@ const SingleSubItem = (SubItemProps: SubItemProps) => {
 										isTouched={formik.touched.quantity}
 										invalidFeedback={formik.errors.quantity}
 										validFeedback='Valid quantity'
-										disabled={isViewMode ? true : false}
+										disabled
 									/>
 								</FormGroup>
 							</div>
@@ -184,7 +199,7 @@ const SingleSubItem = (SubItemProps: SubItemProps) => {
 										isTouched={formik.touched.unit}
 										invalidFeedback={formik.errors.unit}
 										validFeedback='Valid unit'
-										disabled={isViewMode ? true : false}
+										disabled
 									/>
 								</FormGroup>
 							</div>
@@ -199,7 +214,7 @@ const SingleSubItem = (SubItemProps: SubItemProps) => {
 										isTouched={formik.touched.unit_cost}
 										invalidFeedback={formik.errors.unit_cost}
 										validFeedback='Valid unit_cost'
-										disabled={isViewMode ? true : false}
+										disabled
 									/>
 								</FormGroup>
 							</div>
@@ -216,7 +231,7 @@ const SingleSubItem = (SubItemProps: SubItemProps) => {
 								isTouched={formik.touched.total_cost}
 								invalidFeedback={formik.errors.total_cost}
 								validFeedback='Valid total_cost'
-								disabled={isViewMode ? true : false}
+								disabled
 							/>
 						</FormGroup>
 					</div>
@@ -231,7 +246,7 @@ const SingleSubItem = (SubItemProps: SubItemProps) => {
 								isTouched={formik.touched.margin}
 								invalidFeedback={formik.errors.margin}
 								validFeedback='Valid margin'
-								disabled={isViewMode ? true : false}
+								disabled
 							/>
 						</FormGroup>
 					</div>
@@ -246,7 +261,7 @@ const SingleSubItem = (SubItemProps: SubItemProps) => {
 								isTouched={formik.touched.unit_price}
 								invalidFeedback={formik.errors.unit_price}
 								validFeedback='Valid unit_price'
-								disabled={isViewMode ? true : false}
+								disabled
 							/>
 						</FormGroup>
 					</div>
@@ -261,7 +276,7 @@ const SingleSubItem = (SubItemProps: SubItemProps) => {
 								isTouched={formik.touched.total_price}
 								invalidFeedback={formik.errors.total_price}
 								validFeedback='Valid total_price'
-								disabled={isViewMode ? true : false}
+								disabled
 							/>
 						</FormGroup>
 					</div>

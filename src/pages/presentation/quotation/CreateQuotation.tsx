@@ -14,8 +14,8 @@ const QuotationData = {
 	summary: {
 		reference_status: '',
 		note: '',
-		total: '',
-		g_total: '',
+		total: '0',
+		g_total: '0',
 	},
 };
 

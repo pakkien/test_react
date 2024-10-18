@@ -22,9 +22,13 @@ import Accordion, { AccordionItem } from '../../../../components/bootstrap/Accor
 type ItemProps = {
 	mode: string;
 	data: item;
-	deletefunc: (item: item) => void;
+	deleteItemfunc: (item: item) => void;
 	addItemfunc: () => void;
-	// addSubItemfunc: (item: item) => void;
+	editItemfunc: (item: item) => void;
+
+	deleteSubItemfunc: (sub_item: sub_item) => void;
+	addSubItemfunc: (item_id: string) => void;
+	editSubItemfunc: (sub_item: sub_item) => void;
 	//formik: formik
 };
 
@@ -34,33 +38,34 @@ type item = {
 	brand: string;
 	model: string;
 	remarks: string;
-	quantity: number;
+	quantity: string;
 	unit: string;
-	unit_cost: number;
-	total_cost: number;
-	margin: number;
-	unit_price: number;
-	total_price: number;
+	unit_cost: string;
+	total_cost: string;
+	margin: string;
+	unit_price: string;
+	total_price: string;
 	sub_item: sub_item[];
 };
 
 type sub_item = {
 	sub_item_id: string;
+	item_id: string;
 	product_desc: string;
 	brand: string;
 	model: string;
 	remarks: string;
-	quantity: number;
+	quantity: string;
 	unit: string;
-	unit_cost: number;
-	total_cost: number;
-	margin: number;
-	unit_price: number;
-	total_price: number;
+	unit_cost: string;
+	total_cost: string;
+	margin: string;
+	unit_price: string;
+	total_price: string;
 };
 
 const SingleItem = (ItemProps: ItemProps) => {
-	const isViewMode = ItemProps.mode.toLowerCase() === 'view' ? true : false;
+	const [mode, setMode] = useState(ItemProps.mode.toLowerCase());
 
 	const [ItemData, setItemData] = useState(ItemProps);
 	const [Count, setCount] = useState(0);
@@ -79,46 +84,62 @@ const SingleItem = (ItemProps: ItemProps) => {
 			unit_price: ItemProps.data.unit_price,
 			total_price: ItemProps.data.total_price,
 		},
+
 		validate,
-		onSubmit: () => {
-			alert('i am item');
+		onSubmit: (values) => {
+			//console.log(JSON.stringify(QuotationData));
+			// alert(JSON.stringify(values, null, 2));
+			// setMode('edit');
 		},
 	});
 
-	const handleButtonClick_deleteItem = (item: item) => {
-		ItemProps.deletefunc(item);
+	const handleButtonClick_deleteItem = (_item: item) => {
+		ItemProps.deleteItemfunc(_item);
+	};
+
+	const handleButtonClick_editItem = (_item: item) => {
+		ItemProps.editItemfunc(_item);
 	};
 
 	const handleDeleteSubItem = (_sub_item: sub_item) => {
 		ItemData.data.sub_item = ItemData.data.sub_item.filter(
 			(sub_item) => sub_item.sub_item_id != _sub_item.sub_item_id,
 		);
+		ItemProps.deleteSubItemfunc(_sub_item);
 		setCount(Count + 1); //force rerendering
+	};
+
+	const handleEditSubItem = (_sub_item: sub_item) => {
+		//show dialog
+		ItemProps.editSubItemfunc(_sub_item);
 	};
 
 	const handleButtonClick_addItem = () => {
 		ItemProps.addItemfunc();
 	};
 
-	const handleButtonClick_addSubItem = () => {
-		CreateNewSubItem();
+	const handleButtonClick_addSubItem = (item_id: string) => {
+		//CreateNewSubItem();
+		//show dialog
+		ItemProps.addSubItemfunc(item_id);
 	};
 
 	const CreateNewSubItem = () => {
 		let new_id = crypto.randomUUID();
 		let new_sub_item: sub_item = {
 			sub_item_id: new_id,
+			item_id: ItemProps.data.item_id,
 			product_desc: '',
 			brand: '',
 			model: '',
 			remarks: '',
-			quantity: 0,
+			quantity: '',
 			unit: '',
-			unit_cost: 0,
-			total_cost: 0,
-			margin: 0,
-			unit_price: 0,
-			total_price: 0,
+			unit_cost: '',
+			total_cost: '',
+			margin: '',
+			unit_price: '',
+			total_price: '',
 		};
 
 		ItemData.data.sub_item.push(new_sub_item);
@@ -127,11 +148,20 @@ const SingleItem = (ItemProps: ItemProps) => {
 	};
 
 	return (
-		<Card id={'#item_card_id#' + ItemProps.data.item_id}>
+		<Card id={'#item_card_id#' + ItemProps.data.item_id} onSubmit={formik.handleSubmit}>
 			<CardHeader>
 				<CardLabel>
 					<CardTitle tag='div' className='h3'>
-						Add Item Details
+						Item Details &nbsp;&nbsp;
+						<Button
+							color='info'
+							icon='Edit'
+							hidden={mode == 'view' ? true : false}
+							onClick={() => {
+								handleButtonClick_editItem(ItemProps.data);
+							}}>
+							Edit
+						</Button>
 					</CardTitle>
 				</CardLabel>
 				<CardActions>
@@ -139,7 +169,7 @@ const SingleItem = (ItemProps: ItemProps) => {
 						color='danger'
 						icon='Delete'
 						tag='a'
-						hidden={isViewMode ? true : false}
+						hidden={mode == 'view' ? true : false}
 						onClick={() => {
 							handleButtonClick_deleteItem(ItemProps.data);
 						}}>
@@ -163,7 +193,7 @@ const SingleItem = (ItemProps: ItemProps) => {
 								isTouched={formik.touched.product_desc}
 								invalidFeedback={formik.errors.product_desc}
 								validFeedback='Valid product description'
-								disabled={isViewMode ? true : false}
+								disabled
 							/>
 						</FormGroup>
 					</div>
@@ -178,7 +208,7 @@ const SingleItem = (ItemProps: ItemProps) => {
 								isTouched={formik.touched.brand}
 								invalidFeedback={formik.errors.brand}
 								validFeedback='Valid brand'
-								disabled={isViewMode ? true : false}
+								disabled
 							/>
 						</FormGroup>
 					</div>
@@ -193,7 +223,7 @@ const SingleItem = (ItemProps: ItemProps) => {
 								isTouched={formik.touched.model}
 								invalidFeedback={formik.errors.model}
 								validFeedback='Valid model'
-								disabled={isViewMode ? true : false}
+								disabled
 							/>
 						</FormGroup>
 					</div>
@@ -208,7 +238,7 @@ const SingleItem = (ItemProps: ItemProps) => {
 								isTouched={formik.touched.remarks}
 								invalidFeedback={formik.errors.remarks}
 								validFeedback='Valid remarks'
-								disabled={isViewMode ? true : false}
+								disabled
 							/>
 						</FormGroup>
 					</div>
@@ -225,7 +255,7 @@ const SingleItem = (ItemProps: ItemProps) => {
 										isTouched={formik.touched.quantity}
 										invalidFeedback={formik.errors.quantity}
 										validFeedback='Valid quantity'
-										disabled={isViewMode ? true : false}
+										disabled
 									/>
 								</FormGroup>
 							</div>
@@ -240,7 +270,7 @@ const SingleItem = (ItemProps: ItemProps) => {
 										isTouched={formik.touched.unit}
 										invalidFeedback={formik.errors.unit}
 										validFeedback='Valid unit'
-										disabled={isViewMode ? true : false}
+										disabled
 									/>
 								</FormGroup>
 							</div>
@@ -255,7 +285,7 @@ const SingleItem = (ItemProps: ItemProps) => {
 										isTouched={formik.touched.unit_cost}
 										invalidFeedback={formik.errors.unit_cost}
 										validFeedback='Valid unit_cost'
-										disabled={isViewMode ? true : false}
+										disabled
 									/>
 								</FormGroup>
 							</div>
@@ -272,7 +302,7 @@ const SingleItem = (ItemProps: ItemProps) => {
 								isTouched={formik.touched.total_cost}
 								invalidFeedback={formik.errors.total_cost}
 								validFeedback='Valid total_cost'
-								disabled={isViewMode ? true : false}
+								disabled
 							/>
 						</FormGroup>
 					</div>
@@ -287,7 +317,7 @@ const SingleItem = (ItemProps: ItemProps) => {
 								isTouched={formik.touched.margin}
 								invalidFeedback={formik.errors.margin}
 								validFeedback='Valid margin'
-								disabled={isViewMode ? true : false}
+								disabled
 							/>
 						</FormGroup>
 					</div>
@@ -302,7 +332,7 @@ const SingleItem = (ItemProps: ItemProps) => {
 								isTouched={formik.touched.unit_price}
 								invalidFeedback={formik.errors.unit_price}
 								validFeedback='Valid unit_price'
-								disabled={isViewMode ? true : false}
+								disabled
 							/>
 						</FormGroup>
 					</div>
@@ -317,7 +347,7 @@ const SingleItem = (ItemProps: ItemProps) => {
 								isTouched={formik.touched.total_price}
 								invalidFeedback={formik.errors.total_price}
 								validFeedback='Valid total_price'
-								disabled={isViewMode ? true : false}
+								disabled
 							/>
 						</FormGroup>
 					</div>
@@ -334,6 +364,7 @@ const SingleItem = (ItemProps: ItemProps) => {
 											mode={ItemProps.mode}
 											data={sub_item}
 											deleteSubItemfunc={handleDeleteSubItem}
+											editSubItemfunc={handleEditSubItem}
 										/>
 									))}
 								</AccordionItem>
@@ -349,7 +380,7 @@ const SingleItem = (ItemProps: ItemProps) => {
 						color='info'
 						icon='Add'
 						tag='a'
-						hidden={isViewMode ? true : false}
+						hidden={mode == 'view' ? true : false}
 						onClick={() => {
 							handleButtonClick_addItem();
 						}}>
@@ -357,11 +388,11 @@ const SingleItem = (ItemProps: ItemProps) => {
 					</Button>
 					<Button
 						color='info'
-						icon='Delete'
+						icon='Add'
 						tag='a'
-						hidden={isViewMode ? true : false}
+						hidden={mode == 'view' ? true : false}
 						onClick={() => {
-							handleButtonClick_addSubItem();
+							handleButtonClick_addSubItem(ItemProps.data.item_id);
 						}}>
 						Add Sub-Item
 					</Button>
