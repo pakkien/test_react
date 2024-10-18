@@ -42,6 +42,8 @@ import Modal, {
 } from '../../../../components/bootstrap/Modal';
 import { TModalFullScreen, TModalSize } from '../../../../type/modal-type';
 import SingleSubItemEditForm from './SingleSubItemEditForm';
+import Spinner from '../../../../components/bootstrap/Spinner';
+import Icon from '../../../../components/icon/Icon';
 
 type QuotationProps = {
 	mode: string;
@@ -326,6 +328,10 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 		QuotationData.data.item[itemIndex].sub_item[subItemIndex] = _sub_item;
 	};
 
+	function timeout(delay: number) {
+		return new Promise((res) => setTimeout(res, delay));
+	}
+
 	const formik = useFormik({
 		initialValues: {
 			client: QuotationData.data.client,
@@ -342,16 +348,27 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 			g_total: QuotationData.data.summary.g_total,
 		},
 		validate,
-		onSubmit: (values) => {
-			//console.log(JSON.stringify(QuotationData));
-			//alert(JSON.stringify(values, null, 2));
+		onSubmit: async (values) => {
+			const payload = Object.assign(
+				{ quotation_id: QuotationData.data.quotation_id },
+				values,
+				{
+					item: QuotationData.data.item,
+				},
+			);
+			console.log(JSON.stringify(payload));
+			showNotification(
+				<span className='d-flex align-items-center'>
+					<Icon icon='Info' size='lg' className='me-1' />
+					<span>Quotation saved</span>
+				</span>,
+				'Quotation saved successfully',
+			);
 
-			//console.log(values);
-			const test = Object.assign({ quotation_id: QuotationData.data.quotation_id }, values, {
-				item: QuotationData.data.item,
-			});
-			console.log(JSON.stringify(test));
-			alert(JSON.stringify(test));
+			await timeout(1000);
+			formik.setSubmitting(false);
+			//formik.isSubmitting = false;
+			//alert(JSON.stringify(test));
 		},
 	});
 
@@ -602,9 +619,13 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 								<Button
 									type='submit'
 									color='success'
-									icon='Save'
-									isDisable={!formik.isValid && !!formik.submitCount}>
-									Save
+									icon={formik.isSubmitting ? 'None' : 'Save'}
+									isDisable={!formik.isValid || formik.isSubmitting}>
+									{formik.isSubmitting ? (
+										<Spinner isSmall inButton='onlyIcon' />
+									) : (
+										'Save'
+									)}
 								</Button>
 							</CardFooterRight>
 						</CardFooter>
