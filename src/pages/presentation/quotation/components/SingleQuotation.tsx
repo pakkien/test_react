@@ -28,17 +28,10 @@ import Card, {
 import FormGroup from '../../../../components/bootstrap/forms/FormGroup';
 import Input from '../../../../components/bootstrap/forms/Input';
 import SingleItem from './SingleItem';
-import Summary from './Summary';
-import { reference } from '@popperjs/core';
-import { FieldArray, FormikProvider, useFormik } from 'formik';
+import { useFormik } from 'formik';
 import validate from '../../../helper/EditQuotationValidate';
 //import validate2 from '../../../helper/EditItemValidate';
 import showNotification from '../../../../components/extras/showNotification';
-import Icon from '../../../../components/icon/Icon';
-import Item from '../../../../layout/Navigation/Item';
-import { setTimeout } from 'timers/promises';
-import ScrollspyNav from '../../../../components/bootstrap/ScrollspyNav';
-import { OnValueChange } from 'react-number-format';
 import SingleItemEditForm from './SingleItemEditForm';
 
 import Modal, {
