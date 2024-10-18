@@ -384,7 +384,7 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 				</SubHeaderLeft>
 			</SubHeader>
 			<Page container='fluid'>
-				<p>{JSON.stringify(QuotationData)}</p>
+				{/* <p>{JSON.stringify(QuotationData)}</p> */}
 				<form className='form' id='quotationFormId' onSubmit={formik.handleSubmit}>
 					<Card>
 						<CardHeader>
