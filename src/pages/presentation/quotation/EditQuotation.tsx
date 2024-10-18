@@ -14,11 +14,11 @@ const EditQuotation = () => {
 		item: [
 			{
 				item_id: '09ee02e9-8115-42ad-8648-74c901b96940',
-				product_desc: 'productDesc',
+				product_desc: 'item1',
 				brand: 'prodtBrand',
 				model: 'ModelX',
 				remarks: 'dummyRemarks',
-				quantity: '3',
+				quantity: '300',
 				unit: 'Unit',
 				unit_cost: '300.0',
 				total_cost: '3000.0',
@@ -28,11 +28,12 @@ const EditQuotation = () => {
 				sub_item: [
 					{
 						sub_item_id: '60c07ea8-f677-4e0c-b232-8756842ee174',
-						product_desc: 'productDesc',
+						item_id: '09ee02e9-8115-42ad-8648-74c901b96940',
+						product_desc: 'item1_subItem1',
 						brand: 'prodtBrand',
 						model: 'ModelX44',
 						remarks: 'dummyRemarks',
-						quantity: '3',
+						quantity: '222',
 						unit: 'Unit',
 						unit_cost: '300.0',
 						total_cost: '3000.0',
@@ -42,11 +43,12 @@ const EditQuotation = () => {
 					},
 					{
 						sub_item_id: 'd23c57b7-38c1-45c4-a253-f8f7affe0447',
-						product_desc: 'productDesc',
+						item_id: '09ee02e9-8115-42ad-8648-74c901b96940',
+						product_desc: 'item1_subItem2',
 						brand: 'prodtBrand',
 						model: 'ModelX55',
 						remarks: 'dummyRemarks',
-						quantity: '3',
+						quantity: '444',
 						unit: 'Unit',
 						unit_cost: '300.0',
 						total_cost: '3000.0',
@@ -58,7 +60,7 @@ const EditQuotation = () => {
 			},
 			{
 				item_id: '7043ac52-22c1-474c-898c-ae4a3d8d44aa',
-				product_desc: 'productDesc2',
+				product_desc: 'item2',
 				brand: 'prodtBrand2',
 				model: 'ModelX2',
 				remarks: 'dummyRemarks2',
@@ -72,7 +74,8 @@ const EditQuotation = () => {
 				sub_item: [
 					{
 						sub_item_id: '24e651fe-720e-4aa3-bd25-95398b39e440',
-						product_desc: 'productDesc',
+						item_id: '7043ac52-22c1-474c-898c-ae4a3d8d44aa',
+						product_desc: 'item2_subItem1',
 						brand: 'prodtBrand',
 						model: 'ModelX444',
 						remarks: 'dummyRemarks',
@@ -88,7 +91,7 @@ const EditQuotation = () => {
 			},
 			{
 				item_id: 'fca38a36-659a-4e68-84f5-3c95eea6e9cb',
-				product_desc: 'productDesc2888',
+				product_desc: 'item3',
 				brand: 'prodtBrand2',
 				model: 'ModelX2',
 				remarks: 'dummyRemarks2',

@@ -121,7 +121,7 @@ const validate = (values: IValues) => {
 		errors.g_total = 'Must be 20 characters or less';
 	}
 
-	console.log("error:" + JSON.stringify(errors));
+	//console.log("error:" + JSON.stringify(errors));
 	return errors;
 };
 

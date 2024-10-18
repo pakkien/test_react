@@ -1,41 +1,17 @@
-import React, { useState } from 'react';
-import Modal, {
-	ModalHeader,
-	ModalTitle,
-	ModalBody,
-	ModalFooter,
-} from '../../../../components/bootstrap/Modal';
-import Button from '../../../../components/bootstrap/Button';
-import { TModalSize, TModalFullScreen } from '../../../../type/modal-type';
-import { json } from 'stream/consumers';
-import SingleItem from './SingleItem';
+import React from 'react';
+import validate from '../../../helper/EditItemValidate';
+import { useFormik } from 'formik';
 import FormGroup from '../../../../components/bootstrap/forms/FormGroup';
 import Input from '../../../../components/bootstrap/forms/Input';
-import { useFormik } from 'formik';
-import validate from '../../../helper/EditItemValidate';
+import { ModalFooter } from '../../../../components/bootstrap/Modal';
+import Button from '../../../../components/bootstrap/Button';
 
-type ItemFormProps = {
+type SubItemFormProps = {
 	mode: string;
-	data: item;
-	editItemfunc: (item: item) => void;
-	createItemfunc: (item: item) => void;
+	data: sub_item;
+	editSubItemfunc: (sub_item: sub_item) => void;
+	createSubItemfunc: (sub_item: sub_item) => void;
 	setState: (state: boolean) => void;
-};
-
-type item = {
-	item_id: string;
-	product_desc: string;
-	brand: string;
-	model: string;
-	remarks: string;
-	quantity: string;
-	unit: string;
-	unit_cost: string;
-	total_cost: string;
-	margin: string;
-	unit_price: string;
-	total_price: string;
-	sub_item: sub_item[];
 };
 
 type sub_item = {
@@ -54,29 +30,30 @@ type sub_item = {
 	total_price: string;
 };
 
-const SingleItemEditForm = (itemFormProps: ItemFormProps) => {
+const SingleSubItemEditForm = (subItemFormProps: SubItemFormProps) => {
 	const formik = useFormik({
 		initialValues: {
-			product_desc: itemFormProps.data.product_desc,
-			brand: itemFormProps.data.brand,
-			model: itemFormProps.data.model,
-			remarks: itemFormProps.data.remarks,
-			quantity: itemFormProps.data.quantity,
-			unit: itemFormProps.data.unit,
-			unit_cost: itemFormProps.data.unit_cost,
-			total_cost: itemFormProps.data.total_cost,
-			margin: itemFormProps.data.margin,
-			unit_price: itemFormProps.data.unit_price,
-			total_price: itemFormProps.data.total_price,
+			product_desc: subItemFormProps.data.product_desc,
+			brand: subItemFormProps.data.brand,
+			model: subItemFormProps.data.model,
+			remarks: subItemFormProps.data.remarks,
+			quantity: subItemFormProps.data.quantity,
+			unit: subItemFormProps.data.unit,
+			unit_cost: subItemFormProps.data.unit_cost,
+			total_cost: subItemFormProps.data.total_cost,
+			margin: subItemFormProps.data.margin,
+			unit_price: subItemFormProps.data.unit_price,
+			total_price: subItemFormProps.data.total_price,
 		},
 
 		validate,
 		onSubmit: (values) => {
-			//console.log(JSON.stringify(QuotationData));
+			//console.log(JSON.stringify(subItemFormProps));
 			//alert(JSON.stringify(values, null, 2));
 
-			let new_item: item = {
-				item_id: itemFormProps.data.item_id, //remain
+			let new_sub_item: sub_item = {
+				sub_item_id: subItemFormProps.data.sub_item_id, //remain
+				item_id: subItemFormProps.data.item_id, //remain
 				product_desc: values.product_desc,
 				brand: values.brand,
 				model: values.model,
@@ -88,15 +65,16 @@ const SingleItemEditForm = (itemFormProps: ItemFormProps) => {
 				margin: values.margin,
 				unit_price: values.unit_price,
 				total_price: values.unit_cost,
-				sub_item: itemFormProps.data.sub_item, //remain
 			};
 
-			if (itemFormProps.mode.toLowerCase() == 'edit') {
-				itemFormProps.editItemfunc(new_item);
-			} else if (itemFormProps.mode.toLowerCase() == 'create') {
-				itemFormProps.createItemfunc(new_item);
+			//console.log(JSON.stringify(new_sub_item));
+
+			if (subItemFormProps.mode.toLowerCase() == 'edit') {
+				subItemFormProps.editSubItemfunc(new_sub_item);
+			} else if (subItemFormProps.mode.toLowerCase() == 'create') {
+				subItemFormProps.createSubItemfunc(new_sub_item);
 			}
-			itemFormProps.setState(false);
+			subItemFormProps.setState(false);
 			//setMode('edit');
 		},
 	});
@@ -264,13 +242,15 @@ const SingleItemEditForm = (itemFormProps: ItemFormProps) => {
 			<ModalFooter>
 				<Button
 					color='info'
-					icon={itemFormProps.mode.toLowerCase() == 'create' ? 'Add' : 'Save'}
+					icon={subItemFormProps.mode.toLowerCase() == 'create' ? 'Add' : 'Save'}
 					onClick={formik.handleSubmit}>
-					{itemFormProps.mode.toLowerCase() == 'create' ? 'Add Item' : 'Save Item'}
+					{subItemFormProps.mode.toLowerCase() == 'create'
+						? 'Add Sub Item'
+						: 'Save Sub Item'}
 				</Button>
 			</ModalFooter>
 		</div>
 	);
 };
 
-export default SingleItemEditForm;
+export default SingleSubItemEditForm;

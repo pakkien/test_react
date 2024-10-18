@@ -22,10 +22,13 @@ import Accordion, { AccordionItem } from '../../../../components/bootstrap/Accor
 type ItemProps = {
 	mode: string;
 	data: item;
-	deletefunc: (item: item) => void;
+	deleteItemfunc: (item: item) => void;
 	addItemfunc: () => void;
-	editfunc: (item: item) => void;
-	// addSubItemfunc: (item: item) => void;
+	editItemfunc: (item: item) => void;
+
+	deleteSubItemfunc: (sub_item: sub_item) => void;
+	addSubItemfunc: (item_id: string) => void;
+	editSubItemfunc: (sub_item: sub_item) => void;
 	//formik: formik
 };
 
@@ -47,6 +50,7 @@ type item = {
 
 type sub_item = {
 	sub_item_id: string;
+	item_id: string;
 	product_desc: string;
 	brand: string;
 	model: string;
@@ -89,33 +93,42 @@ const SingleItem = (ItemProps: ItemProps) => {
 		},
 	});
 
-	const handleButtonClick_deleteItem = (item: item) => {
-		ItemProps.deletefunc(item);
+	const handleButtonClick_deleteItem = (_item: item) => {
+		ItemProps.deleteItemfunc(_item);
 	};
 
-	const handleButtonClick_editItem = (item: item) => {
-		ItemProps.editfunc(item);
+	const handleButtonClick_editItem = (_item: item) => {
+		ItemProps.editItemfunc(_item);
 	};
 
 	const handleDeleteSubItem = (_sub_item: sub_item) => {
 		ItemData.data.sub_item = ItemData.data.sub_item.filter(
 			(sub_item) => sub_item.sub_item_id != _sub_item.sub_item_id,
 		);
+		ItemProps.deleteSubItemfunc(_sub_item);
 		setCount(Count + 1); //force rerendering
+	};
+
+	const handleEditSubItem = (_sub_item: sub_item) => {
+		//show dialog
+		ItemProps.editSubItemfunc(_sub_item);
 	};
 
 	const handleButtonClick_addItem = () => {
 		ItemProps.addItemfunc();
 	};
 
-	const handleButtonClick_addSubItem = () => {
-		CreateNewSubItem();
+	const handleButtonClick_addSubItem = (item_id: string) => {
+		//CreateNewSubItem();
+		//show dialog
+		ItemProps.addSubItemfunc(item_id);
 	};
 
 	const CreateNewSubItem = () => {
 		let new_id = crypto.randomUUID();
 		let new_sub_item: sub_item = {
 			sub_item_id: new_id,
+			item_id: ItemProps.data.item_id,
 			product_desc: '',
 			brand: '',
 			model: '',
@@ -338,7 +351,7 @@ const SingleItem = (ItemProps: ItemProps) => {
 							/>
 						</FormGroup>
 					</div>
-					{/* <div className='col-md-12'>
+					<div className='col-md-12'>
 						{ItemProps.data.sub_item.length > 0 && (
 							<Accordion
 								id='accSample'
@@ -351,12 +364,13 @@ const SingleItem = (ItemProps: ItemProps) => {
 											mode={ItemProps.mode}
 											data={sub_item}
 											deleteSubItemfunc={handleDeleteSubItem}
+											editSubItemfunc={handleEditSubItem}
 										/>
 									))}
 								</AccordionItem>
 							</Accordion>
 						)}
-					</div> */}
+					</div>
 					<div className='col-md-12'></div>
 				</div>
 			</CardBody>
@@ -374,11 +388,11 @@ const SingleItem = (ItemProps: ItemProps) => {
 					</Button>
 					<Button
 						color='info'
-						icon='Delete'
+						icon='Add'
 						tag='a'
 						hidden={mode == 'view' ? true : false}
 						onClick={() => {
-							handleButtonClick_addSubItem();
+							handleButtonClick_addSubItem(ItemProps.data.item_id);
 						}}>
 						Add Sub-Item
 					</Button>

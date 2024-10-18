@@ -48,6 +48,7 @@ import Modal, {
 	ModalTitle,
 } from '../../../../components/bootstrap/Modal';
 import { TModalFullScreen, TModalSize } from '../../../../type/modal-type';
+import SingleSubItemEditForm from './SingleSubItemEditForm';
 
 type QuotationProps = {
 	mode: string;
@@ -85,6 +86,7 @@ type item = {
 
 type sub_item = {
 	sub_item_id: string;
+	item_id: string;
 	product_desc: string;
 	brand: string;
 	model: string;
@@ -110,13 +112,22 @@ type ItemFormProps = {
 	data: item;
 };
 
+type SubItemFormProps = {
+	mode: string;
+	data: sub_item;
+};
+
 const SingleQuotation = (QuotationProps: QuotationProps) => {
 	const navigate = useNavigate();
 	const title = QuotationProps.mode + ' Quotation';
 	const isViewMode = QuotationProps.mode.toLowerCase() === 'view' ? true : false;
 
 	//#region modal
+	//modal item
 	const [state, setState] = useState(false);
+
+	//modal sub item
+	const [state2, setState2] = useState(false);
 
 	const [staticBackdropStatus, setStaticBackdropStatus] = useState(false);
 	const [scrollableStatus, setScrollableStatus] = useState(false);
@@ -169,11 +180,38 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 
 	const [itemEditData, setItemEditData] = useState(itemEditDataProps);
 
+	const getNewSubItem = (item_id: string) => {
+		let new_id = crypto.randomUUID();
+		let new_sub_item: sub_item = {
+			sub_item_id: new_id,
+			item_id: item_id,
+			product_desc: '',
+			brand: '',
+			model: '',
+			remarks: '',
+			quantity: '0',
+			unit: '',
+			unit_cost: '0',
+			total_cost: '0',
+			margin: '0',
+			unit_price: '0',
+			total_price: '0',
+		};
+		return new_sub_item;
+	};
+
+	const subItemEditDataProps: SubItemFormProps = {
+		mode: 'Create',
+		data: getNewSubItem(''),
+	};
+
+	const [subItemEditData, setSubItemEditData] = useState(subItemEditDataProps);
+
 	const [QuotationData, setQuotationData] = useState(QuotationProps);
 
 	const [Count, setCount] = useState(0);
 
-	const handleDelete = (_item: item) => {
+	const handleDeleteItem = (_item: item) => {
 		QuotationData.data.item = QuotationData.data.item.filter(
 			(item) => item.item_id != _item.item_id,
 		);
@@ -182,7 +220,7 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 
 	const handleEditItem = (_item: item) => {
 		//console.log(_item);
-
+		//show dialog for edit item
 		itemEditData.mode = 'Edit';
 		itemEditData.data = _item;
 		//console.log('itemEditData:' + JSON.stringify(itemEditData));
@@ -230,10 +268,69 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 			sub_item: [],
 		};
 		return new_item;
-		// QuotationData.data.item.push(new_item);
-		// setQuotationData(QuotationData);
+	};
 
-		// setCount(Count + 1); //force rerendering
+	const CreateNewSubItem = (item_id: string) => {
+		let new_id = crypto.randomUUID();
+		let new_item: sub_item = {
+			sub_item_id: new_id,
+			item_id: item_id,
+			product_desc: '',
+			brand: '',
+			model: '',
+			remarks: '',
+			quantity: '0',
+			unit: '',
+			unit_cost: '0',
+			total_cost: '0',
+			margin: '0',
+			unit_price: '0',
+			total_price: '0',
+		};
+		return new_item;
+	};
+
+	const handleDeleteSubItem = (_sub_item: sub_item) => {
+		let itemIndex = QuotationData.data.item.findIndex((i) => i.item_id == _sub_item.item_id);
+		QuotationData.data.item[itemIndex].sub_item = QuotationData.data.item[
+			itemIndex
+		].sub_item.filter((x) => x.sub_item_id != _sub_item.sub_item_id);
+		setCount(Count + 1); //force rerendering
+	};
+
+	const handleEditSubItem = (_sub_item: sub_item) => {
+		//show dialog for edit sub item
+		subItemEditData.mode = 'Edit';
+		subItemEditData.data = _sub_item;
+		//console.log('itemEditData:' + JSON.stringify(itemEditData));
+		setSubItemEditData(subItemEditData);
+		setState2(true);
+		initialStatus();
+	};
+
+	const handleAddSubItem = (item_id: string) => {
+		subItemEditData.mode = 'Create';
+		subItemEditData.data = CreateNewSubItem(item_id);
+		//console.log('itemEditData:' + JSON.stringify(itemEditData));
+		setSubItemEditData(subItemEditData);
+		setState2(true);
+		initialStatus();
+	};
+
+	const updateAddedSubItem = (_sub_item: sub_item) => {
+		// data from form
+
+		let itemIndex = QuotationData.data.item.findIndex((i) => i.item_id == _sub_item.item_id);
+		QuotationData.data.item[itemIndex].sub_item.push(_sub_item);
+	};
+
+	const updateEditedSubItem = (_sub_item: sub_item) => {
+		//data from form
+		let itemIndex = QuotationData.data.item.findIndex((i) => i.item_id == _sub_item.item_id);
+		let subItemIndex = QuotationData.data.item[itemIndex].sub_item.findIndex(
+			(i) => i.sub_item_id == _sub_item.sub_item_id,
+		);
+		QuotationData.data.item[itemIndex].sub_item[subItemIndex] = _sub_item;
 	};
 
 	const formik = useFormik({
@@ -253,8 +350,15 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 		},
 		validate,
 		onSubmit: (values) => {
-			console.log(JSON.stringify(QuotationData));
-			alert(JSON.stringify(values, null, 2));
+			//console.log(JSON.stringify(QuotationData));
+			//alert(JSON.stringify(values, null, 2));
+
+			//console.log(values);
+			const test = Object.assign({ quotation_id: QuotationData.data.quotation_id }, values, {
+				item: QuotationData.data.item,
+			});
+			console.log(JSON.stringify(test));
+			alert(JSON.stringify(test));
 		},
 	});
 
@@ -270,7 +374,7 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 				</SubHeaderLeft>
 			</SubHeader>
 			<Page container='fluid'>
-				{/* <p>{JSON.stringify(QuotationData)}</p> */}
+				<p>{JSON.stringify(QuotationData)}</p>
 				<form className='form' id='quotationFormId' onSubmit={formik.handleSubmit}>
 					<Card>
 						<CardHeader>
@@ -410,9 +514,12 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 							key={idx + crypto.randomUUID()}
 							mode={QuotationData.mode}
 							data={item}
-							deletefunc={handleDelete}
+							deleteItemfunc={handleDeleteItem}
 							addItemfunc={handleAddItem}
-							editfunc={handleEditItem}
+							editItemfunc={handleEditItem}
+							addSubItemfunc={handleAddSubItem}
+							editSubItemfunc={handleEditSubItem}
+							deleteSubItemfunc={handleDeleteSubItem}
 						/>
 					))}
 					<Card>
@@ -511,13 +618,13 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 					</Card>
 				</form>
 
-				{/* modal form */}
+				{/* modal form item */}
 
 				<form>
 					<Modal
 						isOpen={state}
 						setIsOpen={setState}
-						titleId='exampleModalLabel'
+						titleId='itemEditModal'
 						isStaticBackdrop={staticBackdropStatus}
 						isScrollable={scrollableStatus}
 						isCentered={centeredStatus}
@@ -525,7 +632,7 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 						fullScreen={fullScreenStatus}
 						isAnimation={animationStatus}>
 						<ModalHeader setIsOpen={headerCloseStatus ? setState : undefined}>
-							<ModalTitle id='exampleModalLabel'>
+							<ModalTitle id='itemEditModalId'>
 								{itemEditData.mode.toLowerCase() == 'edit'
 									? 'Edit item'
 									: 'Add item'}
@@ -540,18 +647,37 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 								setState={setState}
 							/>
 						</ModalBody>
-						{/* <ModalFooter>
-							<Button
-								color='info'
-								isOutline
-								className='border-0'
-								onClick={() => setState(false)}>
-								Close
-							</Button>
-							<Button color='info' icon='Save' type='submit'>
-								{itemEditData.mode.toLowerCase() == 'edit' ? 'Save' : 'Add item'}
-							</Button>
-						</ModalFooter> */}
+					</Modal>
+				</form>
+
+				{/* modal form sub item */}
+				<form>
+					<Modal
+						isOpen={state2}
+						setIsOpen={setState2}
+						titleId='subItemEditModal'
+						isStaticBackdrop={staticBackdropStatus}
+						isScrollable={scrollableStatus}
+						isCentered={centeredStatus}
+						size={sizeStatus}
+						fullScreen={fullScreenStatus}
+						isAnimation={animationStatus}>
+						<ModalHeader setIsOpen={headerCloseStatus ? setState2 : undefined}>
+							<ModalTitle id='subItemEditModalId'>
+								{subItemEditData.mode.toLowerCase() == 'edit'
+									? 'Edit Sub item'
+									: 'Add Sub item'}
+							</ModalTitle>
+						</ModalHeader>
+						<ModalBody>
+							<SingleSubItemEditForm
+								mode={subItemEditData.mode}
+								data={subItemEditData.data}
+								editSubItemfunc={updateEditedSubItem}
+								createSubItemfunc={updateAddedSubItem}
+								setState={setState2}
+							/>
+						</ModalBody>
 					</Modal>
 				</form>
 			</Page>
