@@ -620,7 +620,7 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 									type='submit'
 									color='success'
 									icon={formik.isSubmitting ? 'None' : 'Save'}
-									isDisable={!formik.isValid || formik.isSubmitting}
+									isDisable={formik.isSubmitting}
 									hidden={isViewMode ? true : false}>
 									{formik.isSubmitting ? (
 										<Spinner isSmall inButton='onlyIcon' />
