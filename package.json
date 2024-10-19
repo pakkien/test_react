@@ -2,7 +2,7 @@
 	"name": "facit",
 	"version": "4.3.4",
 	"private": true,
-	"homepage": "https://{pakkien}.github.io/{test_react}/",
+	"homepage": "https://pakkien.github.io/test_react/",
 	"scripts": {
 		"predeploy": "npm run build",
 		"deploy": "gh-pages -d dist",
