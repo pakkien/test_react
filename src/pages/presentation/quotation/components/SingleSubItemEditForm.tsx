@@ -64,7 +64,7 @@ const SingleSubItemEditForm = (subItemFormProps: SubItemFormProps) => {
 				total_cost: values.total_cost,
 				margin: values.margin,
 				unit_price: values.unit_price,
-				total_price: values.unit_cost,
+				total_price: values.total_price,
 			};
 
 			//console.log(JSON.stringify(new_sub_item));
