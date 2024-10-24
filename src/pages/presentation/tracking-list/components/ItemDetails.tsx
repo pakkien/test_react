@@ -13,18 +13,25 @@ import Summary from './Summary';
 
 const ItemDetails = () => {
 	return (
+		<>
+		{/* <div className='row'>
+			<div className='col-xl-12 col-lg-12 col-md-12'>
+					Quotation No: 245001S1-TGH-Variation-01&nbsp;&nbsp;&nbsp;
+					<Badge className='statusBadge' color='dark'>
+				<h6>Closed</h6>
+			</Badge>
+			</div>
+			<h6>Revision: 1.1</h6>
+	
+		</div> */}
 		<Card className='rounded-2'>
-			<CardHeader>
+			{/* <CardHeader>
 				<CardLabel>
 					<CardTitle>
-						Quotation No: 245001S1-TGH-Variation-01&nbsp;&nbsp;&nbsp;
-						<Badge className='statusBadge' color='dark'>
-							<h6>Closed</h6>
-						</Badge>
-					</CardTitle>
-					<h6>Revision: 1.1</h6>
+						Item #1
+					</CardTitle>				
 				</CardLabel>
-			</CardHeader>
+			</CardHeader> */}
 			<CardBody>
 				<div className='row g-4'>
 					<div className='col-md-12'>
@@ -95,11 +102,14 @@ const ItemDetails = () => {
 						<SubItemDetails />
 					</div>
 					<div className='col-md-12'></div>
-					<Summary />
+					
 					<div className='col-md-12'></div>
 				</div>
 			</CardBody>
 		</Card>
+
+		<Summary />
+		</>
 	);
 };
 
