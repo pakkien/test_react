@@ -18,51 +18,21 @@ import showNotification from '../../../../components/extras/showNotification';
 import Icon from '../../../../components/icon/Icon';
 import validate from '../../../helper/EditItemValidate';
 import Accordion, { AccordionItem } from '../../../../components/bootstrap/Accordion';
+import QuotationDataType from '../../../dataTypes/QuotationDataType';
 
 type ItemProps = {
 	mode: string;
-	data: item;
-	deleteItemfunc: (item: item) => void;
+	data: QuotationDataType.Item;
+	deleteItemfunc: (item: QuotationDataType.Item) => void;
 	addItemfunc: () => void;
-	editItemfunc: (item: item) => void;
+	editItemfunc: (item: QuotationDataType.Item) => void;
 
-	deleteSubItemfunc: (sub_item: sub_item) => void;
+	deleteSubItemfunc: (sub_item: QuotationDataType.Sub_item) => void;
 	addSubItemfunc: (item_id: string) => void;
-	editSubItemfunc: (sub_item: sub_item) => void;
+	editSubItemfunc: (sub_item: QuotationDataType.Sub_item) => void;
 	//formik: formik
 };
 
-type item = {
-	item_id: string;
-	product_desc: string;
-	brand: string;
-	model: string;
-	remarks: string;
-	quantity: string;
-	unit: string;
-	unit_cost: string;
-	total_cost: string;
-	margin: string;
-	unit_price: string;
-	total_price: string;
-	sub_item: sub_item[];
-};
-
-type sub_item = {
-	sub_item_id: string;
-	item_id: string;
-	product_desc: string;
-	brand: string;
-	model: string;
-	remarks: string;
-	quantity: string;
-	unit: string;
-	unit_cost: string;
-	total_cost: string;
-	margin: string;
-	unit_price: string;
-	total_price: string;
-};
 
 const SingleItem = (ItemProps: ItemProps) => {
 	const [mode, setMode] = useState(ItemProps.mode.toLowerCase());
@@ -93,15 +63,15 @@ const SingleItem = (ItemProps: ItemProps) => {
 		},
 	});
 
-	const handleButtonClick_deleteItem = (_item: item) => {
+	const handleButtonClick_deleteItem = (_item: QuotationDataType.Item) => {
 		ItemProps.deleteItemfunc(_item);
 	};
 
-	const handleButtonClick_editItem = (_item: item) => {
+	const handleButtonClick_editItem = (_item: QuotationDataType.Item) => {
 		ItemProps.editItemfunc(_item);
 	};
 
-	const handleDeleteSubItem = (_sub_item: sub_item) => {
+	const handleDeleteSubItem = (_sub_item: QuotationDataType.Sub_item) => {
 		ItemData.data.sub_item = ItemData.data.sub_item.filter(
 			(sub_item) => sub_item.sub_item_id != _sub_item.sub_item_id,
 		);
@@ -109,7 +79,7 @@ const SingleItem = (ItemProps: ItemProps) => {
 		setCount(Count + 1); //force rerendering
 	};
 
-	const handleEditSubItem = (_sub_item: sub_item) => {
+	const handleEditSubItem = (_sub_item: QuotationDataType.Sub_item) => {
 		//show dialog
 		ItemProps.editSubItemfunc(_sub_item);
 	};
@@ -126,7 +96,7 @@ const SingleItem = (ItemProps: ItemProps) => {
 
 	const CreateNewSubItem = () => {
 		let new_id = crypto.randomUUID();
-		let new_sub_item: sub_item = {
+		let new_sub_item: QuotationDataType.Sub_item = {
 			sub_item_id: new_id,
 			item_id: ItemProps.data.item_id,
 			product_desc: '',

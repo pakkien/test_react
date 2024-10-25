@@ -1,11 +1,12 @@
 namespace QuotationDataType {
 	export type Quotation = {
-		quotation_id: string;
+		quotation_id: string; //PK
 		quotation_data: QuotationData[];
 	};
 
 	export type QuotationData = {
-		quotation_rev_id: string;
+		quotation_rev_id: string; //PK
+		quotation_id: string; //FK
 		quotation_no: string;
 		quotation_date: string;
 		rev: string;
@@ -17,12 +18,18 @@ namespace QuotationDataType {
 		email: string;
 		project_ref: string;
 		item: Item[];
-		summary: Summary;
 		state: string;
+
+		//Summary fields
+		reference_status: string;
+		note: string;
+		total: string;
+		g_total: string;
 	};
 
 	export type Item = {
-		item_id: string;
+		item_id: string; //PK
+		quotation_rev_id: string; //FK
 		product_desc: string;
 		brand: string;
 		model: string;
@@ -38,8 +45,8 @@ namespace QuotationDataType {
 	};
 
 	export type Sub_item = {
-		sub_item_id: string;
-		item_id: string;
+		sub_item_id: string; //PK
+		item_id: string;  //FK
 		product_desc: string;
 		brand: string;
 		model: string;
@@ -53,12 +60,6 @@ namespace QuotationDataType {
 		total_price: string;
 	};
 
-	export type Summary = {
-		reference_status: string;
-		note: string;
-		total: string;
-		g_total: string;
-	};
 }
 
 export default QuotationDataType;

@@ -13,46 +13,16 @@ import FormGroup from '../../../../components/bootstrap/forms/FormGroup';
 import Input from '../../../../components/bootstrap/forms/Input';
 import { useFormik } from 'formik';
 import validate from '../../../helper/EditItemValidate';
+import QuotationDataType from '../../../dataTypes/QuotationDataType';
 
 type ItemFormProps = {
 	mode: string;
-	data: item;
-	editItemfunc: (item: item) => void;
-	createItemfunc: (item: item) => void;
+	data: QuotationDataType.Item;
+	editItemfunc: (item: QuotationDataType.Item) => void;
+	createItemfunc: (item: QuotationDataType.Item) => void;
 	setState: (state: boolean) => void;
 };
 
-type item = {
-	item_id: string;
-	product_desc: string;
-	brand: string;
-	model: string;
-	remarks: string;
-	quantity: string;
-	unit: string;
-	unit_cost: string;
-	total_cost: string;
-	margin: string;
-	unit_price: string;
-	total_price: string;
-	sub_item: sub_item[];
-};
-
-type sub_item = {
-	sub_item_id: string;
-	item_id: string;
-	product_desc: string;
-	brand: string;
-	model: string;
-	remarks: string;
-	quantity: string;
-	unit: string;
-	unit_cost: string;
-	total_cost: string;
-	margin: string;
-	unit_price: string;
-	total_price: string;
-};
 
 const SingleItemEditForm = (itemFormProps: ItemFormProps) => {
 	const formik = useFormik({
@@ -75,8 +45,9 @@ const SingleItemEditForm = (itemFormProps: ItemFormProps) => {
 			//console.log(JSON.stringify(QuotationData));
 			//alert(JSON.stringify(values, null, 2));
 
-			let new_item: item = {
+			let new_item: QuotationDataType.Item = {
 				item_id: itemFormProps.data.item_id, //remain
+				quotation_rev_id: itemFormProps.data.quotation_rev_id, //remain
 				product_desc: values.product_desc,
 				brand: values.brand,
 				model: values.model,

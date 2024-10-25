@@ -5,30 +5,16 @@ import FormGroup from '../../../../components/bootstrap/forms/FormGroup';
 import Input from '../../../../components/bootstrap/forms/Input';
 import { ModalFooter } from '../../../../components/bootstrap/Modal';
 import Button from '../../../../components/bootstrap/Button';
+import QuotationDataType from '../../../dataTypes/QuotationDataType';
 
 type SubItemFormProps = {
 	mode: string;
-	data: sub_item;
-	editSubItemfunc: (sub_item: sub_item) => void;
-	createSubItemfunc: (sub_item: sub_item) => void;
+	data: QuotationDataType.Sub_item;
+	editSubItemfunc: (sub_item: QuotationDataType.Sub_item) => void;
+	createSubItemfunc: (sub_item: QuotationDataType.Sub_item) => void;
 	setState: (state: boolean) => void;
 };
 
-type sub_item = {
-	sub_item_id: string;
-	item_id: string;
-	product_desc: string;
-	brand: string;
-	model: string;
-	remarks: string;
-	quantity: string;
-	unit: string;
-	unit_cost: string;
-	total_cost: string;
-	margin: string;
-	unit_price: string;
-	total_price: string;
-};
 
 const SingleSubItemEditForm = (subItemFormProps: SubItemFormProps) => {
 	const formik = useFormik({
@@ -51,7 +37,7 @@ const SingleSubItemEditForm = (subItemFormProps: SubItemFormProps) => {
 			//console.log(JSON.stringify(subItemFormProps));
 			//alert(JSON.stringify(values, null, 2));
 
-			let new_sub_item: sub_item = {
+			let new_sub_item: QuotationDataType.Sub_item = {
 				sub_item_id: subItemFormProps.data.sub_item_id, //remain
 				item_id: subItemFormProps.data.item_id, //remain
 				product_desc: values.product_desc,

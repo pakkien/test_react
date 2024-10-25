@@ -15,29 +15,15 @@ import validate from '../../../helper/EditItemValidate';
 import { useFormik } from 'formik';
 import showNotification from '../../../../components/extras/showNotification';
 import Icon from '../../../../components/icon/Icon';
+import QuotationDataType from '../../../dataTypes/QuotationDataType';
 
 type SubItemProps = {
 	mode: string;
-	data: sub_item;
-	deleteSubItemfunc: (sub_item: sub_item) => void;
-	editSubItemfunc: (sub_item: sub_item) => void;
+	data: QuotationDataType.Sub_item;
+	deleteSubItemfunc: (sub_item: QuotationDataType.Sub_item) => void;
+	editSubItemfunc: (sub_item: QuotationDataType.Sub_item) => void;
 };
 
-type sub_item = {
-	sub_item_id: string;
-	item_id: string;
-	product_desc: string;
-	brand: string;
-	model: string;
-	remarks: string;
-	quantity: string;
-	unit: string;
-	unit_cost: string;
-	total_cost: string;
-	margin: string;
-	unit_price: string;
-	total_price: string;
-};
 
 const SingleSubItem = (SubItemProps: SubItemProps) => {
 	const isViewMode = SubItemProps.mode.toLowerCase() === 'view' ? true : false;
@@ -68,11 +54,11 @@ const SingleSubItem = (SubItemProps: SubItemProps) => {
 		},
 	});
 
-	const handleButtonClick_deleteSubItem = (sub_item: sub_item) => {
+	const handleButtonClick_deleteSubItem = (sub_item: QuotationDataType.Sub_item) => {
 		SubItemProps.deleteSubItemfunc(sub_item);
 	};
 
-	const handleButtonClick_editSubItem = (_sub_item: sub_item) => {
+	const handleButtonClick_editSubItem = (_sub_item: QuotationDataType.Sub_item) => {
 		SubItemProps.editSubItemfunc(_sub_item);
 	};
 

@@ -44,72 +44,22 @@ import { TModalFullScreen, TModalSize } from '../../../../type/modal-type';
 import SingleSubItemEditForm from './SingleSubItemEditForm';
 import Spinner from '../../../../components/bootstrap/Spinner';
 import Icon from '../../../../components/icon/Icon';
+import QuotationDataType from '../../../dataTypes/QuotationDataType';
 
 type QuotationProps = {
 	mode: string;
-	data: QuotationData;
+	data: QuotationDataType.QuotationData;
 };
 
-type QuotationData = {
-	quotation_id: string;
-	client: string;
-	end_user: string;
-	site_location: string;
-	building: string;
-	pic: string;
-	email: string;
-	project_ref: string;
-	item: item[];
-	summary: summary;
-};
-
-type item = {
-	item_id: string;
-	product_desc: string;
-	brand: string;
-	model: string;
-	remarks: string;
-	quantity: string;
-	unit: string;
-	unit_cost: string;
-	total_cost: string;
-	margin: string;
-	unit_price: string;
-	total_price: string;
-	sub_item: sub_item[];
-};
-
-type sub_item = {
-	sub_item_id: string;
-	item_id: string;
-	product_desc: string;
-	brand: string;
-	model: string;
-	remarks: string;
-	quantity: string;
-	unit: string;
-	unit_cost: string;
-	total_cost: string;
-	margin: string;
-	unit_price: string;
-	total_price: string;
-};
-
-type summary = {
-	reference_status: string;
-	note: string;
-	total: string;
-	g_total: string;
-};
 
 type ItemFormProps = {
 	mode: string;
-	data: item;
+	data: QuotationDataType.Item;
 };
 
 type SubItemFormProps = {
 	mode: string;
-	data: sub_item;
+	data: QuotationDataType.Sub_item;
 };
 
 const SingleQuotation = (QuotationProps: QuotationProps) => {
@@ -150,8 +100,9 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 
 	const getNewItem = () => {
 		let new_id = crypto.randomUUID();
-		let new_item: item = {
+		let new_item: QuotationDataType.Item = {
 			item_id: new_id,
+			quotation_rev_id: '',
 			product_desc: '',
 			brand: '',
 			model: '',
@@ -177,7 +128,7 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 
 	const getNewSubItem = (item_id: string) => {
 		let new_id = crypto.randomUUID();
-		let new_sub_item: sub_item = {
+		let new_sub_item: QuotationDataType.Sub_item = {
 			sub_item_id: new_id,
 			item_id: item_id,
 			product_desc: '',
@@ -206,14 +157,14 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 
 	const [Count, setCount] = useState(0);
 
-	const handleDeleteItem = (_item: item) => {
+	const handleDeleteItem = (_item: QuotationDataType.Item) => {
 		QuotationData.data.item = QuotationData.data.item.filter(
 			(item) => item.item_id != _item.item_id,
 		);
 		setCount(Count + 1); //force rerendering
 	};
 
-	const handleEditItem = (_item: item) => {
+	const handleEditItem = (_item: QuotationDataType.Item) => {
 		//console.log(_item);
 		//show dialog for edit item
 		itemEditData.mode = 'Edit';
@@ -224,7 +175,7 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 		initialStatus();
 	};
 
-	const updateEditedItem = (_item: item) => {
+	const updateEditedItem = (_item: QuotationDataType.Item) => {
 		let itemIndex = QuotationData.data.item.findIndex((i) => i.item_id == _item.item_id);
 		QuotationData.data.item[itemIndex] = _item;
 		setCount(Count + 1); //force rerendering
@@ -239,7 +190,7 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 		initialStatus();
 	};
 
-	const updateAddedItem = (_item: item) => {
+	const updateAddedItem = (_item: QuotationDataType.Item) => {
 		QuotationData.data.item.push(_item);
 		setQuotationData(QuotationData);
 		setCount(Count + 1); //force rerendering
@@ -247,8 +198,9 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 
 	const CreateNewItem = () => {
 		let new_id = crypto.randomUUID();
-		let new_item: item = {
+		let new_item: QuotationDataType.Item = {
 			item_id: new_id,
+			quotation_rev_id: '',
 			product_desc: '',
 			brand: '',
 			model: '',
@@ -267,7 +219,7 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 
 	const CreateNewSubItem = (item_id: string) => {
 		let new_id = crypto.randomUUID();
-		let new_item: sub_item = {
+		let new_item: QuotationDataType.Sub_item = {
 			sub_item_id: new_id,
 			item_id: item_id,
 			product_desc: '',
@@ -285,7 +237,7 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 		return new_item;
 	};
 
-	const handleDeleteSubItem = (_sub_item: sub_item) => {
+	const handleDeleteSubItem = (_sub_item: QuotationDataType.Sub_item) => {
 		let itemIndex = QuotationData.data.item.findIndex((i) => i.item_id == _sub_item.item_id);
 		QuotationData.data.item[itemIndex].sub_item = QuotationData.data.item[
 			itemIndex
@@ -293,7 +245,7 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 		setCount(Count + 1); //force rerendering
 	};
 
-	const handleEditSubItem = (_sub_item: sub_item) => {
+	const handleEditSubItem = (_sub_item: QuotationDataType.Sub_item) => {
 		//show dialog for edit sub item
 		subItemEditData.mode = 'Edit';
 		subItemEditData.data = _sub_item;
@@ -312,14 +264,14 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 		initialStatus();
 	};
 
-	const updateAddedSubItem = (_sub_item: sub_item) => {
+	const updateAddedSubItem = (_sub_item: QuotationDataType.Sub_item) => {
 		// data from form
 
 		let itemIndex = QuotationData.data.item.findIndex((i) => i.item_id == _sub_item.item_id);
 		QuotationData.data.item[itemIndex].sub_item.push(_sub_item);
 	};
 
-	const updateEditedSubItem = (_sub_item: sub_item) => {
+	const updateEditedSubItem = (_sub_item: QuotationDataType.Sub_item) => {
 		//data from form
 		let itemIndex = QuotationData.data.item.findIndex((i) => i.item_id == _sub_item.item_id);
 		let subItemIndex = QuotationData.data.item[itemIndex].sub_item.findIndex(
@@ -342,10 +294,10 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 			email: QuotationData.data.email,
 			project_ref: QuotationData.data.project_ref,
 
-			reference_status: QuotationData.data.summary.reference_status,
-			note: QuotationData.data.summary.note,
-			total: QuotationData.data.summary.total,
-			g_total: QuotationData.data.summary.g_total,
+			reference_status: QuotationData.data.reference_status,
+			note: QuotationData.data.note,
+			total: QuotationData.data.total,
+			g_total: QuotationData.data.g_total,
 		},
 		validate,
 		onSubmit: async (values) => {
