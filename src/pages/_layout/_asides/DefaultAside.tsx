@@ -9,8 +9,9 @@ import {
 	demoPagesMenu,
 	pageLayoutTypesPagesMenu,
 	adminPagesMenu,
-	trackingListMenu,
 	quotationMenu,
+	trackingListMenu,
+	
 } from '../../../menu';
 import ThemeContext from '../../../contexts/themeContext';
 import Icon from '../../../components/icon/Icon';
@@ -24,7 +25,7 @@ const DefaultAside = () => {
 		localStorage.getItem('facit_asideDocStatus') === 'true' || false,
 	);
 
-	const { t } = useTranslation(['translation', 'menu']);
+	//const { t } = useTranslation(['translation', 'menu']);
 
 	return (
 		<Aside>
@@ -33,8 +34,8 @@ const DefaultAside = () => {
 			</AsideHead>
 			<AsideBody>
 				<Navigation menu={dashboardPagesMenu} id='aside-dashboard' />
-				<NavigationLine />
-				{!doc && (
+
+				{/* {!doc && (
 					<>
 						<Navigation menu={demoPagesMenu} id='aside-demo-pages' />
 						<NavigationLine />
@@ -64,16 +65,18 @@ const DefaultAside = () => {
 						</nav>
 					</>
 				)}
-				<NavigationLine />
-
+				<NavigationLine /> */}
+			
 				<Navigation menu={trackingListMenu} id='aside-tracking' />
+
 				<Navigation menu={quotationMenu} id='aside-quotation' />
-				<NavigationLine />
-				<Navigation menu={adminPagesMenu} id='aside-admin' />
-				<NavigationLine />
-				{asideStatus && doc && <div className='p-4'>Documentation</div>}
+	
+
+				
+
+				{/* {asideStatus && doc && <div className='p-4'>Documentation</div>} */}
 			</AsideBody>
-			<AsideFoot>
+			{/* <AsideFoot>
 				<nav aria-label='aside-bottom-menu'>
 					<div className='navigation'>
 						<div
@@ -110,6 +113,11 @@ const DefaultAside = () => {
 					</div>
 				</nav>
 				<User />
+			</AsideFoot> */}
+			<AsideFoot>
+			<Navigation menu={adminPagesMenu} id='aside-admin' />
+			<NavigationLine />
+			<Navigation menu={demoPagesMenu} id='aside-demo-pages' />
 			</AsideFoot>
 		</Aside>
 	);

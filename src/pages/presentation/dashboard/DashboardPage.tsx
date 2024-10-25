@@ -17,6 +17,7 @@ import Modal, {
 	ModalFooter,
 } from '../../../components/bootstrap/Modal';
 import SubItemDetails from '../tracking-list/components/SubItemDetails';
+import Card, { CardBody } from '../../../components/bootstrap/Card';
 
 const DashboardPage = () => {
 	const [state, setState] = useState(false);
@@ -66,18 +67,6 @@ const DashboardPage = () => {
 			<Page>
 				<div className='row'>
 					<div className='col-12 mb-3'>
-						<Button
-							className='me-4'
-							color='danger'
-							isLight
-							icon='Delete'
-							onClick={() => {
-								initialStatus();
-								setCenteredStatus(true);
-								setState(true);
-							}}>
-							Delete
-						</Button>
 						<Popovers
 							title='DashboardPage.tsx'
 							desc={<code>src/pages/presentation/dashboard/DashboardPage.tsx</code>}>
@@ -86,35 +75,11 @@ const DashboardPage = () => {
 						<code className='ps-3'>DashboardPage.tsx</code>
 					</div>
 				</div>
-				<SubItemDetails />
-
-				<Modal
-					isOpen={state}
-					setIsOpen={setState}
-					titleId='exampleModalLabel'
-					isStaticBackdrop={staticBackdropStatus}
-					isScrollable={scrollableStatus}
-					isCentered={centeredStatus}
-					size={sizeStatus}
-					fullScreen={fullScreenStatus}
-					isAnimation={animationStatus}>
-					<ModalHeader setIsOpen={headerCloseStatus ? setState : undefined}>
-						<ModalTitle id='exampleModalLabel'>Modal title</ModalTitle>
-					</ModalHeader>
-					<ModalBody>AAA</ModalBody>
-					<ModalFooter>
-						<Button
-							color='info'
-							isOutline
-							className='border-0'
-							onClick={() => setState(false)}>
-							Close
-						</Button>
-						<Button color='info' icon='Save'>
-							Save changes
-						</Button>
-					</ModalFooter>
-				</Modal>
+				<Card>
+					<CardBody>
+						<h1>Work in Progress...</h1>
+					</CardBody>
+				</Card>
 			</Page>
 		</PageWrapper>
 	);

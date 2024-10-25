@@ -154,7 +154,7 @@ const TrackingList = () => {
 												<div className='col-auto'>
 													<Button
 														color='primary'
-														icon='Edit'
+														icon='RemoveRedEye'
 														shadow='none'
 														hoverShadow='lg'
 														tag='a'

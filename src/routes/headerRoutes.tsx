@@ -9,12 +9,16 @@ const headers: RouteProps[] = [
 	{ path: pageLayoutTypesPagesMenu.pageLayout.subMenu.onlyContent.path, element: null },
 	{ path: pageLayoutTypesPagesMenu.blank.path, element: null },
 	{ path: demoPagesMenu.login.path, element: null },
-	{ path: demoPagesMenu.signUp.path, element: null },
-	{ path: demoPagesMenu.page404.path, element: null },
+	// { path: demoPagesMenu.signUp.path, element: null },
+	// { path: demoPagesMenu.page404.path, element: null },
 	{ path: dashboardPagesMenu.dashboard.path, element: <DashboardHeader /> },
+	// {
+	// 	path: `*`,
+	// 	element: <DefaultHeader />,
+	// },
 	{
 		path: `*`,
-		element: <DefaultHeader />,
+		element: null,
 	},
 ];
 

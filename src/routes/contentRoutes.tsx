@@ -82,18 +82,18 @@ const presentation = [
 		path: 'admin/manage-user',
 		element: <ADMIN.MANAGE_USER />,
 	},
-	{
-		path: demoPagesMenu.page404.path,
-		element: <AUTH.PAGE_404 />,
-	},
+	// {
+	// 	path: demoPagesMenu.page404.path,
+	// 	element: <AUTH.PAGE_404 />,
+	// },
 	{
 		path: demoPagesMenu.login.path,
 		element: <Login />,
 	},
-	{
-		path: demoPagesMenu.signUp.path,
-		element: <Login isSignUp />,
-	},
+	// {
+	// 	path: demoPagesMenu.signUp.path,
+	// 	element: <Login isSignUp />,
+	// },
 
 	/** ************************************************** */
 

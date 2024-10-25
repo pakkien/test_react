@@ -44,7 +44,7 @@ export const trackingListMenu = {
 	trackingList: {
 		id: 'trackinglist',
 		text: 'Tracking List',
-		path: 'tracking',
+		path: '/tracking',
 		icon: 'TrackChanges',
 		subMenu: null,
 	},
@@ -55,7 +55,7 @@ export const quotationMenu = {
 	quotation: {
 		id: 'quotation',
 		text: 'Quotation',
-		path: 'quotation',
+		path: '/quotation',
 		icon: 'LaptopChromebook',
 		subMenu: null,
 	},
@@ -66,7 +66,7 @@ export const adminPagesMenu = {
 	admin: {
 		id: 'admin',
 		text: 'Admin',
-		path: 'admin',
+		path: '/admin',
 		icon: 'SupervisedUserCircle',
 		subMenu: null,
 	},
@@ -74,29 +74,29 @@ export const adminPagesMenu = {
 };
 
 export const demoPagesMenu = {
-	auth: {
-		id: 'auth',
-		text: 'Auth Pages',
-		icon: 'Extension',
-	},
+	// auth: {
+	// 	id: 'auth',
+	// 	text: 'Auth Pages',
+	// 	icon: 'Extension',
+	// },
 	login: {
 		id: 'login',
-		text: 'Login',
-		path: 'auth-pages/login',
+		text: 'Logout',
+		path: '/auth-pages/login',
 		icon: 'Login',
 	},
-	signUp: {
-		id: 'signUp',
-		text: 'Sign Up',
-		path: 'auth-pages/sign-up',
-		icon: 'PersonAdd',
-	},
-	page404: {
-		id: 'Page404',
-		text: '404 Page',
-		path: 'auth-pages/404',
-		icon: 'ReportGmailerrorred',
-	},
+	// signUp: {
+	// 	id: 'signUp',
+	// 	text: 'Sign Up',
+	// 	path: 'auth-pages/sign-up',
+	// 	icon: 'PersonAdd',
+	// },
+	// page404: {
+	// 	id: 'Page404',
+	// 	text: '404 Page',
+	// 	path: 'auth-pages/404',
+	// 	icon: 'ReportGmailerrorred',
+	// },
 };
 
 export const pageLayoutTypesPagesMenu = {
