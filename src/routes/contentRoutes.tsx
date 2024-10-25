@@ -47,6 +47,10 @@ const presentation = [
 	 * Landing
 	 */
 	{
+		path: 'test_react/',
+		element: <LANDING.DASHBOARD />,
+	},
+	{
 		path: dashboardPagesMenu.dashboard.path,
 		element: <LANDING.DASHBOARD />,
 	},
@@ -68,7 +72,7 @@ const presentation = [
 	},
 	{
 		path: 'quotation/edit-quotation',
-		element: <QUOTATION.EDIT_QUOTATION_PAGE />,
+		element: <QUOTATION.EDIT_QUOTATION_PAGE/>,
 	},
 	{
 		path: 'quotation/create-quotation',

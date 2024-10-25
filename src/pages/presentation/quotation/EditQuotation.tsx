@@ -1,5 +1,6 @@
 import React from 'react';
 import SingleQuotation from './components/SingleQuotation';
+import { useLocation } from 'react-router-dom';
 
 const Quotation = {
 	quotation_id: 'ad399d47-a038-4fb4-9f31-2f142c143611',
@@ -240,7 +241,17 @@ const Quotation = {
 };
 
 const EditQuotation = () => {
-	return <SingleQuotation mode='Edit' data={Quotation.quotation_data[0]} />;
+	const location = useLocation();
+
+	
+	if (location.state != null){
+		return <SingleQuotation mode='Edit' data={location.state.quotation_data} />; //from tracking view
+	}else{
+		return <SingleQuotation mode='Edit' data={Quotation.quotation_data[0]} />; 
+	}
+
+	
+
 };
 
 export default EditQuotation;

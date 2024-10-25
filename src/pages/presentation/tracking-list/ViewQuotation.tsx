@@ -39,9 +39,9 @@ const Quotation = {
 	quotation_data: [
 		{
 			quotation_no: '24001S1-TGH',
-      quotation_id: 'ad399d47-a038-4fb4-9f31-2f142c143611',
+			quotation_id: 'ad399d47-a038-4fb4-9f31-2f142c143611',
 			quotation_rev_id: 'c33d08b9-8ec3-41a1-8b0a-66033a3c7214',
-			rev: "0",
+			rev: '0',
 			quotation_date: '31/01/2024',
 			client: 'client_name',
 			end_user: 'someEndUserName',
@@ -54,7 +54,7 @@ const Quotation = {
 			item: [
 				{
 					item_id: '09ee02e9-8115-42ad-8648-74c901b96940',
-          quotation_rev_id: 'c33d08b9-8ec3-41a1-8b0a-66033a3c7214',
+					quotation_rev_id: 'c33d08b9-8ec3-41a1-8b0a-66033a3c7214',
 					product_desc: 'item1',
 					brand: 'prodtBrand',
 					model: 'ModelX',
@@ -101,7 +101,7 @@ const Quotation = {
 				},
 				{
 					item_id: '7043ac52-22c1-474c-898c-ae4a3d8d44aa',
-          quotation_rev_id: 'c33d08b9-8ec3-41a1-8b0a-66033a3c7214',
+					quotation_rev_id: 'c33d08b9-8ec3-41a1-8b0a-66033a3c7214',
 					product_desc: 'item2',
 					brand: 'prodtBrand2',
 					model: 'ModelX2',
@@ -133,7 +133,7 @@ const Quotation = {
 				},
 				{
 					item_id: 'fca38a36-659a-4e68-84f5-3c95eea6e9cb',
-          quotation_rev_id: 'c33d08b9-8ec3-41a1-8b0a-66033a3c7214',
+					quotation_rev_id: 'c33d08b9-8ec3-41a1-8b0a-66033a3c7214',
 					product_desc: 'item3',
 					brand: 'prodtBrand2',
 					model: 'ModelX2',
@@ -148,17 +148,17 @@ const Quotation = {
 					sub_item: [],
 				},
 			],
-      reference_status: '-',
-      note: '-',
-      total: '12400.0',
-      g_total: '12400.0',
+			reference_status: '-',
+			note: '-',
+			total: '12400.0',
+			g_total: '12400.0',
 		},
 		{
 			quotation_no: '24001S1-TGH-Variation-01',
-      quotation_id: 'ad399d47-a038-4fb4-9f31-2f142c143611',
+			quotation_id: 'ad399d47-a038-4fb4-9f31-2f142c143611',
 			quotation_rev_id: '998bf269-5741-4445-83ca-f251cb608c5e',
 			quotation_date: '31/01/2024',
-			rev: "1",
+			rev: '1',
 			client: 'client_name1',
 			end_user: 'someEndUserName1',
 			site_location: 'Penang1',
@@ -170,7 +170,7 @@ const Quotation = {
 			item: [
 				{
 					item_id: '09ee02e9-8115-42ad-8648-74c901b96940',
-          quotation_rev_id: '998bf269-5741-4445-83ca-f251cb608c5e',
+					quotation_rev_id: '998bf269-5741-4445-83ca-f251cb608c5e',
 					product_desc: 'item1_Variation-01',
 					brand: 'prodtBrand',
 					model: 'ModelX',
@@ -217,7 +217,7 @@ const Quotation = {
 				},
 				{
 					item_id: '7043ac52-22c1-474c-898c-ae4a3d8d44aa',
-          quotation_rev_id: '998bf269-5741-4445-83ca-f251cb608c5e',
+					quotation_rev_id: '998bf269-5741-4445-83ca-f251cb608c5e',
 					product_desc: 'item2_Variation-01',
 					brand: 'prodtBrand2',
 					model: 'ModelX2',
@@ -249,7 +249,7 @@ const Quotation = {
 				},
 				{
 					item_id: 'fca38a36-659a-4e68-84f5-3c95eea6e9cb',
-          quotation_rev_id: '998bf269-5741-4445-83ca-f251cb608c5e',
+					quotation_rev_id: '998bf269-5741-4445-83ca-f251cb608c5e',
 					product_desc: 'item3_Variation-01',
 					brand: 'prodtBrand2',
 					model: 'ModelX2',
@@ -264,11 +264,10 @@ const Quotation = {
 					sub_item: [],
 				},
 			],
-      reference_status: '-',
-      note: '-',
-      total: '12400.0',
-      g_total: '12400.0',
-
+			reference_status: '-',
+			note: '-',
+			total: '12400.0',
+			g_total: '12400.0',
 		},
 	],
 };
@@ -324,7 +323,9 @@ const ViewQuotation = () => {
 					<Button color='info' isLight icon='Download' onClick={() => navigate(-1)}>
 						PDF
 					</Button>
-					<Button color='info' onClick={() => navigate(-1)}>
+					<Button color='info' onClick={() => {
+						navigate('../quotation/edit-quotation', {state:{quotation_data: Quotation.quotation_data[quotationRev]}})
+					}}>
 						Create Variation
 					</Button>
 				</SubHeaderRight>
@@ -489,10 +490,7 @@ const ViewQuotation = () => {
 										<FormGroup id='total' label='Total (RM)' isFloating>
 											<Input
 												placeholder='Name'
-												value={
-													Quotation.quotation_data[quotationRev]
-														.total
-												}
+												value={Quotation.quotation_data[quotationRev].total}
 											/>
 										</FormGroup>
 									</div>
@@ -500,10 +498,7 @@ const ViewQuotation = () => {
 										<FormGroup id='note' label='Note' isFloating>
 											<Input
 												placeholder='Name'
-												value={
-													Quotation.quotation_data[quotationRev]
-														.note
-												}
+												value={Quotation.quotation_data[quotationRev].note}
 											/>
 										</FormGroup>
 									</div>
@@ -512,8 +507,7 @@ const ViewQuotation = () => {
 											<Input
 												placeholder='Name'
 												value={
-													Quotation.quotation_data[quotationRev]
-														.g_total
+													Quotation.quotation_data[quotationRev].g_total
 												}
 											/>
 										</FormGroup>
