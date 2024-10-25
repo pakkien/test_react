@@ -27,7 +27,6 @@ import { getActiveElement, useFormik } from 'formik';
 import Badge from '../../../components/bootstrap/Badge';
 import SubItemDetails from './components/SubItemDetails';
 import ItemDetails from './components/ItemDetails';
-import Summary from './components/Summary';
 import Dropdown, {
 	DropdownToggle,
 	DropdownMenu,
@@ -36,239 +35,239 @@ import Dropdown, {
 import Nav, { NavItem, NavLinkDropdown } from '../../../components/bootstrap/Nav';
 
 const Quotation = {
-	quotation_id: "ad399d47-a038-4fb4-9f31-2f142c143611",
+	quotation_id: 'ad399d47-a038-4fb4-9f31-2f142c143611',
 	quotation_data: [
-	  {
-		quotation_no: "24001S1-TGH",
-		quotation_rev_id: "c33d08b9-8ec3-41a1-8b0a-66033a3c7214",
-		rev: 0,
-		quotation_date: "31/01/2024",
-		client: "client_name",
-		end_user: "someEndUserName",
-		site_location: "Penang",
-		building: "PG1",
-		pic: "123",
-		email: "sometester@gmail.com",
-		project_ref: "abcProject",
-		state: "awarded",
-		item: [
-		  {
-			item_id: "09ee02e9-8115-42ad-8648-74c901b96940",
-			product_desc: "item1",
-			brand: "prodtBrand",
-			model: "ModelX",
-			remarks: "dummyRemarks",
-			quantity: "300",
-			unit: "Unit",
-			unit_cost: "300.0",
-			total_cost: "3000.0",
-			margin: "0.8",
-			unit_price: "375",
-			total_price: "3750",
-			sub_item: [
-			  {
-				sub_item_id: "60c07ea8-f677-4e0c-b232-8756842ee174",
-				item_id: "09ee02e9-8115-42ad-8648-74c901b96940",
-				product_desc: "item1_subItem1",
-				brand: "prodtBrand",
-				model: "ModelX44",
-				remarks: "dummyRemarks",
-				quantity: "222",
-				unit: "Unit",
-				unit_cost: "300.0",
-				total_cost: "3000.0",
-				margin: "0.8",
-				unit_price: "375",
-				total_price: "3750",
-			  },
-			  {
-				sub_item_id: "d23c57b7-38c1-45c4-a253-f8f7affe0447",
-				item_id: "09ee02e9-8115-42ad-8648-74c901b96940",
-				product_desc: "item1_subItem2",
-				brand: "prodtBrand",
-				model: "ModelX55",
-				remarks: "dummyRemarks",
-				quantity: "444",
-				unit: "Unit",
-				unit_cost: "300.0",
-				total_cost: "3000.0",
-				margin: "0.8",
-				unit_price: "375",
-				total_price: "3750",
-			  },
+		{
+			quotation_no: '24001S1-TGH',
+			quotation_rev_id: 'c33d08b9-8ec3-41a1-8b0a-66033a3c7214',
+			rev: 0,
+			quotation_date: '31/01/2024',
+			client: 'client_name',
+			end_user: 'someEndUserName',
+			site_location: 'Penang',
+			building: 'PG1',
+			pic: '123',
+			email: 'sometester@gmail.com',
+			project_ref: 'abcProject',
+			state: 'awarded',
+			item: [
+				{
+					item_id: '09ee02e9-8115-42ad-8648-74c901b96940',
+					product_desc: 'item1',
+					brand: 'prodtBrand',
+					model: 'ModelX',
+					remarks: 'dummyRemarks',
+					quantity: '300',
+					unit: 'Unit',
+					unit_cost: '300.0',
+					total_cost: '3000.0',
+					margin: '0.8',
+					unit_price: '375',
+					total_price: '3750',
+					sub_item: [
+						{
+							sub_item_id: '60c07ea8-f677-4e0c-b232-8756842ee174',
+							item_id: '09ee02e9-8115-42ad-8648-74c901b96940',
+							product_desc: 'item1_subItem1',
+							brand: 'prodtBrand',
+							model: 'ModelX44',
+							remarks: 'dummyRemarks',
+							quantity: '222',
+							unit: 'Unit',
+							unit_cost: '300.0',
+							total_cost: '3000.0',
+							margin: '0.8',
+							unit_price: '375',
+							total_price: '3750',
+						},
+						{
+							sub_item_id: 'd23c57b7-38c1-45c4-a253-f8f7affe0447',
+							item_id: '09ee02e9-8115-42ad-8648-74c901b96940',
+							product_desc: 'item1_subItem2',
+							brand: 'prodtBrand',
+							model: 'ModelX55',
+							remarks: 'dummyRemarks',
+							quantity: '444',
+							unit: 'Unit',
+							unit_cost: '300.0',
+							total_cost: '3000.0',
+							margin: '0.8',
+							unit_price: '375',
+							total_price: '3750',
+						},
+					],
+				},
+				{
+					item_id: '7043ac52-22c1-474c-898c-ae4a3d8d44aa',
+					product_desc: 'item2',
+					brand: 'prodtBrand2',
+					model: 'ModelX2',
+					remarks: 'dummyRemarks2',
+					quantity: '3',
+					unit: 'Unit2',
+					unit_cost: '300.0',
+					total_cost: '3000.0',
+					margin: '0.8',
+					unit_price: '375',
+					total_price: '3750',
+					sub_item: [
+						{
+							sub_item_id: '24e651fe-720e-4aa3-bd25-95398b39e440',
+							item_id: '7043ac52-22c1-474c-898c-ae4a3d8d44aa',
+							product_desc: 'item2_subItem1',
+							brand: 'prodtBrand',
+							model: 'ModelX444',
+							remarks: 'dummyRemarks',
+							quantity: '3',
+							unit: 'Unit',
+							unit_cost: '300.0',
+							total_cost: '3000.0',
+							margin: '0.8',
+							unit_price: '375',
+							total_price: '3750',
+						},
+					],
+				},
+				{
+					item_id: 'fca38a36-659a-4e68-84f5-3c95eea6e9cb',
+					product_desc: 'item3',
+					brand: 'prodtBrand2',
+					model: 'ModelX2',
+					remarks: 'dummyRemarks2',
+					quantity: '3',
+					unit: 'Unit2',
+					unit_cost: '300.0',
+					total_cost: '3000.0',
+					margin: '0.8',
+					unit_price: '375',
+					total_price: '3750',
+					sub_item: [],
+				},
 			],
-		  },
-		  {
-			item_id: "7043ac52-22c1-474c-898c-ae4a3d8d44aa",
-			product_desc: "item2",
-			brand: "prodtBrand2",
-			model: "ModelX2",
-			remarks: "dummyRemarks2",
-			quantity: "3",
-			unit: "Unit2",
-			unit_cost: "300.0",
-			total_cost: "3000.0",
-			margin: "0.8",
-			unit_price: "375",
-			total_price: "3750",
-			sub_item: [
-			  {
-				sub_item_id: "24e651fe-720e-4aa3-bd25-95398b39e440",
-				item_id: "7043ac52-22c1-474c-898c-ae4a3d8d44aa",
-				product_desc: "item2_subItem1",
-				brand: "prodtBrand",
-				model: "ModelX444",
-				remarks: "dummyRemarks",
-				quantity: "3",
-				unit: "Unit",
-				unit_cost: "300.0",
-				total_cost: "3000.0",
-				margin: "0.8",
-				unit_price: "375",
-				total_price: "3750",
-			  },
-			],
-		  },
-		  {
-			item_id: "fca38a36-659a-4e68-84f5-3c95eea6e9cb",
-			product_desc: "item3",
-			brand: "prodtBrand2",
-			model: "ModelX2",
-			remarks: "dummyRemarks2",
-			quantity: "3",
-			unit: "Unit2",
-			unit_cost: "300.0",
-			total_cost: "3000.0",
-			margin: "0.8",
-			unit_price: "375",
-			total_price: "3750",
-			sub_item: [],
-		  },
-		],
-		summary: {
-		  reference_status: "-",
-		  note: "-",
-		  total: "12400.0",
-		  g_total: "12400.0",
+			summary: {
+				reference_status: '-',
+				note: '-',
+				total: '12400.0',
+				g_total: '12400.0',
+			},
 		},
-	  },
-	  {
-		  quotation_no: "24001S1-TGH-Variation-01",
-		  quotation_rev_id: "998bf269-5741-4445-83ca-f251cb608c5e",
-		  quotation_date: "31/01/2024",
-		  rev: 1,
-		  client: "client_name1",
-		  end_user: "someEndUserName1",
-		  site_location: "Penang1",
-		  building: "PG11",
-		  pic: "1231",
-		  email: "sometester@gmail.com1",
-		  project_ref: "abcProject1",
-		  state: "closed",
-		  item: [
-			{
-			  item_id: "09ee02e9-8115-42ad-8648-74c901b96940",
-			  product_desc: "item1",
-			  brand: "prodtBrand",
-			  model: "ModelX",
-			  remarks: "dummyRemarks",
-			  quantity: "300",
-			  unit: "Unit",
-			  unit_cost: "300.0",
-			  total_cost: "3000.0",
-			  margin: "0.8",
-			  unit_price: "375",
-			  total_price: "3750",
-			  sub_item: [
+		{
+			quotation_no: '24001S1-TGH-Variation-01',
+			quotation_rev_id: '998bf269-5741-4445-83ca-f251cb608c5e',
+			quotation_date: '31/01/2024',
+			rev: 1,
+			client: 'client_name1',
+			end_user: 'someEndUserName1',
+			site_location: 'Penang1',
+			building: 'PG11',
+			pic: '1231',
+			email: 'sometester@gmail.com1',
+			project_ref: 'abcProject1',
+			state: 'closed',
+			item: [
 				{
-				  sub_item_id: "60c07ea8-f677-4e0c-b232-8756842ee174",
-				  item_id: "09ee02e9-8115-42ad-8648-74c901b96940",
-				  product_desc: "item1_subItem1",
-				  brand: "prodtBrand",
-				  model: "ModelX44",
-				  remarks: "dummyRemarks",
-				  quantity: "222",
-				  unit: "Unit",
-				  unit_cost: "300.0",
-				  total_cost: "3000.0",
-				  margin: "0.8",
-				  unit_price: "375",
-				  total_price: "3750",
+					item_id: '09ee02e9-8115-42ad-8648-74c901b96940',
+					product_desc: 'item1',
+					brand: 'prodtBrand',
+					model: 'ModelX',
+					remarks: 'dummyRemarks',
+					quantity: '300',
+					unit: 'Unit',
+					unit_cost: '300.0',
+					total_cost: '3000.0',
+					margin: '0.8',
+					unit_price: '375',
+					total_price: '3750',
+					sub_item: [
+						{
+							sub_item_id: '60c07ea8-f677-4e0c-b232-8756842ee174',
+							item_id: '09ee02e9-8115-42ad-8648-74c901b96940',
+							product_desc: 'item1_subItem1',
+							brand: 'prodtBrand',
+							model: 'ModelX44',
+							remarks: 'dummyRemarks',
+							quantity: '222',
+							unit: 'Unit',
+							unit_cost: '300.0',
+							total_cost: '3000.0',
+							margin: '0.8',
+							unit_price: '375',
+							total_price: '3750',
+						},
+						{
+							sub_item_id: 'd23c57b7-38c1-45c4-a253-f8f7affe0447',
+							item_id: '09ee02e9-8115-42ad-8648-74c901b96940',
+							product_desc: 'item1_subItem2',
+							brand: 'prodtBrand',
+							model: 'ModelX55',
+							remarks: 'dummyRemarks',
+							quantity: '444',
+							unit: 'Unit',
+							unit_cost: '300.0',
+							total_cost: '3000.0',
+							margin: '0.8',
+							unit_price: '375',
+							total_price: '3750',
+						},
+					],
 				},
 				{
-				  sub_item_id: "d23c57b7-38c1-45c4-a253-f8f7affe0447",
-				  item_id: "09ee02e9-8115-42ad-8648-74c901b96940",
-				  product_desc: "item1_subItem2",
-				  brand: "prodtBrand",
-				  model: "ModelX55",
-				  remarks: "dummyRemarks",
-				  quantity: "444",
-				  unit: "Unit",
-				  unit_cost: "300.0",
-				  total_cost: "3000.0",
-				  margin: "0.8",
-				  unit_price: "375",
-				  total_price: "3750",
+					item_id: '7043ac52-22c1-474c-898c-ae4a3d8d44aa',
+					product_desc: 'item2',
+					brand: 'prodtBrand2',
+					model: 'ModelX2',
+					remarks: 'dummyRemarks2',
+					quantity: '3',
+					unit: 'Unit2',
+					unit_cost: '300.0',
+					total_cost: '3000.0',
+					margin: '0.8',
+					unit_price: '375',
+					total_price: '3750',
+					sub_item: [
+						{
+							sub_item_id: '24e651fe-720e-4aa3-bd25-95398b39e440',
+							item_id: '7043ac52-22c1-474c-898c-ae4a3d8d44aa',
+							product_desc: 'item2_subItem1',
+							brand: 'prodtBrand',
+							model: 'ModelX444',
+							remarks: 'dummyRemarks',
+							quantity: '3',
+							unit: 'Unit',
+							unit_cost: '300.0',
+							total_cost: '3000.0',
+							margin: '0.8',
+							unit_price: '375',
+							total_price: '3750',
+						},
+					],
 				},
-			  ],
-			},
-			{
-			  item_id: "7043ac52-22c1-474c-898c-ae4a3d8d44aa",
-			  product_desc: "item2",
-			  brand: "prodtBrand2",
-			  model: "ModelX2",
-			  remarks: "dummyRemarks2",
-			  quantity: "3",
-			  unit: "Unit2",
-			  unit_cost: "300.0",
-			  total_cost: "3000.0",
-			  margin: "0.8",
-			  unit_price: "375",
-			  total_price: "3750",
-			  sub_item: [
 				{
-				  sub_item_id: "24e651fe-720e-4aa3-bd25-95398b39e440",
-				  item_id: "7043ac52-22c1-474c-898c-ae4a3d8d44aa",
-				  product_desc: "item2_subItem1",
-				  brand: "prodtBrand",
-				  model: "ModelX444",
-				  remarks: "dummyRemarks",
-				  quantity: "3",
-				  unit: "Unit",
-				  unit_cost: "300.0",
-				  total_cost: "3000.0",
-				  margin: "0.8",
-				  unit_price: "375",
-				  total_price: "3750",
+					item_id: 'fca38a36-659a-4e68-84f5-3c95eea6e9cb',
+					product_desc: 'item3',
+					brand: 'prodtBrand2',
+					model: 'ModelX2',
+					remarks: 'dummyRemarks2',
+					quantity: '3',
+					unit: 'Unit2',
+					unit_cost: '300.0',
+					total_cost: '3000.0',
+					margin: '0.8',
+					unit_price: '375',
+					total_price: '3750',
+					sub_item: [],
 				},
-			  ],
+			],
+			summary: {
+				reference_status: '-',
+				note: '-',
+				total: '12400.0',
+				g_total: '12400.0',
 			},
-			{
-			  item_id: "fca38a36-659a-4e68-84f5-3c95eea6e9cb",
-			  product_desc: "item3",
-			  brand: "prodtBrand2",
-			  model: "ModelX2",
-			  remarks: "dummyRemarks2",
-			  quantity: "3",
-			  unit: "Unit2",
-			  unit_cost: "300.0",
-			  total_cost: "3000.0",
-			  margin: "0.8",
-			  unit_price: "375",
-			  total_price: "3750",
-			  sub_item: [],
-			},
-		  ],
-		  summary: {
-			reference_status: "-",
-			note: "-",
-			total: "12400.0",
-			g_total: "12400.0",
-		  },
-		}
+		},
 	],
-  };
-  
+};
+
 function ReturnStateColor(state: string) {
 	switch (state.toLowerCase().trim()) {
 		case 'inprogress':
@@ -456,7 +455,41 @@ const ViewQuotation = () => {
 									</div>
 									<h6>Revision: 1.{quotationRev}</h6>
 								</div>
-								<ItemDetails />
+								{Quotation.quotation_data[quotationRev].item.map((item, idx) => (
+									<ItemDetails item={item} />
+								))}
+							</CardBody>
+						</Card>
+						<Card>
+							<CardBody>
+								<div className='row g-4'>
+									<div className='col-md-12'>
+										<h4>Summary</h4>
+									</div>
+									<div className='col-md-8'>
+										<FormGroup
+											id='referenceStatus'
+											label='Reference Status'
+											isFloating>
+											<Input placeholder='Name' value={Quotation.quotation_data[quotationRev].summary.reference_status}/>
+										</FormGroup>
+									</div>
+									<div className='col-md-4'>
+										<FormGroup id='total' label='Total (RM)' isFloating>
+											<Input placeholder='Name' value={Quotation.quotation_data[quotationRev].summary.total} />
+										</FormGroup>
+									</div>
+									<div className='col-md-8'>
+										<FormGroup id='note' label='Note' isFloating>
+											<Input placeholder='Name' value={Quotation.quotation_data[quotationRev].summary.note} />
+										</FormGroup>
+									</div>
+									<div className='col-md-4'>
+										<FormGroup id='gtotal' label='G/Total (RM)' isFloating>
+											<Input placeholder='Name' value={Quotation.quotation_data[quotationRev].summary.g_total}/>
+										</FormGroup>
+									</div>
+								</div>
 							</CardBody>
 						</Card>
 					</div>

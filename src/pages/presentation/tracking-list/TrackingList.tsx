@@ -14,9 +14,9 @@ import Card, {
 import { useNavigate } from 'react-router-dom';
 import Badge from '../../../components/bootstrap/Badge';
 
-function ReturnBatchColor(state: string) {
-	switch (state.toLowerCase()) {
-		case 'in progress':
+function ReturnStateColor(state: string) {
+	switch (state.toLowerCase().trim()) {
+		case 'inprogress':
 			return 'danger';
 		case 'closed':
 			return 'dark';
@@ -143,7 +143,7 @@ const TrackingList = () => {
 										<td>
 											<Badge
 												className='statusBadge'
-												color={ReturnBatchColor(item.status)}>
+												color={ReturnStateColor(item.status)}>
 												<h6>{item.status}</h6>
 											</Badge>
 										</td>
