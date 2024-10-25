@@ -233,10 +233,6 @@ const TrackingList = () => {
 		onReset: () => setTableData(trackingListData),
 	});
 
-	const goToViewQuotationPage = () => {
-		navigate('view-quotation');
-	};
-
 	const searchAndFilterData = (search_string: string) => {
 		return tableData.filter((item) => {
 			return (
@@ -257,6 +253,10 @@ const TrackingList = () => {
 		});
 	};
 
+	const goToViewQuotationPage = () => {
+		navigate('view-quotation');
+	};
+
 	return (
 		<PageWrapper title='Tracking List'>
 			<SubHeader>
@@ -270,23 +270,16 @@ const TrackingList = () => {
 			</SubHeader>
 			<Page container='fluid'>
 				<Card stretch>
-					{/* <CardHeader>
-						<CardLabel>
-							<CardTitle tag='div' className='h3'>
-								Tracking List
-							</CardTitle>
-						</CardLabel>
-					</CardHeader> */}
 					<CardBody className='table-responsive' isScrollable>
 						<div className='row g-4'>
 							<div className='col-md-4'>
-							<CardHeader>
-						<CardLabel>
-							<CardTitle tag='div' className='h3'>
-								Tracking List
-							</CardTitle>
-						</CardLabel>
-					</CardHeader>
+								<CardHeader>
+									<CardLabel>
+										<CardTitle tag='div' className='h3'>
+											Tracking List
+										</CardTitle>
+									</CardLabel>
+								</CardHeader>
 							</div>
 							<div className='col-md-4'>
 								<Alert color='light' isLight>
