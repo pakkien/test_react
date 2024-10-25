@@ -1,7 +1,8 @@
 import React from 'react';
 // import ReactDOM from 'react-dom'; // For React 17
 import { createRoot } from 'react-dom/client'; // For React 18
-import { BrowserRouter as Router } from 'react-router-dom';
+// import { BrowserRouter as Router } from 'react-router-dom';
+import { HashRouter as Router } from 'react-router-dom';
 import './styles/styles.scss';
 import App from './App/App';
 import reportWebVitals from './reportWebVitals';

@@ -8,40 +8,9 @@ import SubHeader, {
 } from '../../../layout/SubHeader/SubHeader';
 import Page from '../../../layout/Page/Page';
 import Popovers from '../../../components/bootstrap/Popovers';
-import { TModalSize, TModalFullScreen } from '../../../type/modal-type';
-import Button from '../../../components/bootstrap/Button';
-import Modal, {
-	ModalHeader,
-	ModalTitle,
-	ModalBody,
-	ModalFooter,
-} from '../../../components/bootstrap/Modal';
-import SubItemDetails from '../tracking-list/components/SubItemDetails';
 import Card, { CardBody } from '../../../components/bootstrap/Card';
 
 const DashboardPage = () => {
-	const [state, setState] = useState(false);
-	const [staticBackdropStatus, setStaticBackdropStatus] = useState(false);
-	const [scrollableStatus, setScrollableStatus] = useState(false);
-	const [centeredStatus, setCenteredStatus] = useState(false);
-	const [sizeStatus, setSizeStatus] = useState<TModalSize>(null);
-	const [fullScreenStatus, setFullScreenStatus] = useState<TModalFullScreen | undefined>(
-		undefined,
-	);
-	const [animationStatus, setAnimationStatus] = useState(true);
-	const [longContentStatus, setLongContentStatus] = useState(false);
-	const [headerCloseStatus, setHeaderCloseStatus] = useState(true);
-
-	const initialStatus = () => {
-		setStaticBackdropStatus(false);
-		setScrollableStatus(false);
-		setCenteredStatus(false);
-		setSizeStatus(null);
-		setFullScreenStatus(false);
-		setAnimationStatus(true);
-		setLongContentStatus(false);
-		setHeaderCloseStatus(true);
-	};
 
 	return (
 		<PageWrapper title='Dashboard Page'>

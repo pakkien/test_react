@@ -95,7 +95,7 @@ export const demoPagesMenu = {
 	// 	id: 'Page404',
 	// 	text: '404 Page',
 	// 	path: 'auth-pages/404',
-	// 	icon: 'ReportGmailerrorred',
+	// 	icon: 'ReportGmailerrorred',		
 	// },
 };
 
