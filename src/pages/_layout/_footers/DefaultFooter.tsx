@@ -7,7 +7,10 @@ const DefaultFooter = () => {
 		<Footer>
 			<div className='container-fluid'>
 				<div className='row'>
-					<div className='col'>
+				<div className='col text-center' >
+					Made with &#x2665; by KStudio Enterprise
+				</div>
+					{/* <div className='col'>
 						<Popovers
 							title='Footer.tsx'
 							desc={<code>src/pages/_layout/_footers/DefaultFooter.tsx</code>}>
@@ -22,7 +25,7 @@ const DefaultFooter = () => {
 							Footer
 						</Popovers>
 						<code className='ps-3'>DefaultFooter.tsx</code>
-					</div>
+					</div> */}
 				</div>
 			</div>
 		</Footer>

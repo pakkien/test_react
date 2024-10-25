@@ -323,9 +323,13 @@ const ViewQuotation = () => {
 					<Button color='info' isLight icon='Download' onClick={() => navigate(-1)}>
 						PDF
 					</Button>
-					<Button color='info' onClick={() => {
-						navigate('../quotation/edit-quotation', {state:{quotation_data: Quotation.quotation_data[quotationRev]}})
-					}}>
+					<Button
+						color='info'
+						onClick={() => {
+							navigate('../quotation/edit-quotation', {
+								state: { quotation_data: Quotation.quotation_data[quotationRev] },
+							});
+						}}>
 						Create Variation
 					</Button>
 				</SubHeaderRight>
@@ -483,6 +487,7 @@ const ViewQuotation = () => {
 													Quotation.quotation_data[quotationRev]
 														.reference_status
 												}
+												disabled
 											/>
 										</FormGroup>
 									</div>
@@ -491,6 +496,7 @@ const ViewQuotation = () => {
 											<Input
 												placeholder='Name'
 												value={Quotation.quotation_data[quotationRev].total}
+												disabled
 											/>
 										</FormGroup>
 									</div>
@@ -499,6 +505,7 @@ const ViewQuotation = () => {
 											<Input
 												placeholder='Name'
 												value={Quotation.quotation_data[quotationRev].note}
+												disabled
 											/>
 										</FormGroup>
 									</div>
@@ -509,6 +516,7 @@ const ViewQuotation = () => {
 												value={
 													Quotation.quotation_data[quotationRev].g_total
 												}
+												disabled
 											/>
 										</FormGroup>
 									</div>
