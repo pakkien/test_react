@@ -27,16 +27,11 @@ import Modal, {
 } from '../../../components/bootstrap/Modal';
 import { TModalSize, TModalFullScreen } from '../../../type/modal-type';
 import Alert from '../../../components/bootstrap/Alert';
-
-// const formik = useFormik({
-// 	initialValues: {
-// 		searchInput: '',
-// 	},
-// 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-// 	onSubmit: (values) => {
-// 		// alert(JSON.stringify(values, null, 2));
-// 	},
-// });
+import FormGroup from '../../../components/bootstrap/forms/FormGroup';
+import { useFormik } from 'formik';
+import useSortableData from '../../../hooks/useSortableData';
+import PaginationButtons, { dataPagination, PER_COUNT } from '../../../components/PaginationButtons';
+import { debounce } from '../../../helpers/helpers';
 
 function returnTrueFalseIconisTrue(isTrue: Boolean) {
 	if (isTrue) {
@@ -45,12 +40,12 @@ function returnTrueFalseIconisTrue(isTrue: Boolean) {
 				icon='CheckCircleOutline'
 				className=''
 				color='success'
-				size='3x'
+				size='2x'
 				forceFamily='material'
 			/>
 		);
 	} else {
-		return <Icon icon='Cancel' className='' color='danger' size='3x' forceFamily='material' />;
+		return <Icon icon='Cancel' className='' color='danger' size='2x' forceFamily='material' />;
 	}
 }
 
@@ -299,6 +294,44 @@ const AdminPage = () => {
 		}, 3000);
 	};
 
+
+	//search
+	const [tableData, setTableData] = useState(userData);
+
+	const [currentPage, setCurrentPage] = useState(1);
+	const [perPage, setPerPage] = useState(PER_COUNT['5']);
+	const { items, requestSort, getClassNamesFor } = useSortableData(tableData);
+
+	const onFormSubmit = (values: { search: any }) => {
+		const searchValue = values.search.toString().toLowerCase();
+		const newData = searchAndFilterData(searchValue);
+
+		if (!values.search) {
+			setTableData(userData);
+		} else {
+			setTableData(newData);
+		}
+	};
+
+	const formik = useFormik({
+		initialValues: {
+			search: '',
+		},
+		onSubmit: onFormSubmit,
+		onReset: () => setTableData(userData),
+	});
+
+	const searchAndFilterData = (search_string: string) => {
+		return tableData.filter((item) => {
+			return (
+				item.name.toLowerCase().includes(search_string) ||
+				item.role.toLowerCase().includes(search_string) ||
+				item.email.toLowerCase().includes(search_string)
+			);
+		});
+	};
+
+
 	return (
 		<PageWrapper title='Admin'>
 			<SubHeader>
@@ -317,100 +350,149 @@ const AdminPage = () => {
 					</Alert>
 				)}
 				<Card stretch>
-					<CardHeader>
-						<CardLabel>
-							<CardTitle tag='div' className='h3'>
-								User Management
-							</CardTitle>
-						</CardLabel>
-						<CardActions>
-							<Button color='success' icon='Create' tag='a' target='_blank'>
-								Create
-							</Button>
-						</CardActions>
-					</CardHeader>
-
-					{/* <CardHeader>
-						<SubHeader>
-							<SubHeaderLeft>
-								<label
-									className='border-0 bg-transparent cursor-pointer me-0'
-									htmlFor='searchInput'>
-									<Icon icon='Search' size='2x' color='primary' />
-								</label>
-								<Input
-									id='searchInput'
-									type='search'
-									className='border-0 shadow-none bg-transparent'
-									placeholder='Search...'
-									// onChange={formik.handleChange}
-									// value={formik.values.searchInput}
-								/>
-							</SubHeaderLeft>
-						</SubHeader>
-					</CardHeader> */}
-
 					<CardBody className='table-responsive' isScrollable>
-						<table className='table table-modern'>
-							<thead>
-								<tr>
-									<th>Role</th>
-									<th>Name</th>
-									<th>Email</th>
-									<th>View Quotation</th>
-									<th>Create / Edit Quotation</th>
-									<th>View MCCR</th>
-									<th>Create / Edit MCCR</th>
-									<th>Action</th>
-								</tr>
-							</thead>
-							<tbody>
-								{lists.map((item) => (
-									<tr key={item.user_id}>
-										<td>{item.role}</td>
-										<td>{item.name}</td>
-										<td>{item.email}</td>
-										<td>{returnTrueFalseIconisTrue(item.view_quotation)}</td>
-										<td>
-											{returnTrueFalseIconisTrue(item.create_edit_quotation)}
-										</td>
-										<td>{returnTrueFalseIconisTrue(item.view_mccr)}</td>
-										<td>{returnTrueFalseIconisTrue(item.create_edit_mccr)}</td>
-										<td>
-											<div className='row'>
-												<div className='col-auto'>
-													<Button
-														color='primary'
-														icon='Edit'
-														shadow='none'
-														hoverShadow='lg'
-														tag='a'
-														target='_blank'
-														onClick={() => goToEditPage()}></Button>
-												</div>
-												<div className='col-auto'>
-													<Button
-														className='me-4'
-														color='danger'
-														isLight
-														icon='Delete'
-														onClick={() => {
-															setUserToDelete({
-																name: item.name,
-																id: item.user_id,
-															});
-															initialStatus();
-															setCenteredStatus(true);
-															setState(true);
-														}}></Button>
-												</div>
+						<div className='row g-4'>
+							<div className='col-md-4'>
+								<CardHeader>
+									<CardLabel>
+										<CardTitle tag='div' className='h3'>
+											User Management
+										</CardTitle>
+									</CardLabel>
+								</CardHeader>
+							</div>
+							<div className='col-md-4'>
+								<Alert color='light' isLight>
+									<form onSubmit={formik.handleSubmit}>
+										<FormGroup>
+											<div className='d-flex' data-tour='search'>
+												<label className='border-0 bg-transparent'>
+													<Icon icon='Search' size='2x' color='primary' />
+												</label>
+												<Input
+													id='search'
+													placeholder='Search...'
+													className='border-0 shadow-none bg-transparent'
+													onChange={(e: {
+														target: { value: string | any[] };
+													}) => {
+														formik.handleChange(e);
+
+														if (e.target.value.length > 2)
+															debounce(
+																() =>
+																	onFormSubmit({
+																		...formik.values,
+																		search: e.target.value,
+																	}),
+																1000,
+															)();
+
+														if (e.target.value.length === 0)
+															formik.resetForm();
+													}}
+													value={formik.values.search}
+												/>
 											</div>
-										</td>
-									</tr>
-								))}
-							</tbody>
-						</table>
+										</FormGroup>
+									</form>
+								</Alert>
+							</div>
+							<div className='col-md-4'>
+								<Button
+									color='success'
+									className='float-end'
+									icon='Create'
+									tag='a'
+									// onClick={() => goToCreateQuotationPage()}
+									>
+									Create
+								</Button>
+							</div>
+							<div className='col-md-12'>
+								<table className='table table-modern'>
+									<thead>
+										<tr>
+											<th>#</th>
+											<th>Role</th>
+											<th>Name</th>
+											<th>Email</th>
+											<th>View Quotation</th>
+											<th>Create / Edit Quotation</th>
+											<th>View MCCR</th>
+											<th>Create / Edit MCCR</th>
+											<th>Action</th>
+										</tr>
+									</thead>
+									<tbody>
+									{dataPagination(items, currentPage, perPage).map(
+											(item, i) => (
+											<tr key={item.user_id}>
+												<td>{i+1}</td>
+												<td>{item.role}</td>
+												<td>{item.name}</td>
+												<td>{item.email}</td>
+												<td>
+													{returnTrueFalseIconisTrue(item.view_quotation)}
+												</td>
+												<td>
+													{returnTrueFalseIconisTrue(
+														item.create_edit_quotation,
+													)}
+												</td>
+												<td>{returnTrueFalseIconisTrue(item.view_mccr)}</td>
+												<td>
+													{returnTrueFalseIconisTrue(
+														item.create_edit_mccr,
+													)}
+												</td>
+												<td>
+													<div className='row'>
+														<div className='col-auto'>
+															<Button
+																color='primary'
+																icon='Edit'
+																shadow='none'
+																hoverShadow='lg'
+																tag='a'
+																target='_blank'
+																onClick={() =>
+																	goToEditPage()
+																}></Button>
+														</div>
+														<div className='col-auto'>
+															<Button
+																className='me-4'
+																color='danger'
+																isLight
+																icon='Delete'
+																onClick={() => {
+																	setUserToDelete({
+																		name: item.name,
+																		id: item.user_id,
+																	});
+																	initialStatus();
+																	setCenteredStatus(true);
+																	setState(true);
+																}}></Button>
+														</div>
+													</div>
+												</td>
+											</tr>
+										))}
+									</tbody>
+								</table>
+							</div>
+						</div>
 					</CardBody>
+					<PaginationButtons
+						data={items}
+						label='items'
+						setCurrentPage={setCurrentPage}
+						currentPage={currentPage}
+						perPage={perPage}
+						setPerPage={setPerPage}
+					/>
 				</Card>
 
 				<Modal
