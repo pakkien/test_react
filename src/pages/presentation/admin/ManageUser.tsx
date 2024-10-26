@@ -27,6 +27,14 @@ import Button from '../../../components/bootstrap/Button';
 import Alert, { AlertHeading, AlertLink } from '../../../components/bootstrap/Alert';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Select from '../../../components/bootstrap/forms/Select';
+
+const SELECT_ROLE_OPTIONS = [
+	{ value: 'admin', text: 'Admin' },
+	{ value: 'user', text: 'User' },
+
+];
+
 
 const ManageUser = () => {
 	const navigate = useNavigate();
@@ -115,17 +123,18 @@ const ManageUser = () => {
 									</div>
 									<div className='col-md-6'>
 										<FormGroup id='role' label='Role' isFloating>
-											<Input
-												placeholder='Role'
-												autoComplete='additional-role'
-												onChange={formik.handleChange}
-												onBlur={formik.handleBlur}
-												value={formik.values.role}
-												isValid={formik.isValid}
-												isTouched={formik.touched.role}
-												invalidFeedback={formik.errors.role}
+											<Select
+													id='inputGroupSelect01'
+													ariaLabel='Default select example'
+													value={formik.values.role}
+													list={SELECT_ROLE_OPTIONS}
+													onChange={formik.handleChange}
+													onBlur={formik.handleBlur}
+													isValid={formik.isValid}
+													isTouched={formik.touched.role}
+													invalidFeedback={formik.errors.role}
 												validFeedback='Valid Role'
-											/>
+												/>
 										</FormGroup>
 									</div>
 									<div className='col-md-12'>

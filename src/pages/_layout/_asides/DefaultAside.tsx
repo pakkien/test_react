@@ -95,7 +95,7 @@ const DefaultAside = () => {
 										className='navigation-icon'
 									/>
 									<span className='navigation-text'>
-										{t('menu:Documentation') as ReactNode}
+										{('menu:Documentation') as ReactNode}
 									</span>
 								</span>
 								<span className='navigation-link-extra'>
