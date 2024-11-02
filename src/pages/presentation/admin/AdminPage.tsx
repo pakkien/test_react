@@ -322,7 +322,7 @@ const AdminPage = () => {
 	});
 
 	const searchAndFilterData = (search_string: string) => {
-		return tableData.filter((item) => {
+		return userData.filter((item) => {
 			return (
 				item.name.toLowerCase().includes(search_string) ||
 				item.role.toLowerCase().includes(search_string) ||

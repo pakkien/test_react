@@ -45,12 +45,12 @@ import SingleSubItemEditForm from './SingleSubItemEditForm';
 import Spinner from '../../../../components/bootstrap/Spinner';
 import Icon from '../../../../components/icon/Icon';
 import QuotationDataType from '../../../dataTypes/QuotationDataType';
+import InputGroup from '../../../../components/bootstrap/forms/InputGroup';
 
 type QuotationProps = {
 	mode: string;
 	data: QuotationDataType.QuotationData;
 };
-
 
 type ItemFormProps = {
 	mode: string;
@@ -66,6 +66,9 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 	const navigate = useNavigate();
 	const title = QuotationProps.mode + ' Quotation';
 	const isViewMode = QuotationProps.mode.toLowerCase() === 'view' ? true : false;
+
+	//upload file
+	const [selectedFile, setSelectedFile] = useState(null);
 
 	//#region modal
 	//modal item
@@ -298,6 +301,8 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 			note: QuotationData.data.note,
 			total: QuotationData.data.total,
 			g_total: QuotationData.data.g_total,
+
+			uploadfile: ''
 		},
 		validate,
 		onSubmit: async (values) => {
@@ -484,6 +489,43 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 							deleteSubItemfunc={handleDeleteSubItem}
 						/>
 					))}
+
+					{/* Test upload */}
+					<Card>
+						<CardHeader>
+							<CardLabel>
+								<CardTitle tag='div' className='h3'>
+									Upload PDF
+								</CardTitle>
+							</CardLabel>
+						</CardHeader>
+						<CardBody className='pb-0'>
+							<div className='row g-4'>
+								<div className='col-md-2'></div>
+								<div className='col-md-8'>
+									<FormGroup
+											className='col-12'
+											id='uploadfile'
+											label='Upload PDF'>
+											<Input
+												type='file'
+												accept='.pdf'
+												onChange={formik.handleChange}
+												value={formik.values.uploadfile}
+												disabled={isViewMode ? true : false}
+											/>
+										</FormGroup>
+								</div>
+								<div className='col-md-2'></div>
+							</div>
+						</CardBody>
+						<CardFooter>
+							<></>
+						</CardFooter>
+					</Card>
+
+
+					{/* Summary */}
 					<Card>
 						<CardHeader>
 							<CardLabel>
@@ -583,6 +625,8 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 							</CardFooterRight>
 						</CardFooter>
 					</Card>
+
+					
 				</form>
 
 				{/* modal form item */}

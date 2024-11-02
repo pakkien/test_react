@@ -8,7 +8,8 @@ const DefaultFooter = () => {
 			<div className='container-fluid'>
 				<div className='row'>
 				<div className='col text-center' >
-					Made with &#x2665; by KStudio Enterprise
+					Business Tracking System
+					{/* Made with &#x2665; by KStudio Enterprise */}
 				</div>
 					{/* <div className='col'>
 						<Popovers

@@ -36,6 +36,7 @@ const validate = (values: IValues) => {
 				note?: string;
 				total?: string;
 				g_total?: string;
+				uploadfile?: string;
 			} = {};
 
 	if (!values.client) {

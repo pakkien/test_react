@@ -234,7 +234,7 @@ const QuotationList = () => {
 	});
 
 	const searchAndFilterData = (search_string: string) => {
-		return tableData.filter((item) => {
+		return quotationData.filter((item) => {
 			return (
 				item.prepared_by.toLowerCase().includes(search_string) ||
 				item.client.toLowerCase().includes(search_string) ||
