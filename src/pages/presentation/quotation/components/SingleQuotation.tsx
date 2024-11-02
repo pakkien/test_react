@@ -68,7 +68,16 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 	const isViewMode = QuotationProps.mode.toLowerCase() === 'view' ? true : false;
 
 	//upload file
-	const [selectedFile, setSelectedFile] = useState(null);
+	const [files, setFiles] = useState<FileList | null>(null);
+
+	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		if (e.target.files) {
+		  //setStatus('initial');
+		  setFiles(e.target.files);
+		}
+	  };
+
+	
 
 	//#region modal
 	//modal item
@@ -302,7 +311,7 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 			total: QuotationData.data.total,
 			g_total: QuotationData.data.g_total,
 
-			uploadfile: ''
+			uploadfile: '',
 		},
 		validate,
 		onSubmit: async (values) => {
@@ -501,29 +510,52 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 						</CardHeader>
 						<CardBody className='pb-0'>
 							<div className='row g-4'>
-								<div className='col-md-2'></div>
-								<div className='col-md-8'>
-									<FormGroup
-											className='col-12'
+								<div className='col-md-4'></div>
+								<div className='col-md-4'>
+									<div className='col-md-12'>
+										<FormGroup
+											//className='col-12'
 											id='uploadfile'
-											label='Upload PDF'>
+											//label='Upload PDF'
+										>
 											<Input
 												type='file'
 												accept='.pdf'
-												onChange={formik.handleChange}
+												multiple
+												//onChange={formik.handleChange}
 												value={formik.values.uploadfile}
 												disabled={isViewMode ? true : false}
+												onChange={(
+													e: React.ChangeEvent<HTMLInputElement>,
+												) => {
+													handleFileChange(e);
+													formik.handleChange(e);
+												}}
 											/>
 										</FormGroup>
+									</div>
+									<div className='col-md-12'>
+										{files &&
+											[...files].map((file, index) => (
+												<section key={file.name}>
+													File number {index + 1} details:
+													<ul>
+														<li>Name: {file.name}</li>
+														<li>Type: {file.type}</li>
+														<li>Size: {file.size} bytes</li>
+													</ul>
+												</section>
+											))}
+									</div>
 								</div>
-								<div className='col-md-2'></div>
+								<div className='col-md-4'></div>
+								<div className='col-md-12'></div>
 							</div>
 						</CardBody>
 						<CardFooter>
 							<></>
 						</CardFooter>
 					</Card>
-
 
 					{/* Summary */}
 					<Card>
@@ -625,8 +657,6 @@ const SingleQuotation = (QuotationProps: QuotationProps) => {
 							</CardFooterRight>
 						</CardFooter>
 					</Card>
-
-					
 				</form>
 
 				{/* modal form item */}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PageWrapper from '../../../layout/PageWrapper/PageWrapper';
 import Button from '../../../components/bootstrap/Button';
 import Page from '../../../layout/Page/Page';
@@ -28,6 +28,11 @@ import { debounce } from '../../../helpers/helpers';
 import { InputGroupText } from '../../../components/bootstrap/forms/InputGroup';
 import FormGroup from '../../../components/bootstrap/forms/FormGroup';
 import Alert from '../../../components/bootstrap/Alert';
+import OffCanvas, { OffCanvasBody, OffCanvasHeader, OffCanvasTitle } from '../../../components/bootstrap/OffCanvas';
+import PlaceholderImage from '../../../components/extras/PlaceholderImage';
+import AdditionalInfoForm from './components/AdditionalInfoForm';
+import { TModalFullScreen, TModalSize } from '../../../type/modal-type';
+import Modal, { ModalBody, ModalFooter, ModalHeader, ModalTitle } from '../../../components/bootstrap/Modal';
 
 function ReturnStateColor(state: string) {
 	switch (state.toLowerCase().trim()) {
@@ -40,6 +45,14 @@ function ReturnStateColor(state: string) {
 		default:
 			return 'primary';
 	}
+}
+
+interface IValues {
+	name: string;
+	price: number;
+	stock: number;
+	category: string;
+	image?: string | null;
 }
 
 const trackingListData = [
@@ -207,6 +220,56 @@ const trackingListData = [
 
 const TrackingList = () => {
 	const navigate = useNavigate();
+	
+	const [state, setState] = useState(false);
+	const [staticBackdropStatus, setStaticBackdropStatus] = useState(false);
+	const [scrollableStatus, setScrollableStatus] = useState(false);
+	const [centeredStatus, setCenteredStatus] = useState(true);
+	const [sizeStatus, setSizeStatus] = useState<TModalSize>(null);
+	const [fullScreenStatus, setFullScreenStatus] = useState<TModalFullScreen | undefined>(
+		undefined,
+	);
+	const [animationStatus, setAnimationStatus] = useState(true);
+	const [longContentStatus, setLongContentStatus] = useState(false);
+	const [headerCloseStatus, setHeaderCloseStatus] = useState(true);
+
+	const initialStatus = () => {
+		setStaticBackdropStatus(false);
+		setScrollableStatus(false);
+		setCenteredStatus(true);
+		setSizeStatus('xl');
+		setFullScreenStatus(undefined);
+		setAnimationStatus(true);
+		setLongContentStatus(false);
+		setHeaderCloseStatus(true);
+	};
+
+	const formik = useFormik({
+		initialValues: {
+			po_no: '',
+            po_date: '',
+            po_amount: '',
+            po_attach_file: '',
+            so_no: '',
+            so_attach_file: '',
+            invoice_no: '',
+            invoice_date: '',
+            payment_terms: '',
+            invoice_amount: '',
+            invoice_attach_file: '',
+            remarks: '',
+            status_overwrite: ''
+		},
+
+		//validate,
+		onSubmit: (values) => {
+			console.log(JSON.stringify(values));
+			//alert(JSON.stringify(values, null, 2));
+		},
+	});
+
+
+
 
 	const [tableData, setTableData] = useState(trackingListData);
 
@@ -225,7 +288,7 @@ const TrackingList = () => {
 		}
 	};
 
-	const formik = useFormik({
+	const formik_search = useFormik({
 		initialValues: {
 			search: '',
 		},
@@ -257,6 +320,52 @@ const TrackingList = () => {
 		navigate('view-quotation');
 	};
 
+
+
+	//Edit form
+	// const [editItem, setEditItem] = useState<IValues | null>(null);
+	// const [editPanel, setEditPanel] = useState<boolean>(false);
+
+	// function handleEdit(id: number) {
+	// 	//const newData = tableData.filter((item) => item.id === id.toString());
+	// 	//setEditItem(newData[0]);
+	// 	setEditItem(null);
+	// }
+
+	// const formik = useFormik({
+	// 	initialValues: {
+	// 		name: '',
+	// 		price: 0,
+	// 		stock: 0,
+	// 		category: '',
+	// 	},
+	// 	//validate,
+	// 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	// 	onSubmit: (values) => {
+	// 		setEditPanel(false);
+	// 	},
+	// });
+
+	// useEffect(() => {
+	// 	if (editItem) {
+	// 		formik.setValues({
+	// 			name: editItem.name,
+	// 			price: editItem.price,
+	// 			stock: editItem.stock,
+	// 			category: editItem.category,
+	// 		});
+	// 	}
+	// 	return () => {
+	// 		formik.setValues({
+	// 			name: '',
+	// 			price: 0,
+	// 			stock: 0,
+	// 			category: '',
+	// 		});
+	// 	};
+	// 	// eslint-disable-next-line react-hooks/exhaustive-deps
+	// }, [editItem]);
+
 	return (
 		<PageWrapper title='Tracking List'>
 			<SubHeader>
@@ -283,7 +392,7 @@ const TrackingList = () => {
 							</div>
 							<div className='col-md-4'>
 								<Alert color='light' isLight>
-									<form onSubmit={formik.handleSubmit}>
+									<form onSubmit={formik_search.handleSubmit}>
 										<FormGroup>
 											<div className='d-flex' data-tour='search'>
 												<label className='border-0 bg-transparent'>
@@ -296,22 +405,22 @@ const TrackingList = () => {
 													onChange={(e: {
 														target: { value: string | any[] };
 													}) => {
-														formik.handleChange(e);
+														formik_search.handleChange(e);
 
 														if (e.target.value.length > 2)
 															debounce(
 																() =>
 																	onFormSubmit({
-																		...formik.values,
+																		...formik_search.values,
 																		search: e.target.value,
 																	}),
 																1000,
 															)();
 
 														if (e.target.value.length === 0)
-															formik.resetForm();
+															formik_search.resetForm();
 													}}
-													value={formik.values.search}
+													value={formik_search.values.search}
 												/>
 											</div>
 										</FormGroup>
@@ -390,6 +499,37 @@ const TrackingList = () => {
 																		goToViewQuotationPage()
 																	}></Button>
 															</div>
+															{/* <div className='col-auto'>
+																<Button
+																	color='primary'
+																	icon='Add'
+																	shadow='none'
+																	hoverShadow='lg'
+																	tag='a'
+																	onClick={() =>{
+																		//goToViewQuotationPage()
+																		//console.log('hihi')
+																		setEditPanel(true);
+																		handleEdit(item.id)}}>
+																	</Button>
+															</div> */}
+															<div className='col-auto'>
+																<Button
+																	color='primary'
+																	icon='Add'
+																	shadow='none'
+																	hoverShadow='lg'
+																	tag='a'
+																	onClick={() =>{
+																		//goToViewQuotationPage()
+																		//console.log('hihi')
+																		setState(true);
+																		initialStatus();
+																	}
+																	}
+																		>
+																	</Button>
+															</div>
 														</div>
 													</td>
 												</tr>
@@ -410,7 +550,183 @@ const TrackingList = () => {
 					/>
 				</Card>
 			</Page>
+
+			{/* <OffCanvas
+				setOpen={setEditPanel}
+				isOpen={editPanel}
+				tag='form'
+				noValidate
+				onSubmit={formik.handleSubmit}>
+				<OffCanvasHeader setOpen={setEditPanel}>
+					<OffCanvasTitle id='edit-panel'>
+						{editItem?.name || 'New Quotation'}{' : Add. Info'}
+						{editItem?.name ? (
+							<Badge color='primary' isLight>
+								Edit
+							</Badge>
+						) : (
+							<Badge color='success' isLight>
+								New
+							</Badge>
+						)}
+					</OffCanvasTitle>
+				</OffCanvasHeader>
+				<OffCanvasBody>
+					<Card>
+						<CardHeader>
+							<CardLabel icon='Photo' iconColor='info'>
+								<CardTitle>Product Image</CardTitle>
+							</CardLabel>
+						</CardHeader>
+						<CardBody>
+							<div className='row'>
+								<div className='col-12'>
+									{editItem?.image ? (
+										<img
+											src={editItem.image}
+											alt=''
+											width={128}
+											height={128}
+											className='mx-auto d-block img-fluid mb-3'
+										/>
+									) : (
+										<PlaceholderImage
+											width={128}
+											height={128}
+											className='mx-auto d-block img-fluid mb-3 rounded'
+										/>
+									)}
+								</div>
+								<div className='col-12'>
+									<div className='row g-4'>
+										<div className='col-12'>
+											<Input type='file' autoComplete='photo' />
+										</div>
+										<div className='col-12'>
+											{editItem && (
+												<Button
+													color='dark'
+													isLight
+													icon='Delete'
+													className='w-100'
+													onClick={() => {
+														setEditItem({ ...editItem, image: null });
+													}}>
+													Delete Image
+												</Button>
+											)}
+										</div>
+									</div>
+								</div>
+							</div>
+						</CardBody>
+					</Card>
+
+					<Card>
+						<CardHeader>
+							<CardLabel icon='Description' iconColor='success'>
+								<CardTitle>Product Details</CardTitle>
+							</CardLabel>
+						</CardHeader>
+						<CardBody>
+							<div className='row g-4'>
+								<div className='col-12'>
+									<FormGroup id='name' label='Name' isFloating>
+										<Input
+											placeholder='Name'
+											onChange={formik.handleChange}
+											onBlur={formik.handleBlur}
+											value={formik.values.name}
+											isValid={formik.isValid}
+											isTouched={formik.touched.name}
+											invalidFeedback={formik.errors.name}
+											validFeedback='Looks good!'
+										/>
+									</FormGroup>
+								</div>
+								<div className='col-12'>
+									<FormGroup id='price' label='Price' isFloating>
+										<Input
+											placeholder='Price'
+											onChange={formik.handleChange}
+											onBlur={formik.handleBlur}
+											value={formik.values.price}
+											isValid={formik.isValid}
+											isTouched={formik.touched.price}
+											invalidFeedback={formik.errors.price}
+											validFeedback='Looks good!'
+										/>
+									</FormGroup>
+								</div>
+								<div className='col-12'>
+									<FormGroup id='stock' label='Stock' isFloating>
+										<Input
+											placeholder='Stock'
+											onChange={formik.handleChange}
+											onBlur={formik.handleBlur}
+											value={formik.values.stock}
+											isValid={formik.isValid}
+											isTouched={formik.touched.stock}
+											invalidFeedback={formik.errors.stock}
+											validFeedback='Looks good!'
+										/>
+									</FormGroup>
+								</div>
+								<div className='col-12'>
+									<FormGroup id='category' label='Category' isFloating>
+										<Input
+											placeholder='Category'
+											onChange={formik.handleChange}
+											onBlur={formik.handleBlur}
+											value={formik.values.category}
+											isValid={formik.isValid}
+											isTouched={formik.touched.category}
+											invalidFeedback={formik.errors.category}
+											validFeedback='Looks good!'
+										/>
+									</FormGroup>
+								</div>
+							</div>
+						</CardBody>
+					</Card>
+				</OffCanvasBody>
+				<div className='p-3'>
+					<Button
+						color='info'
+						icon='Save'
+						type='submit'
+						isDisable={!formik.isValid && !!formik.submitCount}>
+						Save
+					</Button>
+				</div>
+			</OffCanvas> */}
+
+	        <Modal
+			isOpen={state}
+			setIsOpen={setState}
+			titleId='subItemEditModal'
+			isStaticBackdrop={staticBackdropStatus}
+			isScrollable={scrollableStatus}
+			isCentered={centeredStatus}
+			size={sizeStatus}
+			fullScreen={fullScreenStatus}
+			isAnimation={animationStatus}>
+			<ModalHeader setIsOpen={headerCloseStatus ? setState : undefined}>
+				<ModalTitle id='editAdditionalInfoModal'>Edit Additional Info</ModalTitle>
+			</ModalHeader>
+			<ModalBody>
+				<AdditionalInfoForm state={state} id='1' formik={formik}/>
+			</ModalBody>
+			<ModalFooter>
+				<Button color='info' icon='Save' onClick={formik.handleSubmit}>
+					Save
+				</Button>
+			</ModalFooter>
+		</Modal>
+
+			
 		</PageWrapper>
+		
 	);
 };
 
