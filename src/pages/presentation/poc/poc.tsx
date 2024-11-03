@@ -7,32 +7,41 @@ import Input from '../../../components/bootstrap/forms/Input';
 import PageWrapper from '../../../layout/PageWrapper/PageWrapper';
 import {z} from 'zod';
 import Button from '../../../components/bootstrap/Button';
+import { FormProviderQuotation } from './QuotationForm';
+import { Quotation } from '../poc/components/Quotation';
 
-const schema = z.object({
-    name: z.string().min(8),
-    name2: z.string().min(3),
-    name3: z.string().min(3)
-});
 
-type FormFields = z.infer<typeof schema>;
+// const schema = z.object({
+//     name: z.string().min(8),
+//     name2: z.string().min(3),
+//     name3: z.string().min(3)
+// });
+
+// type FormFields = z.infer<typeof schema>;
 
 const poc = () => {
-	const { register, handleSubmit, setError, formState:{errors, isSubmitting} } = useForm<FormFields>({
-        mode: "onChange",
-        defaultValues: {
-            name: "",
-        },
-        resolver: zodResolver(schema),
-    });
+	// const { register, handleSubmit, setError, formState:{errors, isSubmitting} } = useForm<FormFields>({
+    //     mode: "onChange",
+    //     defaultValues: {
+    //         name: "",
+    //     },
+    //     resolver: zodResolver(schema),
+    // });
 
 
-	const onSubmit: SubmitHandler<FormFields> = (data) => {
-		console.log(data);
-	};
+	// const onSubmit: SubmitHandler<FormFields> = (data) => {
+	// 	console.log(data);
+	// };
 
 	return (
 		<PageWrapper title='POC'>
-			<form onSubmit={handleSubmit(onSubmit)}>
+            <FormProviderQuotation>
+                <Quotation />
+            </FormProviderQuotation>
+
+
+
+			{/* <form onSubmit={handleSubmit(onSubmit)}>
 				<FormGroup className='form-floating'>
 					<input
 						id='name'
@@ -50,7 +59,7 @@ const poc = () => {
 				</FormGroup>
                 
                 <hr/>
-				{/* <FormGroup className='form-floating'>
+				<FormGroup className='form-floating'>
 					<input
 						id='name2'
 						className='form-control is-valid'
@@ -70,10 +79,10 @@ const poc = () => {
 					/>
 					<div className='invalid-feedback'>invalid name3</div>
 					<label className='form-label'>Name3</label>
-				</FormGroup> */}
+				</FormGroup> 
 
 				<Button type='submit'>Submit</Button>
-			</form>
+			</form> */}
 		</PageWrapper>
 	);
 };
