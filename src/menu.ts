@@ -73,17 +73,6 @@ export const adminPagesMenu = {
 
 };
 
-export const pocPagesMenu = {
-	poc: {
-		id: 'poc',
-		text: 'poc',
-		path: '/poc',
-		icon: 'SupervisedUserCircle',
-		subMenu: null,
-	},
-
-};
-
 export const demoPagesMenu = {
 	// auth: {
 	// 	id: 'auth',

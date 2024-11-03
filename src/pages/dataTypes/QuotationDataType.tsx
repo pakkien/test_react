@@ -17,7 +17,7 @@ namespace QuotationDataType {
 		pic: string;
 		email: string;
 		project_ref: string;
-		item: Item[];
+		items: Item[];
 		state: string;
 
 		//Summary fields
@@ -41,7 +41,7 @@ namespace QuotationDataType {
 		margin: string;
 		unit_price: string;
 		total_price: string;
-		sub_item: Sub_item[];
+		sub_items: Sub_item[];
 	};
 
 	export type Sub_item = {

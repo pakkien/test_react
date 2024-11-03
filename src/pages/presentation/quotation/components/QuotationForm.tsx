@@ -1,7 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 import { FormProvider, SubmitHandler, useForm, useFormContext } from 'react-hook-form';
 import { z } from 'zod';
+import QuotationDataType from '../../../dataTypes/QuotationDataType';
 
 const schemaSubItem = z.object({
 	product_desc: z.string().min(3),
@@ -51,30 +52,43 @@ export const schemaQuotation = z.object({
 
 export type FormTypeQuotation = z.infer<typeof schemaQuotation>
 
-export const useFormQuotation = () =>
+
+type QuotationFormProps = {
+	data: QuotationDataType.QuotationData,
+	children: ReactNode
+
+}
+
+export const useFormQuotation = (props: QuotationFormProps) =>
   useForm<FormTypeQuotation>({
 	mode: "onChange",
     resolver: zodResolver(schemaQuotation),
+	defaultValues:{
+		client: props.data.client,
+		end_user: props.data.end_user,
+		site_location: props.data.site_location,
+		building: props.data.building,
+		pic: props.data.pic,
+		email: props.data.email,
+		project_ref: props.data.project_ref,
+		items: props.data.items, //check again
+		reference_status: props.data.reference_status,
+		note: props.data.note,
+		total: props.data.total,
+		g_total: props.data.g_total,
+
+	}
+
   })
 
 
-export const FormProviderQuotation = ({
-	children,
-  }: {
-	children: ReactNode
-  }) => {
-	const methods = useFormQuotation()
-	return <FormProvider {...methods}>{children}</FormProvider>
+export const FormProviderQuotation = (props: QuotationFormProps) => {
+	const methods = useFormQuotation(props)
+	return <FormProvider {...methods}>{props.children}</FormProvider>
   }
   
-export const useFormContextQuotation = () =>
+export const useFormContextQuotation = () => 
+	//setData(props.data.client);
 	useFormContext<FormTypeQuotation>()
-  
 
 
-
-// const EditQuotation = () => {
-// 	return <div>EditQuotation</div>;
-// };
-
-// export default EditQuotation;

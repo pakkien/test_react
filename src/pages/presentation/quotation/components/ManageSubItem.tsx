@@ -1,20 +1,19 @@
 import React from 'react';
-import { useFormContextQuotation } from '../QuotationForm';
+import { useFormContextQuotation } from '../components/QuotationForm'
 import { useFieldArray } from 'react-hook-form';
-import Card, {
-	CardActions,
-	CardBody,
-	CardFooter,
-	CardFooterRight,
-	CardHeader,
-	CardLabel,
-	CardTitle,
-} from '../../../../components/bootstrap/Card';
+import Accordion, { AccordionItem } from '../../../../components/bootstrap/Accordion';
+import Card, { CardActions, CardBody, CardFooter, CardFooterRight, CardHeader, CardLabel, CardTitle } from '../../../../components/bootstrap/Card';
 import Button from '../../../../components/bootstrap/Button';
 import FormGroup from '../../../../components/bootstrap/forms/FormGroup';
-import ManageSubItem from './ManageSubItem';
 
-const ManageItem = () => {
+type SubItemProps = {
+	itemIndex: number,
+	isViewMode: boolean
+}
+
+const ManageSubItem = (props: SubItemProps) => {
+
+	const itemIndex = props.itemIndex;
 	const {
 		register,
 		control,
@@ -22,11 +21,11 @@ const ManageItem = () => {
 	} = useFormContextQuotation();
 
 	const { append, remove, fields } = useFieldArray({
-		name: 'items',
+		name: `items.${itemIndex}.sub_items`,
 		control,
 	});
 
-	const addItem = () => {
+	const addSubItem = () => {
 		append({
 			product_desc: '',
 			brand: '',
@@ -38,27 +37,28 @@ const ManageItem = () => {
 			total_cost: '',
 			margin: '',
 			unit_price: '',
-			total_price: '',
-			sub_items: [],
+			total_price: ''
 		});
 	};
 
 	return (
-		<div className='pb-0'>
-			<div className='row g-4'>
-				<div className='col-md-12' hidden={fields.length == 0 ? false : true}>
-					<Button color='info' icon='Add' tag='a' onClick={addItem} className='float-end'>
-						Add Item
+		<>
+			<div className='col-md-12' hidden={props.isViewMode || fields.length > 0 ? true : false}>
+					<Button color='info' icon='Add' tag='a' onClick={addSubItem} className='float-end'>
+						Add Sub Item
 					</Button>
 				</div>
-				<div className='col-md-12'>
-					{fields.map((item, itemIndex) => {
-						return (
-							<Card id={'#item_card_id#' + itemIndex} key={item.id}>
+			
+			
+			{fields.length > 0 && (
+				<Accordion id='SubItemAccordion' color='dark' activeItemId={'SubItemAccordionItem_'+ itemIndex}>
+					<AccordionItem id={'SubItemAccordionItem_'+ itemIndex} title='Sub Items'>
+						{fields.map((sub_item, subItemIndex) => (
+							<Card>
 								<CardHeader>
 									<CardLabel>
 										<CardTitle tag='div' className='h3'>
-											Item Details {itemIndex + 1}/{fields.length}{' '}
+											Sub Item - {subItemIndex + 1}/{fields.length}{' '}
 											&nbsp;&nbsp;
 										</CardTitle>
 									</CardLabel>
@@ -67,13 +67,14 @@ const ManageItem = () => {
 											color='danger'
 											icon='Delete'
 											tag='a'
-											hidden={false}
+											hidden={props.isViewMode}
 											onClick={() => {
-												remove(itemIndex);
+												remove(subItemIndex);
 											}}>
-											Delete Item
+											Delete Sub Item
 										</Button>
 									</CardActions>
+									
 								</CardHeader>
 								<CardBody className='pb-0'>
 									<div className='row g-4'>
@@ -86,17 +87,18 @@ const ManageItem = () => {
 													id='product_desc'
 													className={
 														'form-control ' +
-														(errors.items?.[itemIndex]?.product_desc
+														(errors.items?.[itemIndex]?.sub_items?.[subItemIndex]?.product_desc
 															? 'is-invalid'
 															: '')
 													}
-													{...register(`items.${itemIndex}.product_desc`)}
+													{...register(`items.${itemIndex}.sub_items.${subItemIndex}.product_desc`)}
 													type='text'
 													placeholder='product_desc'
+													disabled={props.isViewMode}
 												/>
 												<div className='invalid-feedback'>
 													{
-														errors.items?.[itemIndex]?.product_desc
+														errors.items?.[itemIndex]?.sub_items?.[subItemIndex]?.product_desc
 															?.message
 													}
 												</div>
@@ -108,16 +110,17 @@ const ManageItem = () => {
 													id='brand'
 													className={
 														'form-control ' +
-														(errors.items?.[itemIndex]?.brand
+														(errors.items?.[itemIndex]?.sub_items?.[subItemIndex]?.brand
 															? 'is-invalid'
 															: '')
 													}
-													{...register(`items.${itemIndex}.brand`)}
+													{...register(`items.${itemIndex}.sub_items.${subItemIndex}.brand`)}
 													type='text'
 													placeholder='brand'
+													disabled={props.isViewMode}
 												/>
 												<div className='invalid-feedback'>
-													{errors.items?.[itemIndex]?.brand?.message}
+													{errors.items?.[itemIndex]?.sub_items?.[subItemIndex]?.brand?.message}
 												</div>
 											</FormGroup>
 										</div>
@@ -127,16 +130,17 @@ const ManageItem = () => {
 													id='model'
 													className={
 														'form-control ' +
-														(errors.items?.[itemIndex]?.model
+														(errors.items?.[itemIndex]?.sub_items?.[subItemIndex]?.model
 															? 'is-invalid'
 															: '')
 													}
-													{...register(`items.${itemIndex}.model`)}
+													{...register(`items.${itemIndex}.sub_items.${subItemIndex}.model`)}
 													type='text'
 													placeholder='model'
+													disabled={props.isViewMode}
 												/>
 												<div className='invalid-feedback'>
-													{errors.items?.[itemIndex]?.model?.message}
+													{errors.items?.[itemIndex]?.sub_items?.[subItemIndex]?.model?.message}
 												</div>
 											</FormGroup>
 										</div>
@@ -146,16 +150,17 @@ const ManageItem = () => {
 													id='remarks'
 													className={
 														'form-control ' +
-														(errors.items?.[itemIndex]?.remarks
+														(errors.items?.[itemIndex]?.sub_items?.[subItemIndex]?.remarks
 															? 'is-invalid'
 															: '')
 													}
-													{...register(`items.${itemIndex}.remarks`)}
+													{...register(`items.${itemIndex}.sub_items.${subItemIndex}.remarks`)}
 													type='text'
 													placeholder='remarks'
+													disabled={props.isViewMode}
 												/>
 												<div className='invalid-feedback'>
-													{errors.items?.[itemIndex]?.remarks?.message}
+													{errors.items?.[itemIndex]?.sub_items?.[subItemIndex]?.remarks?.message}
 												</div>
 											</FormGroup>
 										</div>
@@ -170,19 +175,20 @@ const ManageItem = () => {
 															id='quantity'
 															className={
 																'form-control ' +
-																(errors.items?.[itemIndex]?.quantity
+																(errors.items?.[itemIndex]?.sub_items?.[subItemIndex]?.quantity
 																	? 'is-invalid'
 																	: '')
 															}
 															{...register(
-																`items.${itemIndex}.quantity`,
+																`items.${itemIndex}.sub_items.${subItemIndex}.quantity`,
 															)}
 															type='text'
 															placeholder='quantity'
+															disabled={props.isViewMode}
 														/>
 														<div className='invalid-feedback'>
 															{
-																errors.items?.[itemIndex]?.quantity
+																errors.items?.[itemIndex]?.sub_items?.[subItemIndex]?.quantity
 																	?.message
 															}
 														</div>
@@ -194,17 +200,18 @@ const ManageItem = () => {
 															id='unit'
 															className={
 																'form-control ' +
-																(errors.items?.[itemIndex]?.unit
+																(errors.items?.[itemIndex]?.sub_items?.[subItemIndex]?.unit
 																	? 'is-invalid'
 																	: '')
 															}
-															{...register(`items.${itemIndex}.unit`)}
+															{...register(`items.${itemIndex}.sub_items.${subItemIndex}.unit`)}
 															type='text'
 															placeholder='unit'
+															disabled={props.isViewMode}
 														/>
 														<div className='invalid-feedback'>
 															{
-																errors.items?.[itemIndex]?.unit
+																errors.items?.[itemIndex]?.sub_items?.[subItemIndex]?.unit
 																	?.message
 															}
 														</div>
@@ -220,19 +227,20 @@ const ManageItem = () => {
 															className={
 																'form-control ' +
 																(errors.items?.[itemIndex]
-																	?.unit_cost
+																	?.sub_items?.[subItemIndex]?.unit_cost
 																	? 'is-invalid'
 																	: '')
 															}
 															{...register(
-																`items.${itemIndex}.unit_cost`,
+																`items.${itemIndex}.sub_items.${subItemIndex}.unit_cost`,
 															)}
 															type='text'
 															placeholder='unit_cost'
+															disabled={props.isViewMode}
 														/>
 														<div className='invalid-feedback'>
 															{
-																errors.items?.[itemIndex]?.unit_cost
+																errors.items?.[itemIndex]?.sub_items?.[subItemIndex]?.unit_cost
 																	?.message
 															}
 														</div>
@@ -249,16 +257,17 @@ const ManageItem = () => {
 													id='total_cost'
 													className={
 														'form-control ' +
-														(errors.items?.[itemIndex]?.total_cost
+														(errors.items?.[itemIndex]?.sub_items?.[subItemIndex]?.total_cost
 															? 'is-invalid'
 															: '')
 													}
-													{...register(`items.${itemIndex}.total_cost`)}
+													{...register(`items.${itemIndex}.sub_items.${subItemIndex}.total_cost`)}
 													type='text'
 													placeholder='total_cost'
+													disabled={props.isViewMode}
 												/>
 												<div className='invalid-feedback'>
-													{errors.items?.[itemIndex]?.total_cost?.message}
+													{errors.items?.[itemIndex]?.sub_items?.[subItemIndex]?.total_cost?.message}
 												</div>
 											</FormGroup>
 										</div>
@@ -268,16 +277,17 @@ const ManageItem = () => {
 													id='margin'
 													className={
 														'form-control ' +
-														(errors.items?.[itemIndex]?.margin
+														(errors.items?.[itemIndex]?.sub_items?.[subItemIndex]?.margin
 															? 'is-invalid'
 															: '')
 													}
-													{...register(`items.${itemIndex}.margin`)}
+													{...register(`items.${itemIndex}.sub_items.${subItemIndex}.margin`)}
 													type='text'
 													placeholder='margin'
+													disabled={props.isViewMode}
 												/>
 												<div className='invalid-feedback'>
-													{errors.items?.[itemIndex]?.margin?.message}
+													{errors.items?.[itemIndex]?.sub_items?.[subItemIndex]?.margin?.message}
 												</div>
 											</FormGroup>
 										</div>
@@ -290,16 +300,17 @@ const ManageItem = () => {
 													id='unit_price'
 													className={
 														'form-control ' +
-														(errors.items?.[itemIndex]?.unit_price
+														(errors.items?.[itemIndex]?.sub_items?.[subItemIndex]?.unit_price
 															? 'is-invalid'
 															: '')
 													}
-													{...register(`items.${itemIndex}.unit_price`)}
+													{...register(`items.${itemIndex}.sub_items.${subItemIndex}.unit_price`)}
 													type='text'
 													placeholder='unit_price'
+													disabled={props.isViewMode}
 												/>
 												<div className='invalid-feedback'>
-													{errors.items?.[itemIndex]?.unit_price?.message}
+													{errors.items?.[itemIndex]?.sub_items?.[subItemIndex]?.unit_price?.message}
 												</div>
 											</FormGroup>
 										</div>
@@ -312,47 +323,22 @@ const ManageItem = () => {
 													id='total_price'
 													className={
 														'form-control ' +
-														(errors.items?.[itemIndex]?.total_price
+														(errors.items?.[itemIndex]?.sub_items?.[subItemIndex]?.total_price
 															? 'is-invalid'
 															: '')
 													}
-													{...register(`items.${itemIndex}.total_price`)}
+													{...register(`items.${itemIndex}.sub_items.${subItemIndex}.total_price`)}
 													type='text'
 													placeholder='total_price'
+													disabled={props.isViewMode}
 												/>
 												<div className='invalid-feedback'>
 													{
-														errors.items?.[itemIndex]?.total_price
+														errors.items?.[itemIndex]?.sub_items?.[subItemIndex]?.total_price
 															?.message
 													}
 												</div>
 											</FormGroup>
-										</div>
-										<div className='col-md-12'>
-											{/* sub_item here */}
-                                            <ManageSubItem itemIndex={itemIndex}/>
-											{/* {ItemProps.data.sub_item.length > 0 && (
-												<Accordion
-													id='accSample'
-													activeItemId={ItemProps.data.item_id}
-													color='dark'>
-													<AccordionItem
-														id={ItemProps.data.item_id}
-														title='Sub Item'>
-														{ItemProps.data.sub_item.map((sub_item) => (
-															<SingleSubItem
-																key={sub_item.sub_item_id}
-																mode={ItemProps.mode}
-																data={sub_item}
-																deleteSubItemfunc={
-																	handleDeleteSubItem
-																}
-																editSubItemfunc={handleEditSubItem}
-															/>
-														))}
-													</AccordionItem>
-												</Accordion>
-											)} */}
 										</div>
 										<div className='col-md-12'></div>
 									</div>
@@ -363,29 +349,19 @@ const ManageItem = () => {
 											color='info'
 											icon='Add'
 											tag='a'
-											hidden={false}
-											onClick={addItem}>
-											Add Item
-										</Button>
-										<Button
-											color='info'
-											icon='Add'
-											tag='a'
-											hidden={false}
-											onClick={() => {
-												//handleButtonClick_addSubItem(ItemProps.data.item_id);
-											}}>
+											hidden={props.isViewMode}
+											onClick={addSubItem}>
 											Add Sub-Item
 										</Button>
 									</CardFooterRight>
 								</CardFooter>
 							</Card>
-						);
-					})}
-				</div>
-			</div>
-		</div>
+						))}
+					</AccordionItem>
+				</Accordion>
+			)}
+		</>
 	);
 };
 
-export default ManageItem;
+export default ManageSubItem;

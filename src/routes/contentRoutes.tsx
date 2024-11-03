@@ -6,13 +6,9 @@ import {
 	demoPagesMenu,
 	pageLayoutTypesPagesMenu,
 	quotationMenu,
-	pocPagesMenu
 } from '../menu';
 import Login from '../pages/presentation/auth/Login';
 
-const POC = {
-	POC_PAGE: lazy(() => import('../pages/presentation/poc/poc')),
-};
 
 
 const LANDING = {
@@ -55,10 +51,6 @@ const presentation = [
 	{
 		path: 'test_react/',
 		element: <LANDING.DASHBOARD />,
-	},
-	{
-		path: pocPagesMenu.poc.path,
-		element: <POC.POC_PAGE />,
 	},
 	{
 		path: dashboardPagesMenu.dashboard.path,
