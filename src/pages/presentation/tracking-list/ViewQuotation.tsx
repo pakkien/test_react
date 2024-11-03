@@ -51,7 +51,7 @@ const Quotation = {
 			email: 'sometester@gmail.com',
 			project_ref: 'abcProject',
 			state: 'awarded',
-			item: [
+			items: [
 				{
 					item_id: '09ee02e9-8115-42ad-8648-74c901b96940',
 					quotation_rev_id: 'c33d08b9-8ec3-41a1-8b0a-66033a3c7214',
@@ -66,7 +66,7 @@ const Quotation = {
 					margin: '0.8',
 					unit_price: '375',
 					total_price: '3750',
-					sub_item: [
+					sub_items: [
 						{
 							sub_item_id: '60c07ea8-f677-4e0c-b232-8756842ee174',
 							item_id: '09ee02e9-8115-42ad-8648-74c901b96940',
@@ -113,7 +113,7 @@ const Quotation = {
 					margin: '0.8',
 					unit_price: '375',
 					total_price: '3750',
-					sub_item: [
+					sub_items: [
 						{
 							sub_item_id: '24e651fe-720e-4aa3-bd25-95398b39e440',
 							item_id: '7043ac52-22c1-474c-898c-ae4a3d8d44aa',
@@ -145,7 +145,7 @@ const Quotation = {
 					margin: '0.8',
 					unit_price: '375',
 					total_price: '3750',
-					sub_item: [],
+					sub_items: [],
 				},
 			],
 			reference_status: '-',
@@ -167,11 +167,11 @@ const Quotation = {
 			email: 'sometester@gmail.com1',
 			project_ref: 'abcProject1',
 			state: 'closed',
-			item: [
+			items: [
 				{
 					item_id: '09ee02e9-8115-42ad-8648-74c901b96940',
 					quotation_rev_id: '998bf269-5741-4445-83ca-f251cb608c5e',
-					product_desc: 'item1_Variation-01',
+					product_desc: 'item1',
 					brand: 'prodtBrand',
 					model: 'ModelX',
 					remarks: 'dummyRemarks',
@@ -182,11 +182,11 @@ const Quotation = {
 					margin: '0.8',
 					unit_price: '375',
 					total_price: '3750',
-					sub_item: [
+					sub_items: [
 						{
 							sub_item_id: '60c07ea8-f677-4e0c-b232-8756842ee174',
 							item_id: '09ee02e9-8115-42ad-8648-74c901b96940',
-							product_desc: 'item1_subItem1_Variation-01',
+							product_desc: 'item1_subItem1',
 							brand: 'prodtBrand',
 							model: 'ModelX44',
 							remarks: 'dummyRemarks',
@@ -201,7 +201,7 @@ const Quotation = {
 						{
 							sub_item_id: 'd23c57b7-38c1-45c4-a253-f8f7affe0447',
 							item_id: '09ee02e9-8115-42ad-8648-74c901b96940',
-							product_desc: 'item1_subItem2_Variation-01',
+							product_desc: 'item1_subItem2',
 							brand: 'prodtBrand',
 							model: 'ModelX55',
 							remarks: 'dummyRemarks',
@@ -218,7 +218,7 @@ const Quotation = {
 				{
 					item_id: '7043ac52-22c1-474c-898c-ae4a3d8d44aa',
 					quotation_rev_id: '998bf269-5741-4445-83ca-f251cb608c5e',
-					product_desc: 'item2_Variation-01',
+					product_desc: 'item2',
 					brand: 'prodtBrand2',
 					model: 'ModelX2',
 					remarks: 'dummyRemarks2',
@@ -229,11 +229,11 @@ const Quotation = {
 					margin: '0.8',
 					unit_price: '375',
 					total_price: '3750',
-					sub_item: [
+					sub_items: [
 						{
 							sub_item_id: '24e651fe-720e-4aa3-bd25-95398b39e440',
 							item_id: '7043ac52-22c1-474c-898c-ae4a3d8d44aa',
-							product_desc: 'item2_subItem1_Variation-01',
+							product_desc: 'item2_subItem1',
 							brand: 'prodtBrand',
 							model: 'ModelX444',
 							remarks: 'dummyRemarks',
@@ -250,7 +250,7 @@ const Quotation = {
 				{
 					item_id: 'fca38a36-659a-4e68-84f5-3c95eea6e9cb',
 					quotation_rev_id: '998bf269-5741-4445-83ca-f251cb608c5e',
-					product_desc: 'item3_Variation-01',
+					product_desc: 'item3',
 					brand: 'prodtBrand2',
 					model: 'ModelX2',
 					remarks: 'dummyRemarks2',
@@ -261,7 +261,7 @@ const Quotation = {
 					margin: '0.8',
 					unit_price: '375',
 					total_price: '3750',
-					sub_item: [],
+					sub_items: [],
 				},
 			],
 			reference_status: '-',
@@ -465,7 +465,7 @@ const ViewQuotation = () => {
 									</div>
 									<h6>Revision: 1.{quotationRev}</h6>
 								</div>
-								{Quotation.quotation_data[quotationRev].item.map((item, idx) => (
+								{Quotation.quotation_data[quotationRev].items.map((item, idx) => (
 									<ItemDetails item={item} />
 								))}
 							</CardBody>

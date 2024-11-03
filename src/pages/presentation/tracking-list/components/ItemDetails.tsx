@@ -86,7 +86,7 @@ const ItemDetails = (ItemProps: ItemProps) => {
 
 					{/* sub item details */}
 					<div className='col-md-12'>
-						{ItemProps.item.sub_item.length > 0 && (
+						{ItemProps.item.sub_items.length > 0 && (
 							<Accordion
 								id='subitemAccordion'
 								activeItemId='subitemAccordionitem'
@@ -95,7 +95,7 @@ const ItemDetails = (ItemProps: ItemProps) => {
 									id='subitemAccordionitem'
 									title={ItemProps.item.product_desc + ' - Breakdown'}
 									icon='List'>
-									{ItemProps.item.sub_item.map((sub_item, idx) => (
+									{ItemProps.item.sub_items.map((sub_item, idx) => (
 										<SubItemDetails sub_item={sub_item} />
 									))}
 								</AccordionItem>

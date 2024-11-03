@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { FormTypeQuotation, useFormContextQuotation } from '../components/QuotationForm'
+import { FormTypeQuotation, useFormContextQuotation } from '../components/QuotationForm';
 import { SubmitHandler, useFieldArray } from 'react-hook-form';
 import PageWrapper from '../../../../layout/PageWrapper/PageWrapper';
 import Card, {
@@ -25,6 +25,8 @@ import Page from '../../../../layout/Page/Page';
 import Spinner from '../../../../components/bootstrap/Spinner';
 import showNotification from '../../../../components/extras/showNotification';
 import Icon from '../../../../components/icon/Icon';
+import Input from '../../../../components/bootstrap/forms/Input';
+import UploadFiles from '../uploadFileComponents/UploadFiles';
 
 type QuotationProps = {
 	mode: 'create' | 'view' | 'edit';
@@ -42,18 +44,19 @@ export const Quotation = (props: QuotationProps) => {
 	//console.log('formData', formData)
 	//console.log('errors', errors)
 
-	const isViewMode = (props.mode.toLowerCase() == 'view')? true:false;
-	const title =  props.mode.charAt(0).toUpperCase()+ props.mode.slice(1).toLowerCase() + ' Quotation ';
+	const isViewMode = props.mode.toLowerCase() == 'view' ? true : false;
+	const title =
+		props.mode.charAt(0).toUpperCase() + props.mode.slice(1).toLowerCase() + ' Quotation ';
 
-	//upload file
-	const [files, setFiles] = useState<FileList | null>(null);
+	// //upload file
+	// const [files, setFiles] = useState<FileList | null>(null);
 
-	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		if (e.target.files) {
-			//setStatus('initial');
-			setFiles(e.target.files);
-		}
-	};
+	// const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+	// 	if (e.target.files) {
+	// 		//setStatus('initial');
+	// 		setFiles(e.target.files);
+	// 	}
+	// };
 
 	function timeout(delay: number) {
 		return new Promise((res) => setTimeout(res, delay));
@@ -73,9 +76,9 @@ export const Quotation = (props: QuotationProps) => {
 			</SubHeader>
 			<Page container='fluid'>
 				<form
-					onSubmit={handleSubmit( async (data) => {
+					onSubmit={handleSubmit(async (data) => {
 						//API CALL
-						
+
 						await timeout(1000);
 						showNotification(
 							<span className='d-flex align-items-center'>
@@ -272,64 +275,65 @@ export const Quotation = (props: QuotationProps) => {
 						</CardFooter>
 					</Card>
 
-					<ManageItem isViewMode={isViewMode}/>
+					<ManageItem isViewMode={isViewMode} />
 
 					{/* Test upload */}
+					<UploadFiles/>
 					{/* <Card>
-				<CardHeader>
-					<CardLabel>
-						<CardTitle tag='div' className='h3'>
-							Upload PDF
-						</CardTitle>
-					</CardLabel>
-				</CardHeader>
-				<CardBody className='pb-0'>
-					<div className='row g-4'>
-						<div className='col-md-4'></div>
-						<div className='col-md-4'>
-							<div className='col-md-12'>
-								<FormGroup
-									//className='col-12'
-									id='uploadfile'
-									//label='Upload PDF'
-								>
-									<input
-										type='file'
-										accept='.pdf'
-										multiple
-										//onChange={formik.handleChange}
-										// value={formik.values.uploadfile}
-										// disabled={isViewMode ? true : false}
-										// onChange={(
-										// 	e: React.ChangeEvent<HTMLInputElement>,
-										// ) => {
-										// 	handleFileChange(e);
-										// 	formik.handleChange(e);
-										// }}
-									/>
-								</FormGroup>
+						<CardHeader>
+							<CardLabel>
+								<CardTitle tag='div' className='h3'>
+									Upload PDF
+								</CardTitle>
+							</CardLabel>
+						</CardHeader>
+						<CardBody className='pb-0'>
+							<div className='row g-4'>
+								<div className='col-md-4'></div>
+								<div className='col-md-4'>
+									<div className='col-md-12'>
+										<FormGroup
+											//className='col-12'
+											id='uploadfile'
+											//label='Upload PDF'
+										>
+											<Input
+												type='file'
+												accept='.pdf'
+												multiple
+												//onChange={formik.handleChange}
+												// value={formik.values.uploadfile}
+												// disabled={isViewMode ? true : false}
+												onChange={(
+													e: React.ChangeEvent<HTMLInputElement>,
+												) => {
+													handleFileChange(e);
+													//formik.handleChange(e);
+												}}
+											/>
+										</FormGroup>
+									</div>
+									<div className='col-md-12'>
+										{files &&
+											[...files].map((file, index) => (
+												<section key={file.name}>
+													File number {index + 1} details:
+													<ul>
+														<li>Name: {file.name}</li>
+														<li>Type: {file.type}</li>
+														<li>Size: {file.size} bytes</li>
+													</ul>
+												</section>
+											))}
+									</div>
+								</div>
+								<div className='col-md-4'></div>
+								<div className='col-md-12'></div>
 							</div>
-							<div className='col-md-12'>
-								{files &&
-									[...files].map((file, index) => (
-										<section key={file.name}>
-											File number {index + 1} details:
-											<ul>
-												<li>Name: {file.name}</li>
-												<li>Type: {file.type}</li>
-												<li>Size: {file.size} bytes</li>
-											</ul>
-										</section>
-									))}
-							</div>
-						</div>
-						<div className='col-md-4'></div>
-						<div className='col-md-12'></div>
-					</div>
-				</CardBody>
-				<CardFooter>
-					<></>
-				</CardFooter>
+						</CardBody>
+						<CardFooter>
+							<></>
+						</CardFooter>
 					</Card> */}
 
 					{/* Summary */}
@@ -448,13 +452,12 @@ export const Quotation = (props: QuotationProps) => {
 								<Button color='dark' icon='Edit' hidden={isViewMode}>
 									Draft
 								</Button>
-								<Button 
-								type='submit' 
-								color='success' 
-								icon='Save'
-								hidden={isViewMode}
-								isDisable={isSubmitting}
-								>
+								<Button
+									type='submit'
+									color='success'
+									icon='Save'
+									hidden={isViewMode}
+									isDisable={isSubmitting}>
 									{isSubmitting ? (
 										<Spinner isSmall inButton='onlyIcon' />
 									) : (

@@ -245,17 +245,27 @@ const QuotationData = {
 const EditQuotation = () => {
 	const location = useLocation();
 
-	// if (location.state != null){
-	// 	return <SingleQuotation mode='Edit' data={location.state.quotation_data} />; //from tracking view
-	// }else{
-	// 	return <SingleQuotation mode='Edit' data={Quotation.quotation_data[0]} />;
-	// }
-
-	return (
-		<FormProviderQuotation data={QuotationData.quotation_data[0]}>
+	if (location.state != null){
+		//return <SingleQuotation mode='Edit' data={location.state.quotation_data} />; //from tracking view
+		return(
+			<FormProviderQuotation data={location.state.quotation_data}>
 			<Quotation mode={'edit'} />
 		</FormProviderQuotation>
-	);
+		);
+	}else{
+		//return <SingleQuotation mode='Edit' data={Quotation.quotation_data[0]} />;
+		return(
+			<FormProviderQuotation data={QuotationData.quotation_data[0]}>
+			<Quotation mode={'edit'} />
+		</FormProviderQuotation>
+		);
+	}
+
+	// return (
+	// 	<FormProviderQuotation data={QuotationData.quotation_data[0]}>
+	// 		<Quotation mode={'edit'} />
+	// 	</FormProviderQuotation>
+	// );
 };
 
 export default EditQuotation;
