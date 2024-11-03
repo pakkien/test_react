@@ -1,6 +1,7 @@
 import React from 'react';
-import SingleQuotation from './components/SingleQuotation';
 import QuotationDataType from '../../dataTypes/QuotationDataType';
+import { FormProviderQuotation } from './components/QuotationForm';
+import { Quotation } from './components/Quotation';
 
 const QuotationData: QuotationDataType.QuotationData = {
 	quotation_id: crypto.randomUUID(),
@@ -15,7 +16,7 @@ const QuotationData: QuotationDataType.QuotationData = {
 	pic: '',
 	email: '',
 	project_ref: '',
-	item: [],
+	items: [],
 	state: '',
 
 	//Summary fields
@@ -27,10 +28,12 @@ const QuotationData: QuotationDataType.QuotationData = {
 };
 
 
-
-
 const CreateQuotation = () => {
-	return <SingleQuotation mode='Create' data={QuotationData} />;
+	return(
+		<FormProviderQuotation data={QuotationData}>
+			<Quotation mode={'create'} />
+		</FormProviderQuotation>
+	)
 };
 
 export default CreateQuotation;

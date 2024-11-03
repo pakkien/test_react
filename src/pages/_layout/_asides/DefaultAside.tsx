@@ -10,7 +10,7 @@ import {
 	pageLayoutTypesPagesMenu,
 	adminPagesMenu,
 	quotationMenu,
-	trackingListMenu,
+	trackingListMenu
 	
 } from '../../../menu';
 import ThemeContext from '../../../contexts/themeContext';
@@ -70,8 +70,8 @@ const DefaultAside = () => {
 				<Navigation menu={trackingListMenu} id='aside-tracking' />
 
 				<Navigation menu={quotationMenu} id='aside-quotation' />
-	
 
+			
 				
 
 				{/* {asideStatus && doc && <div className='p-4'>Documentation</div>} */}

@@ -1,8 +1,10 @@
 import React from 'react';
-import SingleQuotation from './components/SingleQuotation';
-import { useLocation } from 'react-router-dom';
 
-const Quotation = {
+import { useLocation } from 'react-router-dom';
+import { FormProviderQuotation } from './components/QuotationForm';
+import { Quotation } from './components/Quotation';
+
+const QuotationData = {
 	quotation_id: 'ad399d47-a038-4fb4-9f31-2f142c143611',
 	quotation_data: [
 		{
@@ -19,7 +21,7 @@ const Quotation = {
 			email: 'sometester@gmail.com',
 			project_ref: 'abcProject',
 			state: 'awarded',
-			item: [
+			items: [
 				{
 					item_id: '09ee02e9-8115-42ad-8648-74c901b96940',
 					quotation_rev_id: 'c33d08b9-8ec3-41a1-8b0a-66033a3c7214',
@@ -34,7 +36,7 @@ const Quotation = {
 					margin: '0.8',
 					unit_price: '375',
 					total_price: '3750',
-					sub_item: [
+					sub_items: [
 						{
 							sub_item_id: '60c07ea8-f677-4e0c-b232-8756842ee174',
 							item_id: '09ee02e9-8115-42ad-8648-74c901b96940',
@@ -81,7 +83,7 @@ const Quotation = {
 					margin: '0.8',
 					unit_price: '375',
 					total_price: '3750',
-					sub_item: [
+					sub_items: [
 						{
 							sub_item_id: '24e651fe-720e-4aa3-bd25-95398b39e440',
 							item_id: '7043ac52-22c1-474c-898c-ae4a3d8d44aa',
@@ -113,7 +115,7 @@ const Quotation = {
 					margin: '0.8',
 					unit_price: '375',
 					total_price: '3750',
-					sub_item: [],
+					sub_items: [],
 				},
 			],
 			reference_status: '-',
@@ -135,7 +137,7 @@ const Quotation = {
 			email: 'sometester@gmail.com1',
 			project_ref: 'abcProject1',
 			state: 'closed',
-			item: [
+			items: [
 				{
 					item_id: '09ee02e9-8115-42ad-8648-74c901b96940',
 					quotation_rev_id: '998bf269-5741-4445-83ca-f251cb608c5e',
@@ -150,7 +152,7 @@ const Quotation = {
 					margin: '0.8',
 					unit_price: '375',
 					total_price: '3750',
-					sub_item: [
+					sub_items: [
 						{
 							sub_item_id: '60c07ea8-f677-4e0c-b232-8756842ee174',
 							item_id: '09ee02e9-8115-42ad-8648-74c901b96940',
@@ -197,7 +199,7 @@ const Quotation = {
 					margin: '0.8',
 					unit_price: '375',
 					total_price: '3750',
-					sub_item: [
+					sub_items: [
 						{
 							sub_item_id: '24e651fe-720e-4aa3-bd25-95398b39e440',
 							item_id: '7043ac52-22c1-474c-898c-ae4a3d8d44aa',
@@ -229,7 +231,7 @@ const Quotation = {
 					margin: '0.8',
 					unit_price: '375',
 					total_price: '3750',
-					sub_item: [],
+					sub_items: [],
 				},
 			],
 			reference_status: '-',
@@ -243,15 +245,17 @@ const Quotation = {
 const EditQuotation = () => {
 	const location = useLocation();
 
-	
-	if (location.state != null){
-		return <SingleQuotation mode='Edit' data={location.state.quotation_data} />; //from tracking view
-	}else{
-		return <SingleQuotation mode='Edit' data={Quotation.quotation_data[0]} />; 
-	}
+	// if (location.state != null){
+	// 	return <SingleQuotation mode='Edit' data={location.state.quotation_data} />; //from tracking view
+	// }else{
+	// 	return <SingleQuotation mode='Edit' data={Quotation.quotation_data[0]} />;
+	// }
 
-	
-
+	return (
+		<FormProviderQuotation data={QuotationData.quotation_data[0]}>
+			<Quotation mode={'edit'} />
+		</FormProviderQuotation>
+	);
 };
 
 export default EditQuotation;
