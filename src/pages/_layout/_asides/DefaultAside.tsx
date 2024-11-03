@@ -11,6 +11,7 @@ import {
 	adminPagesMenu,
 	quotationMenu,
 	trackingListMenu,
+	pocPagesMenu
 	
 } from '../../../menu';
 import ThemeContext from '../../../contexts/themeContext';
@@ -70,6 +71,8 @@ const DefaultAside = () => {
 				<Navigation menu={trackingListMenu} id='aside-tracking' />
 
 				<Navigation menu={quotationMenu} id='aside-quotation' />
+
+				<Navigation menu={pocPagesMenu} id='aside-poc' />
 	
 
 				
