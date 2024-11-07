@@ -47,7 +47,7 @@ export const schemaQuotation = z.object({
 	total: z.string().min(3),
 	g_total: z.string().min(3),
 	//items: z.array(schemaItem)
-	items: z.array(schemaItem).min(1, { message: 'must contain atleast one item.' })
+	items: z.array(schemaItem).min(1, { message: 'must contain at least one item.' })
 });
 
 export type FormTypeQuotation = z.infer<typeof schemaQuotation>

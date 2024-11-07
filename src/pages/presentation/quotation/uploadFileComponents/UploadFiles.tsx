@@ -31,10 +31,9 @@ const UploadFiles = () => {
 				</CardLabel>
 			</CardHeader>
 			<CardBody className='pb-0'>
-				<div className='row g-4'>
-					<div className='col-md-4'></div>
-					<div className='col-md-4'>
-						<div className='col-md-12'>
+				<div className='row g-4 justify-content-center'>
+					
+						<div className='col-md-4'>
 							<FormGroup
 								//className='col-12'
 								id='uploadfile'
@@ -54,12 +53,12 @@ const UploadFiles = () => {
 								/>
 							</FormGroup>
 						</div>
-						
-					</div>
-					<div className='col-md-4'></div>
+			
+
 					<div className='col-md-12'></div>
 					<div className='col-md-12  '>
-						<div className='row d-flex justify-content-center'>
+						{/* <div className='row d-flex justify-content-center'>  */}
+						<div className='row d-flex'>
 							{files &&
 								[...files].map((file, index) => (
 									// <section key={file.name}>
@@ -70,10 +69,14 @@ const UploadFiles = () => {
 									// 		<li>Size: {file.size} bytes</li>
 									// 	</ul>
 									// </section>
-									<UploadFileCard filename={file.name} size={file.size} ext={file.type}/>
+									<UploadFileCard
+										filename={file.name}
+										size={file.size}
+										ext={file.type}
+									/>
 								))}
-								</div>
 						</div>
+					</div>
 				</div>
 			</CardBody>
 			<CardFooter>

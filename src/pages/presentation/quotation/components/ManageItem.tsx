@@ -57,9 +57,11 @@ const ManageItem = (props: ItemProps) => {
 						Add Item
 					</Button>
 				</div>
-				<div className='col-md-12'>
+				<div className='col-md-12'><div className='row g-4'>
 					{fields.map((item, itemIndex) => {
 						return (
+							//TODO: decide 
+							 <div className='col-xl-6'> 
 							<Card id={'#item_card_id#' + itemIndex} key={item.id}>
 								<CardHeader>
 									<CardLabel>
@@ -380,8 +382,10 @@ const ManageItem = (props: ItemProps) => {
 									</CardFooterRight>
 								</CardFooter> */}
 							</Card>
+							</div>
 						);
 					})}
+					</div>
 				</div>
 			</div>
 		</div>

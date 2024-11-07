@@ -27,6 +27,7 @@ import showNotification from '../../../../components/extras/showNotification';
 import Icon from '../../../../components/icon/Icon';
 import Input from '../../../../components/bootstrap/forms/Input';
 import UploadFiles from '../uploadFileComponents/UploadFiles';
+import Dropzone from '../uploadFileComponents/Dropzone';
 
 type QuotationProps = {
 	mode: 'create' | 'view' | 'edit';
@@ -278,7 +279,8 @@ export const Quotation = (props: QuotationProps) => {
 					<ManageItem isViewMode={isViewMode} />
 
 					{/* Test upload */}
-					<UploadFiles/>
+					{/* <UploadFiles/> */}
+					<Dropzone/>
 					{/* <Card>
 						<CardHeader>
 							<CardLabel>

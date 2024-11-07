@@ -15,7 +15,8 @@ type UploadFileCardProps = {
 
 const UploadFileCard = (props: UploadFileCardProps) => {
 	return (
-		<div className='col-xl-3 col-lg-6 col-md-12 cursor-pointer shadow-3d-primary shadow-3d-hover'>
+		// <div className='col-xl-3 col-lg-6 col-md-12 cursor-pointer shadow-3d-primary shadow-3d-hover'>
+		<div className='col-xl-3 col-lg-6 col-md-12'>
 			<Card shadow='lg'>
 				<CardBody>
 					<div className='row g-3'>
