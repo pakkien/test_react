@@ -26,7 +26,12 @@ const MAX_FILE_COUNT = 10;
 const Dropzone = ({ className }: any) => {
 	const [files, setFiles] = useState<(File & { preview: string, upload_percent:number, upload_id:string })[]>([]);
 	const [rejected, setRejected] = useState<FileRejection[]>([]);
-	//const [count, setCount] = useState<number>(0);
+	const [isFileLimit, setIsFileLimit] = useState(false);
+
+
+
+	//const [progress, setProgress] = useState({started: false, pc:0});
+ 	const [percent, setPercent] = useState(0);
 
 
 	const onDrop = useCallback((acceptedFiles: File[], rejectedFiles: FileRejection[]) => {
@@ -35,7 +40,7 @@ const Dropzone = ({ className }: any) => {
 				...previousFiles,
 				...acceptedFiles.map((file) =>
 					// Object.assign(file, { preview: URL.createObjectURL(file) }),
-					Object.assign(file, { preview: pdf_icon2, upload_percent:0, upload_id:'' },
+					Object.assign(file, { preview: pdf_icon2, upload_percent:50, upload_id:'' },
 						
 					),
 				),
@@ -53,8 +58,8 @@ const Dropzone = ({ className }: any) => {
 			'application/pdf': ['.pdf'],
 		},
 		maxSize: 1024 * 1500,
-		maxFiles: MAX_FILE_COUNT,
-		//disabled: isFileLimit,
+		maxFiles: MAX_FILE_COUNT - files.length,
+		disabled: isFileLimit,
 		onDrop,
 	});
 
@@ -63,26 +68,43 @@ const Dropzone = ({ className }: any) => {
 		return () => files.forEach((file) => URL.revokeObjectURL(file.preview));
 	}, [files]);
 
-	//dummy percent
 	useEffect(() => {
-		// Revoke the data uris to avoid memory leaks
-		// setTimeout(() => {
-		// 	files.forEach((file) => (file.upload_percent != 100)? file.upload_percent += 20: '');
-		// 	//setFiles([...files]);
-		//   }, 1000);
+		// check if accepted files reach limit
+		if (files.length >= MAX_FILE_COUNT){
+			setIsFileLimit(true);
+		}else{
+			setIsFileLimit(false);
+		}
+		console.log(isFileLimit);
+	}, [files.length]);
 
-		//   return () => 
-		// 		files.forEach((file) => (file.upload_percent != 100)? file.upload_percent += 20: '');
-		//const temp = [...files];
+
+	useEffect(() => {
+		// check if accepted files reach limit
+		//const shouldRerender = false;
+
 		setTimeout(() => {
-			files.forEach((file) => (file.upload_percent != 100)? file.upload_percent += 20: '');
-			//setCount(count+=1);
-		  }, 1000);
+			//files.forEach((file) => (file.upload_percent!=100)? file.upload_percent += 10: null);
+			// var newPercent = percent+10;
+			// setPercent(newPercent);
+			setFiles(prevState => {
+				const newFiles = [...prevState];
+				newFiles.map((file) => {(file.upload_percent!=100)? file.upload_percent += 10: null});
+				return newFiles;
+			});
 
-		
-		  
+		  }, 5000);
 
 	}, [files]);
+
+	// setTimeout(() => {
+	// 	//files.forEach((file) => (file.upload_percent!=100)? file.upload_percent += 10: null);
+	// 	const newfiles = [...files];
+	// 	newfiles.forEach((file) => (file.upload_percent!=100)? file.upload_percent += 10: null);
+	// 	setFiles(newfiles);
+
+	//   }, 5000);
+
 
 	const removeFile = (name: string) => {
 		setFiles((files) => files.filter((file) => file.name !== name));
@@ -121,14 +143,14 @@ const Dropzone = ({ className }: any) => {
 			</CardHeader>
 			<CardBody className='pb-0'>
 				<div className='row g-4 '>
-					<div
+					<div hidden={isFileLimit}
 						{...getRootProps({
 							className: className,
 						})}>
 						<input {...getInputProps()} />
 						<div
 							className='border border-2 border-light border d-flex justify-content-center align-items-center'
-							//hidden={isFileLimit}
+							
 							style={{ height: 150 }}>
 							
 							<p className='lead'>
@@ -145,8 +167,8 @@ const Dropzone = ({ className }: any) => {
 						<div className='col-xl-3 col-lg-6 col-md-12' key={file.name}>
 							<Card
 								//shadow='lg'
-								borderColor='info'
-								className='shadow-none border border-1 rounded-2'>
+								borderColor={(file.upload_percent!=100)? 'info':'success'}
+								className='shadow-none border border-2 rounded-2'>
 								<CardBody>
 									<div className='row g-3'>
 										<div className='col d-flex'>
@@ -217,13 +239,17 @@ const Dropzone = ({ className }: any) => {
 															</div>
 														</div>
 														<div className='col-12'>
-															<Progress
+															{(file.upload_percent!=100)? (<Progress
 																isAnimated
 																value={file.upload_percent}
 																max={100}
 																color='success'
 																height='0.5rem'
-															/>
+															/>):
+															<div className='text-success'>
+																<Icon icon='Check' size='lg' color='success'/> Uploaded
+															</div>
+														}
 														</div>
 													</div>
 												</div>
@@ -258,7 +284,7 @@ const Dropzone = ({ className }: any) => {
 							<Card
 								//shadow='lg'
 								borderColor='danger'
-								className='shadow-none border border-1 rounded-2'>
+								className='shadow-none border border-2 rounded-2'>
 								<CardBody>
 									<div className='row g-3'>
 										<div className='col d-flex'>
