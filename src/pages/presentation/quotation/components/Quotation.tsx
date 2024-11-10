@@ -48,16 +48,17 @@ export const Quotation = (props: QuotationProps) => {
 	const isViewMode = props.mode.toLowerCase() == 'view' ? true : false;
 	const title =
 		props.mode.charAt(0).toUpperCase() + props.mode.slice(1).toLowerCase() + ' Quotation ';
+	
 
-	// //upload file
-	// const [files, setFiles] = useState<FileList | null>(null);
+	// upload file
+	const [attachmentIDs, setAttachmentIds] = useState<string[]>();
 
-	// const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-	// 	if (e.target.files) {
-	// 		//setStatus('initial');
-	// 		setFiles(e.target.files);
-	// 	}
-	// };
+	const updateAttachmentID = (ids: string[]) => {
+		setAttachmentIds(ids);
+		
+	};
+
+
 
 	function timeout(delay: number) {
 		return new Promise((res) => setTimeout(res, delay));
@@ -88,7 +89,17 @@ export const Quotation = (props: QuotationProps) => {
 							</span>,
 							'Quotation saved successfully',
 						);
-						console.log('Form submitted: ', data);
+						// console.log('Form submitted: ', data);
+
+
+						console.log("hihi");
+						const payload = Object.assign(
+							{ attachment_list: attachmentIDs },
+							data,
+						);
+						console.log('Form submitted (attachment): ', JSON.stringify(payload));
+
+
 					})}>
 					<Card>
 						<CardHeader>
@@ -280,7 +291,7 @@ export const Quotation = (props: QuotationProps) => {
 
 					{/* Test upload */}
 					{/* <UploadFiles/> */}
-					<Dropzone/>
+					<Dropzone setAttachmentIds={updateAttachmentID} className={''}/>
 					{/* <Card>
 						<CardHeader>
 							<CardLabel>

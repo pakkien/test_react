@@ -20,19 +20,64 @@ import pdf_icon2 from '../../../../assets/img/icon/pdf_icon2.png';
 import Icon from '../../../../components/icon/Icon';
 import Progress from '../../../../components/bootstrap/Progress';
 import { useForceUpdate } from 'framer-motion';
+import axios, { AxiosProgressEvent } from 'axios';
+
 
 const MAX_FILE_COUNT = 10;
 
-const Dropzone = ({ className }: any) => {
-	const [files, setFiles] = useState<(File & { preview: string, upload_percent:number, upload_id:string })[]>([]);
+type DropZoneProps = {
+	setAttachmentIds: (ids: string[]) => void,
+	className: string,
+}
+
+const Dropzone = (props: DropZoneProps) => {
+	const [files, setFiles] = useState<(File & { preview: string, upload_percent:number, upload_id:string, upload_error: string })[]>([]);
 	const [rejected, setRejected] = useState<FileRejection[]>([]);
 	const [isFileLimit, setIsFileLimit] = useState(false);
 
+	// const handleUpload = async (fileToUpload: File & { preview: string, upload_percent:number, upload_id:string }) => {
+	const handleUpload = async (fileToUpload: File) => {
+		var data = new FormData();
+          //data.append('foo', 'bar');
+          data.append('file', fileToUpload);
+
+          var config = {
+            onUploadProgress: function(progressEvent: AxiosProgressEvent) {
+				const current_percent = (progressEvent.total && progressEvent.loaded)? Math.round( (progressEvent.loaded * 100) / progressEvent.total ): 0;
+				//console.log("loaded/total:"  +progressEvent.loaded+"/"+progressEvent.total)
+				setFiles(prevState => {
+					const newFiles = [...prevState];
+					newFiles.map((file) => (file.name == fileToUpload.name)? file.upload_percent=current_percent: null);
+					return newFiles;
+				});
+            }
+          };
+
+          axios.post('http://127.0.0.1:5000/quotation/attachment', data, config)
+            .then(function (res) {
+				const attachment_id = res.data.message.attachment_id;
+
+				setFiles(prevState => {
+					const newFiles = [...prevState];
+					newFiles.map((file) => (file.name == fileToUpload.name)? file.upload_id=attachment_id: null);
+					return newFiles;
+				});
+
+				
+            })
+            .catch(function (err) {
+              console.log(err);
+			  setFiles(prevState => {
+				const newFiles = [...prevState];
+				newFiles.map((file) => (file.name == fileToUpload.name)? file.upload_error="Error": null);
+				return newFiles;
+			});
 
 
-	//const [progress, setProgress] = useState({started: false, pc:0});
- 	const [percent, setPercent] = useState(0);
+			  
+            });
 
+	};
 
 	const onDrop = useCallback((acceptedFiles: File[], rejectedFiles: FileRejection[]) => {
 		if (acceptedFiles?.length) {
@@ -40,11 +85,15 @@ const Dropzone = ({ className }: any) => {
 				...previousFiles,
 				...acceptedFiles.map((file) =>
 					// Object.assign(file, { preview: URL.createObjectURL(file) }),
-					Object.assign(file, { preview: pdf_icon2, upload_percent:50, upload_id:'' },
-						
+					//handleUpload(file),
+					Object.assign(file, { preview: pdf_icon2, upload_percent:0, upload_id:'', upload_error:'' },					
 					),
 				),
 			]);
+
+			//start upload
+			{acceptedFiles.map((file) => (handleUpload(file)))};
+
 		}
 
 		if (rejectedFiles?.length) {
@@ -55,7 +104,7 @@ const Dropzone = ({ className }: any) => {
 	const { getRootProps, getInputProps, isDragActive } = useDropzone({
 		accept: {
 			//'image/*': [],
-			'application/pdf': ['.pdf'],
+			'application/*': ['.pdf'],
 		},
 		maxSize: 1024 * 1500,
 		maxFiles: MAX_FILE_COUNT - files.length,
@@ -68,6 +117,14 @@ const Dropzone = ({ className }: any) => {
 		return () => files.forEach((file) => URL.revokeObjectURL(file.preview));
 	}, [files]);
 
+
+	useEffect(() => {
+		// Revoke the data uris to avoid memory leaks
+		const selectedFiles = files.filter((file) => file.upload_percent == 100 && file.upload_id && !file.upload_error);
+		props.setAttachmentIds(selectedFiles.map(file => file.upload_id));
+
+	}, [files]);
+
 	useEffect(() => {
 		// check if accepted files reach limit
 		if (files.length >= MAX_FILE_COUNT){
@@ -75,35 +132,9 @@ const Dropzone = ({ className }: any) => {
 		}else{
 			setIsFileLimit(false);
 		}
-		console.log(isFileLimit);
+		//console.log(isFileLimit);
 	}, [files.length]);
 
-
-	useEffect(() => {
-		// check if accepted files reach limit
-		//const shouldRerender = false;
-
-		setTimeout(() => {
-			//files.forEach((file) => (file.upload_percent!=100)? file.upload_percent += 10: null);
-			// var newPercent = percent+10;
-			// setPercent(newPercent);
-			setFiles(prevState => {
-				const newFiles = [...prevState];
-				newFiles.map((file) => {(file.upload_percent!=100)? file.upload_percent += 10: null});
-				return newFiles;
-			});
-
-		  }, 5000);
-
-	}, [files]);
-
-	// setTimeout(() => {
-	// 	//files.forEach((file) => (file.upload_percent!=100)? file.upload_percent += 10: null);
-	// 	const newfiles = [...files];
-	// 	newfiles.forEach((file) => (file.upload_percent!=100)? file.upload_percent += 10: null);
-	// 	setFiles(newfiles);
-
-	//   }, 5000);
 
 
 	const removeFile = (name: string) => {
@@ -131,7 +162,7 @@ const Dropzone = ({ className }: any) => {
 		return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
 	}
 
-	return (
+	return (	
 		<Card>
 			<CardHeader>
 				<CardLabel>
@@ -145,7 +176,7 @@ const Dropzone = ({ className }: any) => {
 				<div className='row g-4 '>
 					<div hidden={isFileLimit}
 						{...getRootProps({
-							className: className,
+							className: props.className,
 						})}>
 						<input {...getInputProps()} />
 						<div
@@ -167,7 +198,7 @@ const Dropzone = ({ className }: any) => {
 						<div className='col-xl-3 col-lg-6 col-md-12' key={file.name}>
 							<Card
 								//shadow='lg'
-								borderColor={(file.upload_percent!=100)? 'info':'success'}
+								borderColor={(file.upload_error)?'danger':(file.upload_percent!=100)? 'info':'success'}
 								className='shadow-none border border-2 rounded-2'>
 								<CardBody>
 									<div className='row g-3'>
@@ -239,7 +270,13 @@ const Dropzone = ({ className }: any) => {
 															</div>
 														</div>
 														<div className='col-12'>
-															{(file.upload_percent!=100)? (<Progress
+															{(file.upload_error)? (
+																<div className='text-danger'>
+																{file.upload_error}
+																</div>
+															)
+															
+															:(file.upload_percent!=100)? (<Progress
 																isAnimated
 																value={file.upload_percent}
 																max={100}

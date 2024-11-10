@@ -25,6 +25,9 @@ namespace QuotationDataType {
 		note: string;
 		total: string;
 		g_total: string;
+
+		//attachment
+		//attachment_list: string[];
 	};
 
 	export type Item = {
