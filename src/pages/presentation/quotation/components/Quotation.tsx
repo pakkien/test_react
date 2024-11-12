@@ -26,7 +26,6 @@ import Spinner from '../../../../components/bootstrap/Spinner';
 import showNotification from '../../../../components/extras/showNotification';
 import Icon from '../../../../components/icon/Icon';
 import Input from '../../../../components/bootstrap/forms/Input';
-import UploadFiles from '../uploadFileComponents/UploadFiles';
 import Dropzone from '../uploadFileComponents/Dropzone';
 
 type QuotationProps = {

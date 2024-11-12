@@ -61,7 +61,7 @@ const ManageItem = (props: ItemProps) => {
 					{fields.map((item, itemIndex) => {
 						return (
 							//TODO: decide 
-							 <div className='col-xl-6'> 
+							 <div className='col-xl-12'> 
 							<Card id={'#item_card_id#' + itemIndex} key={item.id}>
 								<CardHeader>
 									<CardLabel>
