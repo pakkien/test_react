@@ -46,8 +46,8 @@ export const schemaQuotation = z.object({
 	//Summary
 	reference_status: z.string(),
 	note: z.string(),
-	total: z.string(),
-	g_total: z.string(),
+	total: z.coerce.number(),
+	g_total: z.coerce.number(),
 
 	//items: z.array(schemaItem)
 	items: z.array(schemaItem).min(1, { message: 'must contain at least one item.' }),
@@ -78,8 +78,10 @@ export const useFormQuotation = (props: QuotationFormProps) =>
 		items: props.data.items, //check again
 		reference_status: props.data.reference_status,
 		note: props.data.note,
-		total: props.data.total,
-		g_total: props.data.g_total,
+		// total: props.data.total,
+		// g_total: props.data.g_total,
+		total: 0,
+		g_total: 0,
 		//attachment_list: props.data.attachment_list
 
 	}
