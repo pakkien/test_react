@@ -89,10 +89,12 @@ export const Quotation = (props: QuotationProps) => {
 		});
 	};
 
-	const postCreateQuotation = async (payload: any) => {
-		
+	const config = {
+		headers: {Authorization: `Bearer ${localStorage.getItem('bts_token')}`}
+	}
 
-		axios.post(`http://127.0.0.1:5000/quotation/`, payload).then((response) => {
+	const postCreateQuotation = async (payload: any) => {
+		axios.post(`http://127.0.0.1:5000/quotation/`, payload, config).then((response) => {
 
 			console.log(response.data);
 			showSuccessNotification();
@@ -102,9 +104,7 @@ export const Quotation = (props: QuotationProps) => {
 	}
 
 	const postUpdateQuotation = async (quotation_id: number, payload: any) => {
-
-
-		axios.put(`http://127.0.0.1:5000/quotation/${quotation_id}`, payload).then((response) => {
+		axios.put(`http://127.0.0.1:5000/quotation/${quotation_id}`, payload, config).then((response) => {
 
 			console.log(response.data);
 			showSuccessNotification();

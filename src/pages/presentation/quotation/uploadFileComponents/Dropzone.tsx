@@ -50,8 +50,10 @@ const Dropzone = (props: DropZoneProps) => {
 					newFiles.map((file) => (file.name == fileToUpload.name)? file.upload_percent=current_percent: null);
 					return newFiles;
 				});
-            }
+            },
+			headers: {Authorization: `Bearer ${localStorage.getItem('bts_token')}`}
           };
+
 
           axios.post('http://127.0.0.1:5000/quotation/attachment', data, config)
             .then(function (res) {

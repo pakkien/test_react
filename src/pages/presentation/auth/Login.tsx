@@ -12,9 +12,10 @@ import Button from '../../../components/bootstrap/Button';
 import Logo from '../../../components/Logo';
 import useDarkMode from '../../../hooks/useDarkMode';
 import AuthContext from '../../../contexts/authContext';
-import USERS, { getUserDataWithUsername } from '../../../common/data/userDummyData';
+import USERS, { getUserDataWithEmail, getUserDataWithUsername } from '../../../common/data/userDummyData';
 import Spinner from '../../../components/bootstrap/Spinner';
 import Alert from '../../../components/bootstrap/Alert';
+import axios from 'axios';
 
 interface ILoginHeaderProps {
 	isNewUser?: boolean;
@@ -47,31 +48,55 @@ const Login: FC<ILoginProps> = ({ isSignUp }) => {
 
 	const { darkModeStatus } = useDarkMode();
 
-	const [signInPassword, setSignInPassword] = useState<boolean>(false);
-	const [singUpStatus, setSingUpStatus] = useState<boolean>(!!isSignUp);
+	//const [signInPassword, setSignInPassword] = useState<boolean>(false);
+	//const [singUpStatus, setSingUpStatus] = useState<boolean>(!!isSignUp);
 
 	const navigate = useNavigate();
 	const handleOnClick = useCallback(() => navigate('/'), [navigate]);
 
-	const usernameCheck = (username: string) => {
-		return !!getUserDataWithUsername(username);
-	};
+	// const emailCheck = (email: string) => {
+	// 	return !!getUserDataWithEmail(email);
+	// };
 
-	const passwordCheck = (username: string, password: string) => {
-		return getUserDataWithUsername(username).password === password;
-	};
+	// const passwordCheck = (email: string, password: string) => {
+	// 	return getUserDataWithEmail(email).password === password;
+	// };
+
+	const loginApiCall = async (email: string, password: string) => {
+		const payload = {
+			email: email,
+			password: password
+		};
+		
+		axios.post(`http://127.0.0.1:5000/auth/login`, payload).then((response) => {
+
+			console.log(response.data);
+			if (setUser) {
+				setUser(email);
+			}
+
+			handleOnClick();
+			localStorage.setItem('bts_token', response.data.token);
+
+			//cache token
+			//return true;
+		  }).catch(error => {
+			formik.setFieldError('loginPassword', 'Username and password do not match.');
+			//return false;
+		  });
+	}
 
 	const formik = useFormik({
 		enableReinitialize: true,
 		initialValues: {
-			loginUsername: USERS.JOHN.username,
-			loginPassword: USERS.JOHN.password,
+			loginEmail: '',
+			loginPassword: '' ,
 		},
 		validate: (values) => {
-			const errors: { loginUsername?: string; loginPassword?: string } = {};
+			const errors: { loginEmail?: string; loginPassword?: string } = {};
 
-			if (!values.loginUsername) {
-				errors.loginUsername = 'Required';
+			if (!values.loginEmail) {
+				errors.loginEmail = 'Required';
 			}
 
 			if (!values.loginPassword) {
@@ -81,37 +106,27 @@ const Login: FC<ILoginProps> = ({ isSignUp }) => {
 			return errors;
 		},
 		validateOnChange: false,
-		onSubmit: (values) => {
-			if (usernameCheck(values.loginUsername)) {
-				if (passwordCheck(values.loginUsername, values.loginPassword)) {
-					if (setUser) {
-						setUser(values.loginUsername);
-					}
-
-					handleOnClick();
-				} else {
-					formik.setFieldError('loginPassword', 'Username and password do not match.');
-				}
-			}
+		onSubmit: async (values) => {
+			loginApiCall(values.loginEmail, values.loginPassword);
 		},
 	});
 
 	const [isLoading, setIsLoading] = useState<boolean>(false);
-	const handleContinue = () => {
-		setIsLoading(true);
-		setTimeout(() => {
-			if (
-				!Object.keys(USERS).find(
-					(f) => USERS[f].username.toString() === formik.values.loginUsername,
-				)
-			) {
-				formik.setFieldError('loginUsername', 'No such user found in the system.');
-			} else {
-				setSignInPassword(true);
-			}
-			setIsLoading(false);
-		}, 1000);
-	};
+	// const handleContinue = () => {
+	// 	setIsLoading(true);
+	// 	setTimeout(() => {
+	// 		if (
+	// 			!Object.keys(USERS).find(
+	// 				(f) => USERS[f].email?.toString() == formik.values.loginEmail,
+	// 			)
+	// 		) {
+	// 			formik.setFieldError('loginEmail', 'No such user found in the system.');
+	// 		} else {
+	// 			setSignInPassword(true);
+	// 		}
+	// 		setIsLoading(false);
+	// 	}, 1000);
+	// };
 
 	return (
 		<PageWrapper isProtected={false} title='Login'>
@@ -169,15 +184,15 @@ const Login: FC<ILoginProps> = ({ isSignUp }) => {
 									</div> */}
 								</div>
 
-								<LoginHeader isNewUser={singUpStatus} />
+								<LoginHeader isNewUser={false} />
 
 								<Alert isLight icon='Lock' isDismissible>
 									<div className='row'>
 										<div className='col-12'>
-											<strong>Username:</strong> {USERS.JOHN.username}
+											<strong>Email:</strong> tester1@email.com
 										</div>
 										<div className='col-12'>
-											<strong>Password:</strong> {USERS.JOHN.password}
+											<strong>Password:</strong> password123
 										</div>
 									</div>
 								</Alert>
@@ -185,17 +200,18 @@ const Login: FC<ILoginProps> = ({ isSignUp }) => {
 									<>
 										<div className='col-12'>
 											<FormGroup
-												id='loginUsername'
+												id='loginEmail'
 												isFloating
-												label='Your email or username'
-												className={classNames({
-													'd-none': signInPassword,
-												})}>
+												label='Your email'
+												// className={classNames({
+												// 	'd-none': signInPassword,
+												// })}
+												>
 												<Input
 													autoComplete='username'
-													value={formik.values.loginUsername}
-													isTouched={formik.touched.loginUsername}
-													invalidFeedback={formik.errors.loginUsername}
+													value={formik.values.loginEmail}
+													isTouched={formik.touched.loginEmail}
+													invalidFeedback={formik.errors.loginEmail}
 													isValid={formik.isValid}
 													onChange={formik.handleChange}
 													onBlur={formik.handleBlur}
@@ -204,20 +220,20 @@ const Login: FC<ILoginProps> = ({ isSignUp }) => {
 													}}
 												/>
 											</FormGroup>
-											{signInPassword && (
+											{/* {signInPassword && (
 												<div className='text-center h4 mb-3 fw-bold'>
-													Hi, {formik.values.loginUsername}.
+													Hi, {formik.values.loginEmail}.
 												</div>
-											)}
+											)} */}
 										</div>
 										<div>
 											<FormGroup
 												id='loginPassword'
 												isFloating
 												label='Password'
-												className={classNames({
-													'd-none': !signInPassword,
-												})}
+												// className={classNames({
+												// 	'd-none': !signInPassword,
+												// })}
 											>
 												<Input
 													type='password'
@@ -233,25 +249,12 @@ const Login: FC<ILoginProps> = ({ isSignUp }) => {
 											</FormGroup>
 										</div>
 										<div className='col-12'>
-											{!signInPassword ? (
-												<Button
-													color='warning'
-													className='w-100 py-3'
-													isDisable={!formik.values.loginUsername}
-													onClick={handleContinue}>
-													{isLoading && (
-														<Spinner isSmall inButton isGrow />
-													)}
-													Continue
-												</Button>
-											) : (
-												<Button
+										<Button
 													color='warning'
 													className='w-100 py-3'
 													onClick={formik.handleSubmit}>
 													Login
 												</Button>
-											)}
 										</div>
 									</>
 
@@ -264,7 +267,7 @@ const Login: FC<ILoginProps> = ({ isSignUp }) => {
 					</div>
 				</div>
 			</Page>
-			<div className='text-center'>
+			{/* <div className='text-center'>
 				<a
 					href='/'
 					className={classNames('text-decoration-none me-3', {
@@ -281,15 +284,15 @@ const Login: FC<ILoginProps> = ({ isSignUp }) => {
 					})}>
 					Terms of use
 				</a>
-			</div>
+			</div> */}
 		</PageWrapper>
 	);
 };
 Login.propTypes = {
 	isSignUp: PropTypes.bool,
 };
-// Login.defaultProps = {
-// 	isSignUp: false,
-// };
+Login.defaultProps = {
+	isSignUp: false,
+};
 
 export default Login;

@@ -249,7 +249,10 @@ const EditQuotation = () => {
 	const [quotationRevData, setQuotationRevData] = useState<QuotationDataType.QuotationData>();
 
 	const fetchQuotationRevData = async (quotation_id: number, quotation_rev_id:number) => {
-		axios.get(`http://127.0.0.1:5000/quotation/${quotation_id}/revision/${quotation_rev_id}`).then((response) => {
+		const config = {
+			headers: {Authorization: `Bearer ${localStorage.getItem('bts_token')}`}
+		}
+		axios.get(`http://127.0.0.1:5000/quotation/${quotation_id}/revision/${quotation_rev_id}`, config).then((response) => {
 
 			console.log(response.data);
 			setQuotationRevData(response.data);

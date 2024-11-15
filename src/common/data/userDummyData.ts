@@ -155,6 +155,11 @@ export function getUserDataWithUsername(username: string): IUserProps {
 	return USERS[Object.keys(USERS).filter((f) => USERS[f].username.toString() === username)];
 }
 
+export function getUserDataWithEmail(email: string): IUserProps {
+	// @ts-ignore
+	return USERS[Object.keys(USERS).filter((f) => USERS[f].email.toString() === email)];
+}
+
 export function getUserDataWithId(id?: string): IUserProps {
 	// @ts-ignore
 	return USERS[Object.keys(USERS).filter((f) => USERS[f].id.toString() === id.toString())];

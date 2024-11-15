@@ -251,7 +251,12 @@ const QuotationList = () => {
 	const [tableData, setTableData] = useState([]);
 
 	const fetchData = async () => {
-		axios.get("http://127.0.0.1:5000/quotation/all_quotations_table").then((response) => {
+		const config = {
+			headers: {Authorization: `Bearer ${localStorage.getItem('bts_token')}`}
+		}
+
+		axios.get("http://127.0.0.1:5000/quotation/all_quotations_table", config)
+		.then((response) => {
 			setQuotationData(response.data.data);
 			setTableData(response.data.data);
 			console.log(response.data.data);

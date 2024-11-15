@@ -13,11 +13,11 @@ interface IAuthContextProviderProps {
 	children: ReactNode;
 }
 export const AuthContextProvider: FC<IAuthContextProviderProps> = ({ children }) => {
-	const [user, setUser] = useState<string>(localStorage.getItem('facit_authUsername') || '');
+	const [user, setUser] = useState<string>(localStorage.getItem('bts_authUserEmail') || '');
 	const [userData, setUserData] = useState<Partial<IUserProps>>({});
 
 	useEffect(() => {
-		localStorage.setItem('facit_authUsername', user);
+		localStorage.setItem('bts_authUserEmail', user);
 	}, [user]);
 
 	useEffect(() => {

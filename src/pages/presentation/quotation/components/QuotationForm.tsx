@@ -9,13 +9,13 @@ const schemaSubItem = z.object({
 	brand: z.string().min(3),
 	model: z.string().min(3),
 	remarks: z.string().min(3),
-	quantity: z.coerce.number().int().positive().min(0),
+	quantity: z.coerce.number().int().min(0),
 	unit: z.string(),
-	unit_cost: z.coerce.number().positive().min(0),
-	total_cost: z.coerce.number().positive().min(0),
-	margin: z.coerce.number().positive().min(0),
-	unit_price: z.coerce.number().positive().min(0),
-	total_price: z.coerce.number().positive().min(0),
+	unit_cost: z.coerce.number().min(0),
+	total_cost: z.coerce.number().min(0),
+	margin: z.coerce.number().min(0),
+	unit_price: z.coerce.number().min(0),
+	total_price: z.coerce.number().min(0),
 });
 
 const schemaItem = z.object({
@@ -23,13 +23,13 @@ const schemaItem = z.object({
 	brand: z.string().min(3),
 	model: z.string().min(3),
 	remarks: z.string().min(3),
-	quantity: z.coerce.number().int().positive().min(0),
+	quantity: z.coerce.number().int().min(0),
 	unit: z.string(),
-	unit_cost: z.coerce.number().positive().min(0),
-	total_cost: z.coerce.number().positive().min(0),
-	margin: z.coerce.number().positive().min(0),
-	unit_price: z.coerce.number().positive().min(0),
-	total_price: z.coerce.number().positive().min(0),
+	unit_cost: z.coerce.number().min(0),
+	total_cost: z.coerce.number().min(0),
+	margin: z.coerce.number().min(0),
+	unit_price: z.coerce.number().min(0),
+	total_price: z.coerce.number().min(0),
 	sub_items: z.array(schemaSubItem)
 
 });
