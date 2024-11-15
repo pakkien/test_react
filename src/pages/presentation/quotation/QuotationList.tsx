@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Alert from '../../../components/bootstrap/Alert';
 import Button from '../../../components/bootstrap/Button';
 import Card, {
@@ -27,6 +27,8 @@ import FormGroup from '../../../components/bootstrap/forms/FormGroup';
 import { debounce } from '../../../helpers/helpers';
 import Icon from '../../../components/icon/Icon';
 import Input from '../../../components/bootstrap/forms/Input';
+import axios from 'axios';
+import QuotationDataType from '../../dataTypes/QuotationDataType';
 
 function ReturnBatchColor(state: string) {
 	switch (state.toLowerCase()) {
@@ -41,177 +43,230 @@ function ReturnBatchColor(state: string) {
 	}
 }
 
-const quotationData = [
-	{
-		id: '1',
-		prepared_by: 'Gary',
-		client: 'Tech Group',
-		quotation_date: '2024-04-04T16:00:00.000Z',
-		quotation_no: 'Q-012345',
-		end_user: 'Tech Group',
-		revision: 0,
-		quotation_amount: 9800,
-		cost: 6000,
-		margin: 3500,
-		percent: 27,
-		status: 'In Progress',
-		site_location: 'Penang',
-		building: 'Lab 1',
-	},
-	{
-		id: '2',
-		prepared_by: 'Gary',
-		client: 'Tech Group',
-		quotation_date: '2024-04-03T16:00:00.000Z',
-		quotation_no: 'Q-012345',
-		end_user: 'Tech Group',
-		revision: 0,
-		quotation_amount: 9800.0,
-		cost: 6000.0,
-		margin: 3500.0,
-		percent: 27.96,
-		status: 'Closed',
-		site_location: 'Penang',
-		building: 'Lab 1',
-	},
-	{
-		id: '3',
-		prepared_by: 'Gary',
-		client: 'Tech Group',
-		quotation_date: '2024-04-02T16:00:00.000Z',
-		quotation_no: 'Q-012345',
-		end_user: 'Tech Group',
-		revision: 0,
-		quotation_amount: 9800.0,
-		cost: 6000.1,
-		margin: 3500.0,
-		percent: 27.96,
-		status: 'Awarded',
-		site_location: 'Penang',
-		building: 'Lab 1',
-	},
-	{
-		id: '4',
-		prepared_by: 'Gary',
-		client: 'Tech Group',
-		quotation_date: '2024-04-01T16:00:00.000Z',
-		quotation_no: 'Q-012345',
-		end_user: 'Tech Group',
-		revision: 0,
-		quotation_amount: 9800.0,
-		cost: 6000.03,
-		margin: 3500.0,
-		percent: 27.96,
-		status: 'Awarded',
-		site_location: 'Penang',
-		building: 'Lab 1',
-	},
-	{
-		id: '5',
-		prepared_by: 'Gary',
-		client: 'Tech Group',
-		quotation_date: '2023-04-04T16:00:00.000Z',
-		quotation_no: 'Q-012345',
-		end_user: 'Tech Group',
-		revision: 0,
-		quotation_amount: 9800.0,
-		cost: 6000.0,
-		margin: 3500.0,
-		percent: 27.96,
-		status: 'Awarded',
-		site_location: 'Penang',
-		building: 'Lab 1',
-	},
-	{
-		id: '6',
-		prepared_by: 'Gary',
-		client: 'Tech Group',
-		quotation_date: '2025-04-04T16:00:00.000Z',
-		quotation_no: 'Q-012345',
-		end_user: 'Tech Group',
-		revision: 0,
-		quotation_amount: 9800.0,
-		cost: 6000.0,
-		margin: 3500.0,
-		percent: 27.96,
-		status: 'Awarded',
-		site_location: 'Penang',
-		building: 'Lab 1',
-	},
-	{
-		id: '7',
-		prepared_by: 'Gary',
-		client: 'Tech Group',
-		quotation_date: '2022-04-04T16:00:00.000Z',
-		quotation_no: 'Q-012345',
-		end_user: 'Tech Group',
-		revision: 0,
-		quotation_amount: 9800.0,
-		cost: 6000.0,
-		margin: 3500.0,
-		percent: 27.96,
-		status: 'Awarded',
-		site_location: 'Penang',
-		building: 'Lab 1',
-	},
-	{
-		id: '8',
-		prepared_by: 'Gary',
-		client: 'Tech Group',
-		quotation_date: '2024-04-04T16:00:00.000Z',
-		quotation_no: 'Q-012345',
-		end_user: 'Tech Group',
-		revision: 0,
-		quotation_amount: 9800.0,
-		cost: 6000.0,
-		margin: 3500.0,
-		percent: 27.96,
-		status: 'Awarded',
-		site_location: 'Penang',
-		building: 'Lab 1',
-	},
-	{
-		id: '9',
-		prepared_by: 'Gary',
-		client: 'Tech Group',
-		quotation_date: '2024-04-04T16:00:00.000Z',
-		quotation_no: 'Q-012345',
-		end_user: 'Tech Group',
-		revision: 0,
-		quotation_amount: 9800.0,
-		cost: 6000.0,
-		margin: 3500.0,
-		percent: 27.96,
-		status: 'Awarded',
-		site_location: 'Penang',
-		building: 'Lab 1',
-	},
-	{
-		id: '10',
-		prepared_by: 'Gary',
-		client: 'Tech Group',
-		quotation_date: '2024-04-04T16:00:00.000Z',
-		quotation_no: 'Q-012345',
-		end_user: 'Tech Group',
-		revision: 0,
-		quotation_amount: 9800.0,
-		cost: 6000.0,
-		margin: 3500.0,
-		percent: 27.96,
-		status: 'Awarded',
-		site_location: 'Penang',
-		building: 'Lab 1',
-	},
-];
+// const quotationData = [
+// 	{
+// 		id: '1',
+// 		prepared_by: 'Gary',
+// 		client: 'Tech Group',
+// 		quotation_date: '2024-04-04T16:00:00.000Z',
+// 		quotation_no: 'Q-012345',
+// 		end_user: 'Tech Group',
+// 		revision: 0,
+// 		quotation_amount: 9800,
+// 		cost: 6000,
+// 		margin: 3500,
+// 		percent: 27,
+// 		status: 'In Progress',
+// 		site_location: 'Penang',
+// 		building: 'Lab 1',
+// 	},
+// 	{
+// 		id: '2',
+// 		prepared_by: 'Gary',
+// 		client: 'Tech Group',
+// 		quotation_date: '2024-04-03T16:00:00.000Z',
+// 		quotation_no: 'Q-012345',
+// 		end_user: 'Tech Group',
+// 		revision: 0,
+// 		quotation_amount: 9800.0,
+// 		cost: 6000.0,
+// 		margin: 3500.0,
+// 		percent: 27.96,
+// 		status: 'Closed',
+// 		site_location: 'Penang',
+// 		building: 'Lab 1',
+// 	},
+// 	{
+// 		id: '3',
+// 		prepared_by: 'Gary',
+// 		client: 'Tech Group',
+// 		quotation_date: '2024-04-02T16:00:00.000Z',
+// 		quotation_no: 'Q-012345',
+// 		end_user: 'Tech Group',
+// 		revision: 0,
+// 		quotation_amount: 9800.0,
+// 		cost: 6000.1,
+// 		margin: 3500.0,
+// 		percent: 27.96,
+// 		status: 'Awarded',
+// 		site_location: 'Penang',
+// 		building: 'Lab 1',
+// 	},
+// 	{
+// 		id: '4',
+// 		prepared_by: 'Gary',
+// 		client: 'Tech Group',
+// 		quotation_date: '2024-04-01T16:00:00.000Z',
+// 		quotation_no: 'Q-012345',
+// 		end_user: 'Tech Group',
+// 		revision: 0,
+// 		quotation_amount: 9800.0,
+// 		cost: 6000.03,
+// 		margin: 3500.0,
+// 		percent: 27.96,
+// 		status: 'Awarded',
+// 		site_location: 'Penang',
+// 		building: 'Lab 1',
+// 	},
+// 	{
+// 		id: '5',
+// 		prepared_by: 'Gary',
+// 		client: 'Tech Group',
+// 		quotation_date: '2023-04-04T16:00:00.000Z',
+// 		quotation_no: 'Q-012345',
+// 		end_user: 'Tech Group',
+// 		revision: 0,
+// 		quotation_amount: 9800.0,
+// 		cost: 6000.0,
+// 		margin: 3500.0,
+// 		percent: 27.96,
+// 		status: 'Awarded',
+// 		site_location: 'Penang',
+// 		building: 'Lab 1',
+// 	},
+// 	{
+// 		id: '6',
+// 		prepared_by: 'Gary',
+// 		client: 'Tech Group',
+// 		quotation_date: '2025-04-04T16:00:00.000Z',
+// 		quotation_no: 'Q-012345',
+// 		end_user: 'Tech Group',
+// 		revision: 0,
+// 		quotation_amount: 9800.0,
+// 		cost: 6000.0,
+// 		margin: 3500.0,
+// 		percent: 27.96,
+// 		status: 'Awarded',
+// 		site_location: 'Penang',
+// 		building: 'Lab 1',
+// 	},
+// 	{
+// 		id: '7',
+// 		prepared_by: 'Gary',
+// 		client: 'Tech Group',
+// 		quotation_date: '2022-04-04T16:00:00.000Z',
+// 		quotation_no: 'Q-012345',
+// 		end_user: 'Tech Group',
+// 		revision: 0,
+// 		quotation_amount: 9800.0,
+// 		cost: 6000.0,
+// 		margin: 3500.0,
+// 		percent: 27.96,
+// 		status: 'Awarded',
+// 		site_location: 'Penang',
+// 		building: 'Lab 1',
+// 	},
+// 	{
+// 		id: '8',
+// 		prepared_by: 'Gary',
+// 		client: 'Tech Group',
+// 		quotation_date: '2024-04-04T16:00:00.000Z',
+// 		quotation_no: 'Q-012345',
+// 		end_user: 'Tech Group',
+// 		revision: 0,
+// 		quotation_amount: 9800.0,
+// 		cost: 6000.0,
+// 		margin: 3500.0,
+// 		percent: 27.96,
+// 		status: 'Awarded',
+// 		site_location: 'Penang',
+// 		building: 'Lab 1',
+// 	},
+// 	{
+// 		id: '9',
+// 		prepared_by: 'Gary',
+// 		client: 'Tech Group',
+// 		quotation_date: '2024-04-04T16:00:00.000Z',
+// 		quotation_no: 'Q-012345',
+// 		end_user: 'Tech Group',
+// 		revision: 0,
+// 		quotation_amount: 9800.0,
+// 		cost: 6000.0,
+// 		margin: 3500.0,
+// 		percent: 27.96,
+// 		status: 'Awarded',
+// 		site_location: 'Penang',
+// 		building: 'Lab 1',
+// 	},
+// 	{
+// 		id: '10',
+// 		prepared_by: 'Gary',
+// 		client: 'Tech Group',
+// 		quotation_date: '2024-04-04T16:00:00.000Z',
+// 		quotation_no: 'Q-012345',
+// 		end_user: 'Tech Group',
+// 		revision: 0,
+// 		quotation_amount: 9800.0,
+// 		cost: 6000.0,
+// 		margin: 3500.0,
+// 		percent: 27.96,
+// 		status: 'Awarded',
+// 		site_location: 'Penang',
+// 		building: 'Lab 1',
+// 	},
+// ];
+
+// class QuotationTableDataType {
+// 	building!: string;
+// 	client!: string;
+// 	cost!: number;
+// 	end_user!: string;
+// 	margin!: number;
+// 	prepared_by!: string;
+// 	quotation_amount!: number;
+// 	quotation_date!: string;
+// 	quotation_id!: string;
+// 	quotation_no!: string;
+// 	quotation_rev_id!: number; //TODO
+// 	revision!: number;
+// 	site_location!: string;
+// 	status!: string;
+
+// 	constructor(s: any
+// 	){
+// 		this.building = s.building;
+// 		this.client = s.client;
+// 		this.cost = s.cost;
+// 		this.end_user = s.end_user;
+// 		this.margin = s.margin;
+// 		this.prepared_by = s.prepared_by;
+// 		this.quotation_amount = s.quotation_amount;
+// 		this.quotation_date = s.quotation_date;
+// 		this.quotation_id = s.quotation_id;
+// 		this.quotation_no = s.quotation_no;
+// 		this.quotation_rev_id = s.quotation_rev_id;
+// 		this.revision = s.revision;
+// 		this.site_location = s.site_location;
+// 		this.status = s.status;
+// 	}
+
+// }
+
+
 
 const QuotationList = () => {
 	const navigate = useNavigate();
 	const [isAlertVisible, setIsAlertVisible] = useState(false);
+	const [quotationData, setQuotationData] = useState([]);
+	const [tableData, setTableData] = useState([]);
 
-	const [tableData, setTableData] = useState(quotationData);
+	const fetchData = async () => {
+		axios.get("http://127.0.0.1:5000/quotation/all_quotations_table").then((response) => {
+			setQuotationData(response.data.data);
+			setTableData(response.data.data);
+			console.log(response.data.data);
+		  });
+	};
 
+	//Get Quotation table data
+	useEffect(() => {
+		fetchData();
+	}, []);
+
+	
 	const [currentPage, setCurrentPage] = useState(1);
 	const [perPage, setPerPage] = useState(PER_COUNT['5']);
+
 	const { items, requestSort, getClassNamesFor } = useSortableData(tableData);
 
 	const onFormSubmit = (values: { search: any }) => {
@@ -234,80 +289,44 @@ const QuotationList = () => {
 	});
 
 	const searchAndFilterData = (search_string: string) => {
-		return quotationData.filter((item) => {
+		return quotationData.filter((item: any) => {
 			return (
 				item.prepared_by.toLowerCase().includes(search_string) ||
 				item.client.toLowerCase().includes(search_string) ||
-				dayjs(`${item.quotation_date}`).format('DD/MM/YYYY').includes(search_string) ||
+				dayjs(`${item.quotation_date}`).format('DD-MM-YYYY').includes(search_string) ||
 				item.quotation_no.toLowerCase().includes(search_string) ||
 				item.end_user.toLowerCase().includes(search_string) ||
 				item.revision.toString().toLowerCase().includes(search_string) ||
 				item.quotation_amount.toFixed(2).toString().toLowerCase().includes(search_string) ||
 				item.cost.toFixed(2).toString().toLowerCase().includes(search_string) ||
 				item.margin.toFixed(2).toString().toLowerCase().includes(search_string) ||
-				item.percent.toFixed(2).toString().toLowerCase().includes(search_string) ||
+				//item.percent.toFixed(2).toString().toLowerCase().includes(search_string) ||
 				item.status.toLowerCase().includes(search_string) ||
 				item.site_location.toLowerCase().includes(search_string) ||
 				item.building.toLowerCase().includes(search_string)
 			);
 		});
 	};
-	// 	{
-	// 		id: '1',
-	// 		prepared_by: 'Gary',
-	// 		client: 'Tech Group',
-	// 		quotation_date: '31/01/2024',
-	// 		quotation_no: 'Q-012345',
-	// 		end_user: 'Tech Group',
-	// 		revision: 0,
-	// 		quotation_amount: 9800.0,
-	// 		cost: 6000.0,
-	// 		margin: 3500.0,
-	// 		percent: 27.96,
-	// 		status: 'In Progress',
-	// 		site_location: 'Penang',
-	// 		building: 'Lab 1',
-	// 	},
-	// 	{
-	// 		id: '2',
-	// 		prepared_by: 'Gary',
-	// 		client: 'Tech Group',
-	// 		quotation_date: '31/01/2024',
-	// 		quotation_no: 'Q-012345',
-	// 		end_user: 'Tech Group',
-	// 		revision: 0,
-	// 		quotation_amount: 9800.0,
-	// 		cost: 6000.0,
-	// 		margin: 3500.0,
-	// 		percent: 27.96,
-	// 		status: 'Closed',
-	// 		site_location: 'Penang',
-	// 		building: 'Lab 1',
-	// 	},
-	// 	{
-	// 		id: '3',
-	// 		prepared_by: 'Gary',
-	// 		client: 'Tech Group',
-	// 		quotation_date: '31/01/2024',
-	// 		quotation_no: 'Q-012345',
-	// 		end_user: 'Tech Group',
-	// 		revision: 0,
-	// 		quotation_amount: 9800.0,
-	// 		cost: 6000.0,
-	// 		margin: 3500.0,
-	// 		percent: 27.96,
-	// 		status: 'Awarded',
-	// 		site_location: 'Penang',
-	// 		building: 'Lab 1',
-	// 	},
-	// ];
+	
 
-	const goToViewQuotationPage = () => {
-		navigate('view-quotation');
+	const goToViewQuotationPage = (quotation_id: number, quotation_rev_id: number) => {
+		//navigate('view-quotation');
+
+		navigate('view-quotation', {
+			state: { quotation_id: quotation_id,
+				quotation_rev_id: quotation_rev_id
+			},
+		});
 	};
 
-	const goToEditQuotationPage = () => {
-		navigate('edit-quotation');
+	const goToEditQuotationPage = (quotation_id: number, quotation_rev_id: number) => {
+		//navigate('edit-quotation');
+
+		navigate('edit-quotation', {
+			state: { quotation_id: quotation_id,
+				quotation_rev_id: quotation_rev_id
+			},
+		});
 	};
 
 	const goToCreateQuotationPage = () => {
@@ -315,6 +334,7 @@ const QuotationList = () => {
 	};
 
 	return (
+
 		<PageWrapper title='Quotation'>
 			<SubHeader>
 				<SubHeaderLeft>
@@ -430,7 +450,7 @@ const QuotationList = () => {
 											<th>Quotation Amount</th>
 											<th>Cost</th>
 											<th>Margin</th>
-											<th>%</th>
+											{/* <th>%</th> */}
 											<th>Status</th>
 											<th>Site Location</th>
 											<th>Building</th>
@@ -455,7 +475,7 @@ const QuotationList = () => {
 													<td>{item.quotation_amount.toFixed(2)}</td>
 													<td>{item.cost.toFixed(2)}</td>
 													<td>{item.margin.toFixed(2)}</td>
-													<td>{item.percent.toFixed(2)}%</td>
+													{/* <td>{item.percent.toFixed(2)}%</td> */}
 													<td>
 														<Badge
 															className='statusBadge'
@@ -475,7 +495,7 @@ const QuotationList = () => {
 																	hoverShadow='lg'
 																	tag='a'
 																	onClick={() =>
-																		goToViewQuotationPage()
+																		goToViewQuotationPage(item.quotation_id, item.quotation_rev_id)
 																	}></Button>
 															</div>
 															<div className='col-auto'>
@@ -486,7 +506,7 @@ const QuotationList = () => {
 																	hoverShadow='lg'
 																	tag='a'
 																	onClick={() =>
-																		goToEditQuotationPage()
+																		goToEditQuotationPage(item.quotation_id, item.quotation_rev_id)
 																	}></Button>
 															</div>
 														</div>

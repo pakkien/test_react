@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { useLocation } from 'react-router-dom';
 import { FormProviderQuotation } from './components/QuotationForm';
 import { Quotation } from './components/Quotation';
+import axios from 'axios';
+import QuotationDataType from '../../dataTypes/QuotationDataType';
 
 const QuotationData = {
 	quotation_id: 'ad399d47-a038-4fb4-9f31-2f142c143611',
@@ -244,28 +246,32 @@ const QuotationData = {
 
 const EditQuotation = () => {
 	const location = useLocation();
+	const [quotationRevData, setQuotationRevData] = useState<QuotationDataType.QuotationData>();
 
-	if (location.state != null){
-		//return <SingleQuotation mode='Edit' data={location.state.quotation_data} />; //from tracking view
-		return(
-			<FormProviderQuotation data={location.state.quotation_data}>
-			<Quotation mode={'edit'} />
-		</FormProviderQuotation>
-		);
-	}else{
-		//return <SingleQuotation mode='Edit' data={Quotation.quotation_data[0]} />;
-		return(
-			<FormProviderQuotation data={QuotationData.quotation_data[0]}>
-			<Quotation mode={'edit'} />
-		</FormProviderQuotation>
-		);
+	const fetchQuotationRevData = async (quotation_id: number, quotation_rev_id:number) => {
+		axios.get(`http://127.0.0.1:5000/quotation/${quotation_id}/revision/${quotation_rev_id}`).then((response) => {
+
+			console.log(response.data);
+			setQuotationRevData(response.data);
+		  });
 	}
 
-	// return (
-	// 	<FormProviderQuotation data={QuotationData.quotation_data[0]}>
-	// 		<Quotation mode={'edit'} />
-	// 	</FormProviderQuotation>
-	// );
-};
+	const quotation_id = location.state.quotation_id;
+	const quotation_rev_id = location.state.quotation_rev_id;
+	useEffect(() => {
+		fetchQuotationRevData(quotation_id, quotation_rev_id);
+	}, []);
+
+	return(
+		<>
+		{quotationRevData? <FormProviderQuotation data={quotationRevData}>
+			<Quotation mode={'edit'} quotation_id={quotation_id}/>
+		</FormProviderQuotation> : <></>}	
+		</>
+	);
+
+
+
+	}
 
 export default EditQuotation;

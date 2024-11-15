@@ -1,37 +1,40 @@
-import React from 'react';
+import React, { useState } from 'react';
 import QuotationDataType from '../../dataTypes/QuotationDataType';
 import { FormProviderQuotation } from './components/QuotationForm';
 import { Quotation } from './components/Quotation';
 
 const QuotationData: QuotationDataType.QuotationData = {
-	quotation_id: crypto.randomUUID(),
-	quotation_rev_id: crypto.randomUUID(),
+	quotation_id: -99,
+	quotation_revision_id: -99,
 	quotation_no: '',
 	quotation_date: '',
-	rev: '0',
+	revision: 0,
 	client: '',
 	end_user: '',
 	site_location: '',
 	building: '',
 	pic: '',
 	email: '',
-	project_ref: '',
+	project_reference: '',
 	items: [],
-	state: '',
+	status: '',
 
 	//Summary fields
 	reference_status: '',
 	note: '',
-	total: '',
-	g_total: '',
+	total: 0,
+	g_total: 0,
 
 };
 
 
 const CreateQuotation = () => {
+	//const [quotationRevData, setQuotationRevData] = useState<QuotationDataType.QuotationData>();
+
+
 	return(
 		<FormProviderQuotation data={QuotationData}>
-			<Quotation mode={'create'} />
+			<Quotation mode={'create'}/>
 		</FormProviderQuotation>
 	)
 };

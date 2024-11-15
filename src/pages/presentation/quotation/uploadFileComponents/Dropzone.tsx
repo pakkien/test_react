@@ -38,8 +38,8 @@ const Dropzone = (props: DropZoneProps) => {
 	// const handleUpload = async (fileToUpload: File & { preview: string, upload_percent:number, upload_id:string }) => {
 	const handleUpload = async (fileToUpload: File) => {
 		var data = new FormData();
-          //data.append('foo', 'bar');
           data.append('file', fileToUpload);
+		  data.append('created_by', "tester1@email.com"); //TODO: EDIT IN FUTURE
 
           var config = {
             onUploadProgress: function(progressEvent: AxiosProgressEvent) {

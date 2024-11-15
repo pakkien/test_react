@@ -34,17 +34,17 @@ const ManageItem = (props: ItemProps) => {
 
 	const addItem = () => {
 		append({
-			product_desc: '',
+			product_description: '',
 			brand: '',
 			model: '',
 			remarks: '',
-			quantity: '',
+			quantity: 0,
 			unit: '',
-			unit_cost: '',
-			total_cost: '',
-			margin: '',
-			unit_price: '',
-			total_price: '',
+			unit_cost: 0,
+			total_cost: 0,
+			margin: 0,
+			unit_price: 0,
+			total_price: 0,
 			sub_items: [],
 		});
 	};
@@ -94,18 +94,18 @@ const ManageItem = (props: ItemProps) => {
 													id='product_desc'
 													className={
 														'form-control ' +
-														(errors.items?.[itemIndex]?.product_desc
+														(errors.items?.[itemIndex]?.product_description
 															? 'is-invalid'
 															: '')
 													}
-													{...register(`items.${itemIndex}.product_desc`)}
+													{...register(`items.${itemIndex}.product_description`)}
 													type='text'
 													placeholder='product_desc'
 													disabled={props.isViewMode}
 												/>
 												<div className='invalid-feedback'>
 													{
-														errors.items?.[itemIndex]?.product_desc
+														errors.items?.[itemIndex]?.product_description
 															?.message
 													}
 												</div>
@@ -189,7 +189,7 @@ const ManageItem = (props: ItemProps) => {
 															{...register(
 																`items.${itemIndex}.quantity`,
 															)}
-															type='text'
+															type='text'												
 															placeholder='quantity'
 															disabled={props.isViewMode}
 														/>
@@ -271,7 +271,8 @@ const ManageItem = (props: ItemProps) => {
 													{...register(`items.${itemIndex}.total_cost`)}
 													type='text'
 													placeholder='total_cost'
-													disabled={props.isViewMode}
+													//disabled={props.isViewMode}
+													disabled
 												/>
 												<div className='invalid-feedback'>
 													{errors.items?.[itemIndex]?.total_cost?.message}
@@ -337,7 +338,8 @@ const ManageItem = (props: ItemProps) => {
 													{...register(`items.${itemIndex}.total_price`)}
 													type='text'
 													placeholder='total_price'
-													disabled={props.isViewMode}
+													//disabled={props.isViewMode}
+													disabled
 												/>
 												<div className='invalid-feedback'>
 													{

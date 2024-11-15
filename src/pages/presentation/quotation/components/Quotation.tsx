@@ -27,9 +27,11 @@ import showNotification from '../../../../components/extras/showNotification';
 import Icon from '../../../../components/icon/Icon';
 import Input from '../../../../components/bootstrap/forms/Input';
 import Dropzone from '../uploadFileComponents/Dropzone';
+import axios from 'axios';
 
 type QuotationProps = {
 	mode: 'create' | 'view' | 'edit';
+	quotation_id?: number
 };
 
 export const Quotation = (props: QuotationProps) => {
@@ -64,6 +66,52 @@ export const Quotation = (props: QuotationProps) => {
 	}
 
 	const navigate = useNavigate();
+
+
+	const showSuccessNotification = () => {
+		showNotification(
+			<span className='d-flex align-items-center'>
+				<Icon icon='Info' size='lg' className='me-1' />
+				<span>Quotation saved</span>
+			</span>,
+			'Quotation saved successfully',
+		);
+	}
+
+	const goToQuotationListPage = (quotation_id: number, quotation_rev_id: number) => {
+		//navigate('view-quotation');
+
+		navigate('../quotation', {
+			state: { quotation_id: quotation_id,
+				quotation_rev_id: quotation_rev_id
+			},
+		});
+	};
+
+	const postCreateQuotation = async (payload: any) => {
+		
+
+		axios.post(`http://127.0.0.1:5000/quotation/`, payload).then((response) => {
+
+			console.log(response.data);
+			showSuccessNotification();
+			goToQuotationListPage(response.data.quotation_id, response.data.quotation_rev_id);
+			
+		});
+	}
+
+	const postUpdateQuotation = async (quotation_id: number, payload: any) => {
+
+
+		axios.put(`http://127.0.0.1:5000/quotation/${quotation_id}`, payload).then((response) => {
+
+			console.log(response.data);
+			showSuccessNotification();
+			goToQuotationListPage(response.data.quotation_id, response.data.quotation_rev_id);
+		  });
+	}
+
+
 	return (
 		<PageWrapper title={title}>
 			<SubHeader>
@@ -80,22 +128,26 @@ export const Quotation = (props: QuotationProps) => {
 					onSubmit={handleSubmit(async (data) => {
 						//API CALL
 
-						await timeout(1000);
-						showNotification(
-							<span className='d-flex align-items-center'>
-								<Icon icon='Info' size='lg' className='me-1' />
-								<span>Quotation saved</span>
-							</span>,
-							'Quotation saved successfully',
-						);
+						//await timeout(1000);
+						
 						// console.log('Form submitted: ', data);
 
-
-						console.log("hihi");
 						const payload = Object.assign(
-							{ attachment_list: attachmentIDs },
-							data,
+							{ attachment_list: attachmentIDs?.toString(),
+								created_by: "tester1@email.com",
+								status: "submitted"
+
+							 },
+							data						
 						);
+
+						if(props.quotation_id){
+							//update only since quotation_id exists
+							postUpdateQuotation(props.quotation_id, payload);
+						}else{
+							postCreateQuotation(payload);
+						}
+
 						console.log('Form submitted (attachment): ', JSON.stringify(payload));
 
 
@@ -261,17 +313,17 @@ export const Quotation = (props: QuotationProps) => {
 											id='project_ref'
 											className={
 												'form-control ' +
-												(errors.project_ref ? 'is-invalid' : '')
+												(errors.project_reference ? 'is-invalid' : '')
 											}
-											{...register('project_ref')}
+											{...register('project_reference')}
 											type='text'
 											placeholder='project_ref'
 											disabled={isViewMode}
 										/>
 										<>
-											{errors.project_ref ? (
+											{errors.project_reference ? (
 												<div className='invalid-feedback'>
-													{errors.project_ref.message}
+													{errors.project_reference.message}
 												</div>
 											) : (
 												''

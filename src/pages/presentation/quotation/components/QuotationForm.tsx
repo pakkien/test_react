@@ -5,31 +5,31 @@ import { z } from 'zod';
 import QuotationDataType from '../../../dataTypes/QuotationDataType';
 
 const schemaSubItem = z.object({
-	product_desc: z.string().min(3),
+	product_description: z.string().min(3),
 	brand: z.string().min(3),
 	model: z.string().min(3),
 	remarks: z.string().min(3),
-	quantity: z.string().min(3),
-	unit: z.string().min(3),
-	unit_cost: z.string().min(3),
-	total_cost: z.string().min(3),
-	margin: z.string().min(3),
-	unit_price: z.string().min(3),
-	total_price: z.string().min(3),
+	quantity: z.coerce.number().int().positive().min(0),
+	unit: z.string(),
+	unit_cost: z.coerce.number().positive().min(0),
+	total_cost: z.coerce.number().positive().min(0),
+	margin: z.coerce.number().positive().min(0),
+	unit_price: z.coerce.number().positive().min(0),
+	total_price: z.coerce.number().positive().min(0),
 });
 
 const schemaItem = z.object({
-	product_desc: z.string().min(3),
+	product_description: z.string().min(3),
 	brand: z.string().min(3),
 	model: z.string().min(3),
 	remarks: z.string().min(3),
-	quantity: z.string().min(3),
-	unit: z.string().min(3),
-	unit_cost: z.string().min(3),
-	total_cost: z.string().min(3),
-	margin: z.string().min(3),
-	unit_price: z.string().min(3),
-	total_price: z.string().min(3),
+	quantity: z.coerce.number().int().positive().min(0),
+	unit: z.string(),
+	unit_cost: z.coerce.number().positive().min(0),
+	total_cost: z.coerce.number().positive().min(0),
+	margin: z.coerce.number().positive().min(0),
+	unit_price: z.coerce.number().positive().min(0),
+	total_price: z.coerce.number().positive().min(0),
 	sub_items: z.array(schemaSubItem)
 
 });
@@ -40,12 +40,15 @@ export const schemaQuotation = z.object({
 	site_location: z.string().min(3),
 	building: z.string().min(3),
 	pic: z.string().min(3),
-	email: z.string().min(3),
-	project_ref: z.string().min(3),
-	reference_status: z.string().min(3),
-	note: z.string().min(3),
-	total: z.string().min(3),
-	g_total: z.string().min(3),
+	email: z.string().email(),
+	project_reference: z.string(),
+
+	//Summary
+	reference_status: z.string(),
+	note: z.string(),
+	total: z.string(),
+	g_total: z.string(),
+
 	//items: z.array(schemaItem)
 	items: z.array(schemaItem).min(1, { message: 'must contain at least one item.' }),
 	//attachment_list: z.string().array(),
@@ -71,7 +74,7 @@ export const useFormQuotation = (props: QuotationFormProps) =>
 		building: props.data.building,
 		pic: props.data.pic,
 		email: props.data.email,
-		project_ref: props.data.project_ref,
+		project_reference: props.data.project_reference,
 		items: props.data.items, //check again
 		reference_status: props.data.reference_status,
 		note: props.data.note,
@@ -84,7 +87,7 @@ export const useFormQuotation = (props: QuotationFormProps) =>
   })
 
 
-export const FormProviderQuotation = (props: QuotationFormProps) => {
+export const FormProviderQuotation = (props: any) => {
 	const methods = useFormQuotation(props)
 	return <FormProvider {...methods}>{props.children}</FormProvider>
   }

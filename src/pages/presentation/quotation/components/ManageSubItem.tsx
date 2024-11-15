@@ -27,17 +27,17 @@ const ManageSubItem = (props: SubItemProps) => {
 
 	const addSubItem = () => {
 		append({
-			product_desc: '',
+			product_description: '',
 			brand: '',
 			model: '',
 			remarks: '',
-			quantity: '',
+			quantity: 0,
 			unit: '',
-			unit_cost: '',
-			total_cost: '',
-			margin: '',
-			unit_price: '',
-			total_price: ''
+			unit_cost: 0,
+			total_cost: 0,
+			margin: 0,
+			unit_price: 0,
+			total_price: 0
 		});
 	};
 
@@ -87,18 +87,18 @@ const ManageSubItem = (props: SubItemProps) => {
 													id='product_desc'
 													className={
 														'form-control ' +
-														(errors.items?.[itemIndex]?.sub_items?.[subItemIndex]?.product_desc
+														(errors.items?.[itemIndex]?.sub_items?.[subItemIndex]?.product_description
 															? 'is-invalid'
 															: '')
 													}
-													{...register(`items.${itemIndex}.sub_items.${subItemIndex}.product_desc`)}
+													{...register(`items.${itemIndex}.sub_items.${subItemIndex}.product_description`)}
 													type='text'
 													placeholder='product_desc'
 													disabled={props.isViewMode}
 												/>
 												<div className='invalid-feedback'>
 													{
-														errors.items?.[itemIndex]?.sub_items?.[subItemIndex]?.product_desc
+														errors.items?.[itemIndex]?.sub_items?.[subItemIndex]?.product_description
 															?.message
 													}
 												</div>
@@ -264,7 +264,8 @@ const ManageSubItem = (props: SubItemProps) => {
 													{...register(`items.${itemIndex}.sub_items.${subItemIndex}.total_cost`)}
 													type='text'
 													placeholder='total_cost'
-													disabled={props.isViewMode}
+													//disabled={props.isViewMode}
+													disabled
 												/>
 												<div className='invalid-feedback'>
 													{errors.items?.[itemIndex]?.sub_items?.[subItemIndex]?.total_cost?.message}
@@ -330,7 +331,8 @@ const ManageSubItem = (props: SubItemProps) => {
 													{...register(`items.${itemIndex}.sub_items.${subItemIndex}.total_price`)}
 													type='text'
 													placeholder='total_price'
-													disabled={props.isViewMode}
+													//disabled={props.isViewMode}
+													disabled
 												/>
 												<div className='invalid-feedback'>
 													{
