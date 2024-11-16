@@ -32,7 +32,8 @@ import ViewAttachment from '../uploadFileComponents/ViewAttachment';
 
 type QuotationProps = {
 	mode: 'create' | 'view' | 'edit';
-	quotation_id?: number
+	quotation_id?: string;
+	quotation_rev_id?: string
 };
 
 export const Quotation = (props: QuotationProps) => {
@@ -79,18 +80,15 @@ export const Quotation = (props: QuotationProps) => {
 		);
 	}
 
-	const goToQuotationListPage = (quotation_id: number, quotation_rev_id: number) => {
+	const goToViewQuotationListPage = () => {
 		//navigate('view-quotation');
 
-		navigate('../quotation', {
-			state: { quotation_id: quotation_id,
-				quotation_rev_id: quotation_rev_id
-			},
-		});
+		navigate('../quotation');
+
 	};
 
 	const config = {
-		headers: {Authorization: `Bearer ${localStorage.getItem('bts_token')}`}
+		headers: {Authorization: `${localStorage.getItem('bts_token')}`}
 	}
 
 	const postCreateQuotation = async (payload: any) => {
@@ -98,17 +96,17 @@ export const Quotation = (props: QuotationProps) => {
 
 			console.log(response.data);
 			showSuccessNotification();
-			goToQuotationListPage(response.data.quotation_id, response.data.quotation_rev_id);
+			goToViewQuotationListPage();
 			
 		});
 	}
 
-	const postUpdateQuotation = async (quotation_id: number, payload: any) => {
+	const postUpdateQuotation = async (quotation_id: string, payload: any) => {
 		axios.put(`http://127.0.0.1:5000/quotation/${quotation_id}`, payload, config).then((response) => {
 
 			console.log(response.data);
 			showSuccessNotification();
-			goToQuotationListPage(response.data.quotation_id, response.data.quotation_rev_id);
+			goToViewQuotationListPage();
 		  });
 	}
 
@@ -134,8 +132,8 @@ export const Quotation = (props: QuotationProps) => {
 						// console.log('Form submitted: ', data);
 
 						const payload = Object.assign(
-							{ attachment_list: attachmentIDs?.toString(),
-								created_by: "tester1@email.com",
+							{ attachment_list: attachmentIDs,
+								//created_by: "tester1@email.com",
 								status: "submitted"
 
 							 },
@@ -344,7 +342,7 @@ export const Quotation = (props: QuotationProps) => {
 					{/* Test upload */}
 					{/* <UploadFiles/> */}
 					{isViewMode? 
-					<ViewAttachment/>
+					<ViewAttachment quotation_rev_id={props.quotation_rev_id}/>
 					: 
 					<Dropzone setAttachmentIds={updateAttachmentID} className={''}/>
 					}							

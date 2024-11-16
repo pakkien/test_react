@@ -248,11 +248,11 @@ const EditQuotation = () => {
 	const location = useLocation();
 	const [quotationRevData, setQuotationRevData] = useState<QuotationDataType.QuotationData>();
 
-	const fetchQuotationRevData = async (quotation_id: number, quotation_rev_id:number) => {
+	const fetchQuotationRevData = async (quotation_rev_id:string) => {
 		const config = {
-			headers: {Authorization: `Bearer ${localStorage.getItem('bts_token')}`}
+			headers: {Authorization: `${localStorage.getItem('bts_token')}`}
 		}
-		axios.get(`http://127.0.0.1:5000/quotation/${quotation_id}/revision/${quotation_rev_id}`, config).then((response) => {
+		axios.get(`http://127.0.0.1:5000/quotation/revision/${quotation_rev_id}`, config).then((response) => {
 
 			console.log(response.data);
 			setQuotationRevData(response.data);
@@ -262,7 +262,7 @@ const EditQuotation = () => {
 	const quotation_id = location.state.quotation_id;
 	const quotation_rev_id = location.state.quotation_rev_id;
 	useEffect(() => {
-		fetchQuotationRevData(quotation_id, quotation_rev_id);
+		fetchQuotationRevData(quotation_rev_id);
 	}, []);
 
 	return(

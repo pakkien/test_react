@@ -22,13 +22,28 @@ import Badge from '../../../components/bootstrap/Badge';
 import { useFormik } from 'formik';
 import dayjs from 'dayjs';
 import useSortableData from '../../../hooks/useSortableData';
-import PaginationButtons, { dataPagination, PER_COUNT } from '../../../components/PaginationButtons';
+import PaginationButtons, {
+	dataPagination,
+	PER_COUNT,
+} from '../../../components/PaginationButtons';
 import FormGroup from '../../../components/bootstrap/forms/FormGroup';
 import { debounce } from '../../../helpers/helpers';
 import Icon from '../../../components/icon/Icon';
 import Input from '../../../components/bootstrap/forms/Input';
 import axios from 'axios';
 import QuotationDataType from '../../dataTypes/QuotationDataType';
+
+import utc from 'dayjs/plugin/utc';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+import timezone from 'dayjs/plugin/timezone'
+
+dayjs.extend(utc);
+dayjs.extend(localizedFormat);
+dayjs.extend(customParseFormat);
+dayjs.extend(timezone);
+
+
 
 function ReturnBatchColor(state: string) {
 	switch (state.toLowerCase()) {
@@ -242,8 +257,6 @@ function ReturnBatchColor(state: string) {
 
 // }
 
-
-
 const QuotationList = () => {
 	const navigate = useNavigate();
 	const [isAlertVisible, setIsAlertVisible] = useState(false);
@@ -252,15 +265,16 @@ const QuotationList = () => {
 
 	const fetchData = async () => {
 		const config = {
-			headers: {Authorization: `Bearer ${localStorage.getItem('bts_token')}`}
-		}
+			headers: { Authorization: `${localStorage.getItem('bts_token')}` },
+		};
 
-		axios.get("http://127.0.0.1:5000/quotation/all_quotations_table", config)
-		.then((response) => {
-			setQuotationData(response.data.data);
-			setTableData(response.data.data);
-			console.log(response.data.data);
-		  });
+		axios
+			.get('http://127.0.0.1:5000/quotation/all_quotations_table', config)
+			.then((response) => {
+				setQuotationData(response.data.quotations);
+				setTableData(response.data.quotations);
+				console.log(response.data.quotations);
+			});
 	};
 
 	//Get Quotation table data
@@ -268,7 +282,6 @@ const QuotationList = () => {
 		fetchData();
 	}, []);
 
-	
 	const [currentPage, setCurrentPage] = useState(1);
 	const [perPage, setPerPage] = useState(PER_COUNT['5']);
 
@@ -312,24 +325,24 @@ const QuotationList = () => {
 			);
 		});
 	};
-	
 
-	const goToViewQuotationPage = (quotation_id: number, quotation_rev_id: number) => {
+	const goToViewQuotationPage = (quotation_rev_id: string) => {
 		//navigate('view-quotation');
 
 		navigate('view-quotation', {
-			state: { quotation_id: quotation_id,
-				quotation_rev_id: quotation_rev_id
+			state: {
+				quotation_rev_id: quotation_rev_id,
 			},
 		});
 	};
 
-	const goToEditQuotationPage = (quotation_id: number, quotation_rev_id: number) => {
+	const goToEditQuotationPage = (quotation_id: string, quotation_rev_id: string) => {
 		//navigate('edit-quotation');
 
 		navigate('edit-quotation', {
-			state: { quotation_id: quotation_id,
-				quotation_rev_id: quotation_rev_id
+			state: {
+				quotation_id: quotation_id,
+				quotation_rev_id: quotation_rev_id,
 			},
 		});
 	};
@@ -339,7 +352,6 @@ const QuotationList = () => {
 	};
 
 	return (
-
 		<PageWrapper title='Quotation'>
 			<SubHeader>
 				<SubHeaderLeft>
@@ -470,8 +482,8 @@ const QuotationList = () => {
 													<td>{item.prepared_by}</td>
 													<td>{item.client}</td>
 													<td>
-														{dayjs(`${item.quotation_date}`).format(
-															'DD/MM/YYYY',
+														{dayjs.utc(`${item.quotation_date}`).local().format(
+															'DD-MM-YYYY HH:mm:ss',
 														)}
 													</td>
 													<td>{item.quotation_no}</td>
@@ -500,7 +512,9 @@ const QuotationList = () => {
 																	hoverShadow='lg'
 																	tag='a'
 																	onClick={() =>
-																		goToViewQuotationPage(item.quotation_id, item.quotation_rev_id)
+																		goToViewQuotationPage(
+																			item.quotation_rev_id,
+																		)
 																	}></Button>
 															</div>
 															<div className='col-auto'>
@@ -511,7 +525,10 @@ const QuotationList = () => {
 																	hoverShadow='lg'
 																	tag='a'
 																	onClick={() =>
-																		goToEditQuotationPage(item.quotation_id, item.quotation_rev_id)
+																		goToEditQuotationPage(
+																			item.quotation_id,
+																			item.quotation_rev_id,
+																		)
 																	}></Button>
 															</div>
 														</div>

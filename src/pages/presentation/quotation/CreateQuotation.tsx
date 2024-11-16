@@ -4,8 +4,8 @@ import { FormProviderQuotation } from './components/QuotationForm';
 import { Quotation } from './components/Quotation';
 
 const QuotationData: QuotationDataType.QuotationData = {
-	quotation_id: -99,
-	quotation_revision_id: -99,
+	quotation_id: '',
+	quotation_revision_id: '',
 	quotation_no: '',
 	quotation_date: '',
 	revision: 0,

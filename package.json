@@ -48,6 +48,7 @@
 		"i18next": "^23.7.16",
 		"i18next-browser-languagedetector": "^7.2.0",
 		"i18next-http-backend": "^2.4.2",
+		"js-file-download": "^0.4.12",
 		"jsx-to-string": "^1.4.0",
 		"pascalcase": "^2.0.0",
 		"payment": "^2.4.6",

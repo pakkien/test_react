@@ -39,7 +39,7 @@ const Dropzone = (props: DropZoneProps) => {
 	const handleUpload = async (fileToUpload: File) => {
 		var data = new FormData();
           data.append('file', fileToUpload);
-		  data.append('created_by', "tester1@email.com"); //TODO: EDIT IN FUTURE
+
 
           var config = {
             onUploadProgress: function(progressEvent: AxiosProgressEvent) {
@@ -51,13 +51,13 @@ const Dropzone = (props: DropZoneProps) => {
 					return newFiles;
 				});
             },
-			headers: {Authorization: `Bearer ${localStorage.getItem('bts_token')}`}
+			headers: {Authorization: `${localStorage.getItem('bts_token')}`}
           };
 
 
           axios.post('http://127.0.0.1:5000/quotation/attachment', data, config)
             .then(function (res) {
-				const attachment_id = res.data.message.attachment_id;
+				const attachment_id = res.data.attachment_id;
 
 				setFiles(prevState => {
 					const newFiles = [...prevState];
