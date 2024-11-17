@@ -33,7 +33,7 @@ import ViewAttachment from '../uploadFileComponents/ViewAttachment';
 type QuotationProps = {
 	mode: 'create' | 'view' | 'edit';
 	quotation_id?: string;
-	quotation_rev_id?: string
+	quotation_rev_id?: string;
 };
 
 export const Quotation = (props: QuotationProps) => {
@@ -51,24 +51,19 @@ export const Quotation = (props: QuotationProps) => {
 	const isViewMode = props.mode.toLowerCase() == 'view' ? true : false;
 	const title =
 		props.mode.charAt(0).toUpperCase() + props.mode.slice(1).toLowerCase() + ' Quotation ';
-	
 
 	// upload file
 	const [attachmentIDs, setAttachmentIds] = useState<string[]>();
 
 	const updateAttachmentID = (ids: string[]) => {
 		setAttachmentIds(ids);
-		
 	};
-
-
 
 	function timeout(delay: number) {
 		return new Promise((res) => setTimeout(res, delay));
 	}
 
 	const navigate = useNavigate();
-
 
 	const showSuccessNotification = () => {
 		showNotification(
@@ -78,38 +73,59 @@ export const Quotation = (props: QuotationProps) => {
 			</span>,
 			'Quotation saved successfully',
 		);
-	}
+	};
 
 	const goToViewQuotationListPage = () => {
 		//navigate('view-quotation');
 
 		navigate('../quotation');
-
 	};
 
 	const config = {
-		headers: {Authorization: `${localStorage.getItem('bts_token')}`}
-	}
+		headers: { Authorization: `${localStorage.getItem('bts_token')}` },
+	};
 
 	const postCreateQuotation = async (payload: any) => {
 		axios.post(`http://127.0.0.1:5000/quotation/`, payload, config).then((response) => {
-
-			console.log(response.data);
+			//console.log(response.data);
 			showSuccessNotification();
 			goToViewQuotationListPage();
-			
 		});
-	}
+	};
 
 	const postUpdateQuotation = async (quotation_id: string, payload: any) => {
-		axios.put(`http://127.0.0.1:5000/quotation/${quotation_id}`, payload, config).then((response) => {
+		axios
+			.put(`http://127.0.0.1:5000/quotation/${quotation_id}`, payload, config)
+			.then((response) => {
+				//console.log(response.data);
+				showSuccessNotification();
+				goToViewQuotationListPage();
+			});
+	};
 
-			console.log(response.data);
-			showSuccessNotification();
-			goToViewQuotationListPage();
-		  });
-	}
+	//OPTIONS
+	const leadTimeOptions = [
+		'',
+		'30 Working days from the date of payment received',
+		'60 Working days from the date of payment received',
+		'90 Working days from the date of payment received',
+	];
 
+	const paymentTermsOptions = [
+		'',
+		'30 Days upon Invoice Date',
+		'60 Days upon Invoice Date',
+		'Cash on delivery',
+	];
+
+	const validityOptions = [
+		'',
+		'30 Days from the date of this quotation',
+		'60 Days from the date of this quotation',
+		'90 Days from the date of this quotation',
+	];
+
+	// }
 
 	return (
 		<PageWrapper title={title}>
@@ -128,28 +144,26 @@ export const Quotation = (props: QuotationProps) => {
 						//API CALL
 
 						//await timeout(1000);
-						
+
 						// console.log('Form submitted: ', data);
 
 						const payload = Object.assign(
-							{ attachment_list: attachmentIDs,
+							{
+								attachment_list: attachmentIDs,
 								//created_by: "tester1@email.com",
-								status: "submitted"
-
-							 },
-							data						
+								status: 'submitted',
+							},
+							data,
 						);
 
-						if(props.quotation_id){
+						if (props.quotation_id) {
 							//update only since quotation_id exists
 							postUpdateQuotation(props.quotation_id, payload);
-						}else{
+						} else {
 							postCreateQuotation(payload);
 						}
 
 						console.log('Form submitted (attachment): ', JSON.stringify(payload));
-
-
 					})}>
 					<Card>
 						<CardHeader>
@@ -341,70 +355,106 @@ export const Quotation = (props: QuotationProps) => {
 
 					{/* Test upload */}
 					{/* <UploadFiles/> */}
-					{isViewMode? 
-					<ViewAttachment quotation_rev_id={props.quotation_rev_id}/>
-					: 
-					<Dropzone setAttachmentIds={updateAttachmentID} className={''}/>
-					}							
+					{isViewMode ? (
+						<ViewAttachment quotation_rev_id={props.quotation_rev_id} />
+					) : (
+						<Dropzone setAttachmentIds={updateAttachmentID} className={''} />
+					)}
 
-
-					
-					{/* <Card>
+					{/* Options */}
+					<Card>
 						<CardHeader>
 							<CardLabel>
 								<CardTitle tag='div' className='h3'>
-									Upload PDF
+									Options
 								</CardTitle>
 							</CardLabel>
 						</CardHeader>
 						<CardBody className='pb-0'>
 							<div className='row g-4'>
-								<div className='col-md-4'></div>
 								<div className='col-md-4'>
-									<div className='col-md-12'>
-										<FormGroup
-											//className='col-12'
-											id='uploadfile'
-											//label='Upload PDF'
-										>
-											<Input
-												type='file'
-												accept='.pdf'
-												multiple
-												//onChange={formik.handleChange}
-												// value={formik.values.uploadfile}
-												// disabled={isViewMode ? true : false}
-												onChange={(
-													e: React.ChangeEvent<HTMLInputElement>,
-												) => {
-													handleFileChange(e);
-													//formik.handleChange(e);
-												}}
-											/>
-										</FormGroup>
-									</div>
-									<div className='col-md-12'>
-										{files &&
-											[...files].map((file, index) => (
-												<section key={file.name}>
-													File number {index + 1} details:
-													<ul>
-														<li>Name: {file.name}</li>
-														<li>Type: {file.type}</li>
-														<li>Size: {file.size} bytes</li>
-													</ul>
-												</section>
-											))}
-									</div>
+									<FormGroup id='lead_time' label='Lead Time' isFloating>
+										<select
+											id='lead_time'
+											className={
+												'form-control ' +
+												(errors.lead_time ? 'is-invalid' : '')
+											}
+											{...register('lead_time')}
+											disabled={isViewMode}>
+											{leadTimeOptions.map(
+												op => <option value={op}>{op}</option>
+											)}
+										</select>
+										<>
+											{errors.lead_time ? (
+												<div className='invalid-feedback'>
+													{errors.lead_time.message}
+												</div>
+											) : (
+												''
+											)}
+										</>
+									</FormGroup>
 								</div>
-								<div className='col-md-4'></div>
-								<div className='col-md-12'></div>
+
+								<div className='col-md-4'>
+									<FormGroup id='payment_terms' label='Payment Terms' isFloating>
+										<select
+											id='payment_terms'
+											className={
+												'form-control ' +
+												(errors.lead_time ? 'is-invalid' : '')
+											}
+											{...register('payment_terms')}
+											disabled={isViewMode}>
+											{paymentTermsOptions.map(
+												op => <option value={op}>{op}</option>
+											)}
+										</select>
+										<>
+											{errors.payment_terms ? (
+												<div className='invalid-feedback'>
+													{errors.payment_terms.message}
+												</div>
+											) : (
+												''
+											)}
+										</>
+									</FormGroup>
+								</div>
+
+								<div className='col-md-4'>
+									<FormGroup id='validity' label='Validity' isFloating>
+										<select
+											id='validity'
+											className={
+												'form-control ' +
+												(errors.validity ? 'is-invalid' : '')
+											}
+											{...register('validity')}
+											disabled={isViewMode}>
+											{validityOptions.map(
+												op => <option value={op}>{op}</option>
+											)}
+										</select>
+										<>
+											{errors.validity ? (
+												<div className='invalid-feedback'>
+													{errors.validity.message}
+												</div>
+											) : (
+												''
+											)}
+										</>
+									</FormGroup>
+								</div>
 							</div>
 						</CardBody>
 						<CardFooter>
 							<></>
 						</CardFooter>
-					</Card> */}
+					</Card>
 
 					{/* Summary */}
 					<Card>

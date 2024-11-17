@@ -273,7 +273,7 @@ const QuotationList = () => {
 			.then((response) => {
 				setQuotationData(response.data.quotations);
 				setTableData(response.data.quotations);
-				console.log(response.data.quotations);
+				//console.log(response.data.quotations);
 			});
 	};
 

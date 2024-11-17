@@ -52,6 +52,12 @@ export const schemaQuotation = z.object({
 	//items: z.array(schemaItem)
 	items: z.array(schemaItem).min(1, { message: 'must contain at least one item.' }),
 	//attachment_list: z.string().array(),
+
+
+	//options
+	lead_time: z.string(),
+	payment_terms: z.string(),
+	validity: z.string()
 });
 
 export type FormTypeQuotation = z.infer<typeof schemaQuotation>
@@ -82,7 +88,11 @@ export const useFormQuotation = (props: QuotationFormProps) =>
 		// g_total: props.data.g_total,
 		total: 0,
 		g_total: 0,
-		//attachment_list: props.data.attachment_list
+		
+		//options:
+		lead_time: props.data.lead_time,
+		payment_terms: props.data.payment_terms,
+		validity: props.data.validity
 
 	}
 

@@ -26,8 +26,10 @@ namespace QuotationDataType {
 		total: number;
 		g_total: number;
 
-		//attachment
-		//attachment_list: string[];
+		//options fields
+		lead_time: string;
+		payment_terms: string;
+		validity: string;
 	};
 
 	export type Item = {
