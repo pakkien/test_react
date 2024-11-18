@@ -418,6 +418,7 @@ const ManageOption = () => {
 													onFormSubmit({
 														...formik.values,
 														option_name: e.target.value,
+                            search: formik.values.search,
 													}),
 												1000,
 											)();
@@ -448,6 +449,7 @@ const ManageOption = () => {
 																onFormSubmit({
 																	...formik.values,
 																	search: e.target.value,
+                                  option_name: formikAddOption.values.option_name_dropdown,
 																}),
 															1000,
 														)();
