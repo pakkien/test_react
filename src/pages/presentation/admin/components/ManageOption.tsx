@@ -282,8 +282,10 @@ const ManageOption = () => {
   //distinct option_name only
   const option_names = optionData.map((item) => item.option_name);
   const distinctOptions = [...new Set(option_names)];
-  const dropdown_optionNames = distinctOptions.map((op) => {return {value:op, text:op}});
-  dropdown_optionNames.splice(0, 0, {value: '', text: 'Create New Option' });
+  const dropdown_optionNames_add = distinctOptions.map((op) => {return {value:op, text:op}});
+  const dropdown_optionNames_view = distinctOptions.map((op) => {return {value:op, text:op}});
+  dropdown_optionNames_add.splice(0, 0, {value: '', text: 'Create New Option' });
+  dropdown_optionNames_view.splice(0, 0, {value: '', text: 'All Option' });
 
 	return (
 		<>
@@ -315,7 +317,7 @@ const ManageOption = () => {
 									id='OptionNameSelect'
 									ariaLabel='Default select option name'
 									value={formikAddOption.values.option_name_dropdown}
-									list={dropdown_optionNames}
+									list={dropdown_optionNames_add}
 									onBlur={formikAddOption.handleBlur}
 									isValid={formikAddOption.isValid}
 									isTouched={formikAddOption.touched.option_name_dropdown}
@@ -386,7 +388,7 @@ const ManageOption = () => {
 			<Card>
 				<CardBody>
 					<div className='row g-4'>
-						<div className='col-md-4' hidden={isCreateMode}>
+						<div className='col-md-3' hidden={isCreateMode}>
 							<CardHeader>
 								<CardLabel>
 									<CardTitle tag='div' className='h3'>
@@ -395,7 +397,35 @@ const ManageOption = () => {
 								</CardLabel>
 							</CardHeader>
 						</div>
-						<div className='col-md-4' hidden={isCreateMode}>
+            <div className='col-md-2' hidden={isCreateMode}>
+            <FormGroup id='option_name_dropdown' label={formikAddOption.values.option_name_dropdown == ''?'' : 'Option Name'} isFloating>
+                <Select
+									id='OptionNameSelect'
+									ariaLabel='Default select option name'
+									value={formikAddOption.values.option_name_dropdown}
+									list={dropdown_optionNames_view}
+									//onBlur={formikAddOption.handleBlur}
+									//isValid={formikAddOption.isValid}
+									isTouched={formikAddOption.touched.option_name_dropdown}
+									//invalidFeedback={formikAddOption.errors.option_name_dropdown}
+									//validFeedback='Valid Option Name'
+                  onChange={(e: { target: { value: any } }) => {
+										formikAddOption.handleChange(e);
+
+										//if (e.target.value)
+											debounce(
+												() =>
+													onFormSubmit({
+														...formik.values,
+														option_name: e.target.value,
+													}),
+												1000,
+											)();
+									}}
+								/>
+							</FormGroup>
+            </div>
+            <div className='col-md-4' hidden={isCreateMode}>
 							<Alert color='light' isLight>
 								<form onSubmit={formik.handleSubmit}>
 									<FormGroup>
@@ -432,7 +462,7 @@ const ManageOption = () => {
 								</form>
 							</Alert>
 						</div>
-						<div className='col-md-4' hidden={isCreateMode}>
+						<div className='col-md-3' hidden={isCreateMode}>
 							<Button
 								color='primary'
 								className='float-end'
@@ -579,12 +609,12 @@ const ManageOption = () => {
 				isAnimation={animationStatus}>
 				<ModalHeader setIsOpen={headerCloseStatus ? setState : undefined}>
 					<ModalTitle id='confirmDeleteUserModal'>
-						Confirm Delete Option: - {optionToDelete.option_name} -{' '}
+						Confirm Delete:
 						{optionToDelete.option_value}
 					</ModalTitle>
 				</ModalHeader>
 				<ModalBody>
-					Confirm to delete {optionToDelete.option_name} - {optionToDelete.option_value}
+					<p>Option Name: {optionToDelete.option_name} <br/> Option Value: {optionToDelete.option_value}</p>
 				</ModalBody>
 				<ModalFooter>
 					<Button
