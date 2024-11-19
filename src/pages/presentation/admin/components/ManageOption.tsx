@@ -81,15 +81,14 @@ dayjs.extend(timezone);
 // ]
 
 type OptionDataType = {
-
-created_at: string;
-created_by: string;
-option_id: number;
-option_name: string;
-option_value: string;
-updated_at: string;
-update_by: string;
-}
+	created_at: string;
+	created_by: string;
+	option_id: number;
+	option_name: string;
+	option_value: string;
+	updated_at: string;
+	update_by: string;
+};
 
 const ManageOption = () => {
 	const [optionData, setOptionData] = useState<OptionDataType[]>([]);
@@ -118,9 +117,9 @@ const ManageOption = () => {
 	const [perPage, setPerPage] = useState(PER_COUNT['5']);
 	const { items, requestSort, getClassNamesFor } = useSortableData(tableData);
 
-	const onFormSubmit = (values: { search: any, option_name: any }) => {
+	const onFormSubmit = (values: { search: any; option_name: any }) => {
 		const searchValue = values.search.toString().toLowerCase();
-    const optionNameValue = values.option_name.toString().toLowerCase();
+		const optionNameValue = values.option_name.toString().toLowerCase();
 		const newData = searchAndFilterData(searchValue, optionNameValue);
 
 		if (!values.search && !values.option_name) {
@@ -133,19 +132,19 @@ const ManageOption = () => {
 	const formik = useFormik({
 		initialValues: {
 			search: '',
-      option_name: ''
+			option_name: '',
 		},
 		onSubmit: onFormSubmit,
 		onReset: () => setTableData(optionData),
 	});
 
 	const searchAndFilterData = (search_string: string, option_name: string) => {
-    let tempData = optionData;
-    //console.log("optionName: " + option_name);
+		let tempData = optionData;
+		//console.log("optionName: " + option_name);
 
-    if (option_name){
-      tempData = optionData.filter((item) => item.option_name.toLowerCase() === option_name);
-    }
+		if (option_name) {
+			tempData = optionData.filter((item) => item.option_name.toLowerCase() === option_name);
+		}
 
 		return tempData.filter((item: any) => {
 			return (
@@ -192,70 +191,68 @@ const ManageOption = () => {
 
 	const handleDelete = (id: string) => {
 		//handleRemove(id);
-    const config = {
-      headers: { Authorization: `${localStorage.getItem('bts_token')}` },
-    };
+		const config = {
+			headers: { Authorization: `${localStorage.getItem('bts_token')}` },
+		};
 
-    axios
-    .delete(`http://127.0.0.1:5000/option/${id}`, config)
-    .then((response) => {
-      showNotification(
-				<span className='d-flex align-items-center'>
-					<Icon icon='Info' size='lg' className='me-1' />
-					<span>Option Deleted</span>
-				</span>,
-				"Option deleted successfully",
-			);
+		axios
+			.delete(`http://127.0.0.1:5000/option/${id}`, config)
+			.then((response) => {
+				showNotification(
+					<span className='d-flex align-items-center'>
+						<Icon icon='Info' size='lg' className='me-1' />
+						<span>Option Deleted</span>
+					</span>,
+					'Option deleted successfully',
+				);
 
-      setIsCreateMode(false);
-      fetchData();
-
-    }).catch(errors => console.log(errors));
-
+				setIsCreateMode(false);
+				fetchData();
+			})
+			.catch((errors) => console.log(errors));
 	};
 
 	//Create option
 	const [isCreateMode, setIsCreateMode] = useState(false);
 
-  const handleSubmitAddOption = async (option_name: string, option_value: string) => {
-    const config = {
-      headers: { Authorization: `${localStorage.getItem('bts_token')}` },
-    };
+	const handleSubmitAddOption = async (option_name: string, option_value: string) => {
+		const config = {
+			headers: { Authorization: `${localStorage.getItem('bts_token')}` },
+		};
 
-    const payload = {
-      option_name: option_name,
-      option_value: option_value
-    };
-    
-    axios
-    .post(`http://127.0.0.1:5000/option/`, payload, config)
-    .then((response) => {
-      showNotification(
-				<span className='d-flex align-items-center'>
-					<Icon icon='Info' size='lg' className='me-1' />
-					<span>Option Added</span>
-				</span>,
-				"Option added successfully",
-			);
+		const payload = {
+			option_name: option_name,
+			option_value: option_value,
+		};
 
-      setIsCreateMode(false);
-      fetchData();
-      formikAddOption.resetForm();
+		axios
+			.post(`http://127.0.0.1:5000/option/`, payload, config)
+			.then((response) => {
+				showNotification(
+					<span className='d-flex align-items-center'>
+						<Icon icon='Info' size='lg' className='me-1' />
+						<span>Option Added</span>
+					</span>,
+					'Option added successfully',
+				);
 
-    }).catch(errors => console.log(errors));
-  };
+				//setIsCreateMode(false);
+				fetchData();
+				formikAddOption.resetForm();
+			})
+			.catch((errors) => console.log(errors));
+	};
 
 	const formikAddOption = useFormik({
 		initialValues: {
 			option_name_dropdown: '',
-      option_name: '',
+			option_name: '',
 			option_value: '',
 		},
 		validate: (values) => {
-      const errors: {
+			const errors: {
 				option_name?: string;
 				option_value?: string;
-
 			} = {};
 			if (!values.option_name && !values.option_name_dropdown) {
 				errors.option_name = 'Required';
@@ -265,27 +262,30 @@ const ManageOption = () => {
 				errors.option_value = 'Required';
 			}
 
-      return errors;
-    },
+			return errors;
+		},
 		onSubmit: async (values) => {
-        //api call
-        //console.log(values);
+			//api call
+			//console.log(values);
 
-        const option_name = values.option_name_dropdown? values.option_name_dropdown: values.option_name;
-        await handleSubmitAddOption(option_name, values.option_value);
-
-      
+			const option_name = values.option_name_dropdown
+				? values.option_name_dropdown
+				: values.option_name;
+			await handleSubmitAddOption(option_name, values.option_value);
 		},
 	});
 
-
-  //distinct option_name only
-  const option_names = optionData.map((item) => item.option_name);
-  const distinctOptions = [...new Set(option_names)];
-  const dropdown_optionNames_add = distinctOptions.map((op) => {return {value:op, text:op}});
-  const dropdown_optionNames_view = distinctOptions.map((op) => {return {value:op, text:op}});
-  dropdown_optionNames_add.splice(0, 0, {value: '', text: 'Create New Option' });
-  dropdown_optionNames_view.splice(0, 0, {value: '', text: 'All Option' });
+	//distinct option_name only
+	const option_names = optionData.map((item) => item.option_name);
+	const distinctOptions = [...new Set(option_names)];
+	const dropdown_optionNames_add = distinctOptions.map((op) => {
+		return { value: op, text: op };
+	});
+	const dropdown_optionNames_view = distinctOptions.map((op) => {
+		return { value: op, text: op };
+	});
+	dropdown_optionNames_add.splice(0, 0, { value: '', text: 'Create New Option' });
+	dropdown_optionNames_view.splice(0, 0, { value: '', text: 'All Option' });
 
 	return (
 		<>
@@ -303,17 +303,30 @@ const ManageOption = () => {
 							icon='Close'
 							tag='a'
 							isLight
-							onClick={() => {formikAddOption.resetForm(); 
-              setIsCreateMode(false);
-              formik.resetForm();
-              }}></Button>
+							onClick={() => {
+								formikAddOption.resetForm();
+								setIsCreateMode(false);
+								formik.resetForm();
+							}}></Button>
 					</CardActions>
 				</CardHeader>
 				<CardBody className='pb-0'>
 					<div className='row g-4'>
-						<div className={formikAddOption.values.option_name_dropdown == ''? 'col-md-2':'col-md-4'}>
-							<FormGroup id='option_name_dropdown' label={formikAddOption.values.option_name_dropdown == ''?'' : 'Option Name'} isFloating>
-                <Select
+						<div
+							className={
+								formikAddOption.values.option_name_dropdown == ''
+									? 'col-md-2'
+									: 'col-md-4'
+							}>
+							<FormGroup
+								id='option_name_dropdown'
+								label={
+									formikAddOption.values.option_name_dropdown == ''
+										? ''
+										: 'Option Name'
+								}
+								isFloating>
+								<Select
 									id='OptionNameSelect'
 									ariaLabel='Default select option name'
 									value={formikAddOption.values.option_name_dropdown}
@@ -323,24 +336,26 @@ const ManageOption = () => {
 									isTouched={formikAddOption.touched.option_name_dropdown}
 									invalidFeedback={formikAddOption.errors.option_name_dropdown}
 									//validFeedback='Valid Option Name'
-                  onChange={(e: { target: { value: any } }) => {
+									onChange={(e: { target: { value: any } }) => {
 										formikAddOption.handleChange(e);
 
 										//if (e.target.value)
-											debounce(
-												() =>
-													onFormSubmit({
-														...formik.values,
-														option_name: e.target.value,
-													}),
-												1000,
-											)();
+										debounce(
+											() =>
+												onFormSubmit({
+													...formik.values,
+													option_name: e.target.value,
+												}),
+											1000,
+										)();
 									}}
 								/>
 							</FormGroup>
 						</div>
-						<div className='col-md-4' hidden={formikAddOption.values.option_name_dropdown!=''}>
-							<FormGroup id='option_name' label='Option Name' isFloating >
+						<div
+							className='col-md-4'
+							hidden={formikAddOption.values.option_name_dropdown != ''}>
+							<FormGroup id='option_name' label='Option Name' isFloating>
 								<Input
 									placeholder='Option Name'
 									//autoComplete='additional-name'
@@ -354,7 +369,7 @@ const ManageOption = () => {
 								/>
 							</FormGroup>
 						</div>
-            <div className='col-md-4'>
+						<div className='col-md-4'>
 							<FormGroup id='option_value' label='Option Value' isFloating>
 								<Input
 									placeholder='Option Value'
@@ -369,7 +384,7 @@ const ManageOption = () => {
 								/>
 							</FormGroup>
 						</div>
-            <div className='col-md-12'></div>
+						<div className='col-md-12'></div>
 					</div>
 				</CardBody>
 				<CardFooter>
@@ -397,9 +412,16 @@ const ManageOption = () => {
 								</CardLabel>
 							</CardHeader>
 						</div>
-            <div className='col-md-2' hidden={isCreateMode}>
-            <FormGroup id='option_name_dropdown' label={formikAddOption.values.option_name_dropdown == ''?'' : 'Option Name'} isFloating>
-                <Select
+						<div className='col-md-2' hidden={isCreateMode}>
+							<FormGroup
+								id='option_name_dropdown'
+								label={
+									formikAddOption.values.option_name_dropdown == ''
+										? ''
+										: 'Option Name'
+								}
+								isFloating>
+								<Select
 									id='OptionNameSelect'
 									ariaLabel='Default select option name'
 									value={formikAddOption.values.option_name_dropdown}
@@ -409,24 +431,24 @@ const ManageOption = () => {
 									isTouched={formikAddOption.touched.option_name_dropdown}
 									//invalidFeedback={formikAddOption.errors.option_name_dropdown}
 									//validFeedback='Valid Option Name'
-                  onChange={(e: { target: { value: any } }) => {
+									onChange={(e: { target: { value: any } }) => {
 										formikAddOption.handleChange(e);
 
 										//if (e.target.value)
-											debounce(
-												() =>
-													onFormSubmit({
-														...formik.values,
-														option_name: e.target.value,
-                            search: formik.values.search,
-													}),
-												1000,
-											)();
+										debounce(
+											() =>
+												onFormSubmit({
+													...formik.values,
+													option_name: e.target.value,
+													search: formik.values.search,
+												}),
+											1000,
+										)();
 									}}
 								/>
 							</FormGroup>
-            </div>
-            <div className='col-md-4' hidden={isCreateMode}>
+						</div>
+						<div className='col-md-4' hidden={isCreateMode}>
 							<Alert color='light' isLight>
 								<form onSubmit={formik.handleSubmit}>
 									<FormGroup>
@@ -449,7 +471,9 @@ const ManageOption = () => {
 																onFormSubmit({
 																	...formik.values,
 																	search: e.target.value,
-                                  option_name: formikAddOption.values.option_name_dropdown,
+																	option_name:
+																		formikAddOption.values
+																			.option_name_dropdown,
 																}),
 															1000,
 														)();
@@ -470,9 +494,10 @@ const ManageOption = () => {
 								className='float-end'
 								icon='Add'
 								tag='a'
-								onClick={() => {setIsCreateMode(true); 
-                  formik.resetForm();
-                 }}>
+								onClick={() => {
+									setIsCreateMode(true);
+									formik.resetForm();
+								}}>
 								Add
 							</Button>
 						</div>
@@ -616,7 +641,10 @@ const ManageOption = () => {
 					</ModalTitle>
 				</ModalHeader>
 				<ModalBody>
-					<p>Option Name: {optionToDelete.option_name} <br/> Option Value: {optionToDelete.option_value}</p>
+					<p>
+						Option Name: {optionToDelete.option_name} <br /> Option Value:{' '}
+						{optionToDelete.option_value}
+					</p>
 				</ModalBody>
 				<ModalFooter>
 					<Button
