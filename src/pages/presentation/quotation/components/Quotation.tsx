@@ -28,7 +28,6 @@ import Icon from '../../../../components/icon/Icon';
 import Input from '../../../../components/bootstrap/forms/Input';
 import Dropzone from '../uploadFileComponents/Dropzone';
 import axios from 'axios';
-import ViewAttachment from '../uploadFileComponents/ViewAttachment';
 
 type QuotationProps = {
 	mode: 'create' | 'view' | 'edit';
@@ -353,13 +352,9 @@ export const Quotation = (props: QuotationProps) => {
 
 					<ManageItem isViewMode={isViewMode} />
 
-					{/* Test upload */}
-					{/* <UploadFiles/> */}
-					{isViewMode ? (
-						<ViewAttachment quotation_rev_id={props.quotation_rev_id} />
-					) : (
-						<Dropzone setAttachmentIds={updateAttachmentID} className={''} />
-					)}
+
+					{/* <UploadFiles/> */}			
+					<Dropzone setAttachmentIds={updateAttachmentID} className={''} quotation_rev_id={props.quotation_rev_id} isViewMode={isViewMode}/>
 
 					{/* Options */}
 					<Card>

@@ -25,6 +25,11 @@ const QuotationData: QuotationDataType.QuotationData = {
 	total: 0,
 	g_total: 0,
 
+	//options
+	lead_time: '',
+	payment_terms: '',
+	validity: ''
+
 };
 
 
