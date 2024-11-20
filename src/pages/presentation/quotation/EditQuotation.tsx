@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { FormProviderQuotation } from './components/QuotationForm';
 import { Quotation } from './components/Quotation';
 import axios from 'axios';
@@ -245,36 +245,39 @@ const QuotationData = {
 };
 
 const EditQuotation = () => {
-	const location = useLocation();
+	//const location = useLocation();
+	const { quotation_rev_id } = useParams();
 	const [quotationRevData, setQuotationRevData] = useState<QuotationDataType.QuotationData>();
 
-	const fetchQuotationRevData = async (quotation_rev_id:string) => {
+	const fetchQuotationRevData = async (quotation_rev_id: string) => {
 		const config = {
-			headers: {Authorization: `${localStorage.getItem('bts_token')}`}
-		}
-		axios.get(`http://127.0.0.1:5000/quotation/revision/${quotation_rev_id}`, config).then((response) => {
+			headers: { Authorization: `${localStorage.getItem('bts_token')}` },
+		};
+		axios
+			.get(`http://127.0.0.1:5000/quotation/revision/${quotation_rev_id}`, config)
+			.then((response) => {
+				//console.log(response.data);
+				setQuotationRevData(response.data);
+			});
+	};
 
-			console.log(response.data);
-			setQuotationRevData(response.data);
-		  });
-	}
-
-	const quotation_id = location.state.quotation_id;
-	const quotation_rev_id = location.state.quotation_rev_id;
 	useEffect(() => {
-		fetchQuotationRevData(quotation_rev_id);
+		if (quotation_rev_id) {
+			fetchQuotationRevData(quotation_rev_id);
+		}
 	}, []);
 
-	return(
+	return (
 		<>
-		{quotationRevData? <FormProviderQuotation data={quotationRevData}>
-			<Quotation mode={'edit'} quotation_id={quotation_id}/>
-		</FormProviderQuotation> : <></>}	
+			{quotationRevData ? (
+				<FormProviderQuotation data={quotationRevData}>
+					<Quotation mode={'edit'} quotation_id={quotationRevData.quotation_id} />
+				</FormProviderQuotation>
+			) : (
+				<></>
+			)}
 		</>
 	);
-
-
-
-	}
+};
 
 export default EditQuotation;

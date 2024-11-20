@@ -69,15 +69,15 @@ const presentation = [
 		element: <QUOTATION.QUOTATION_LIST_PAGE />,
 	},
 	{
-		path: 'quotation/view-quotation',
+		path: 'quotation/view/:quotation_rev_id',
 		element: <QUOTATION.VIEW_QUOTATION_PAGE />,
 	},
 	{
-		path: 'quotation/edit-quotation',
+		path: 'quotation/edit/:quotation_rev_id',
 		element: <QUOTATION.EDIT_QUOTATION_PAGE/>,
 	},
 	{
-		path: 'quotation/create-quotation',
+		path: 'quotation/create',
 		element: <QUOTATION.CREATE_QUOTATION_PAGE />,
 	},
 	{
@@ -85,7 +85,7 @@ const presentation = [
 		element: <ADMIN.ADMIN_PAGE />,
 	},
 	{
-		path: 'admin/manage-user',
+		path: 'admin/manage-user/:user_id',
 		element: <ADMIN.MANAGE_USER />,
 	},
 	// {

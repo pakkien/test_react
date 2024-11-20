@@ -45,6 +45,7 @@ import localizedFormat from 'dayjs/plugin/localizedFormat';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import timezone from 'dayjs/plugin/timezone';
 import Select from '../../../../components/bootstrap/forms/Select';
+import EditOptionModal from './EditOptionModal';
 dayjs.extend(utc);
 dayjs.extend(localizedFormat);
 dayjs.extend(customParseFormat);
@@ -102,11 +103,10 @@ const ManageOption = () => {
 		axios.get('http://127.0.0.1:5000/option/', config).then((response) => {
 			setOptionData(response.data.options);
 			setTableData(response.data.options);
-			//console.log(response.data.options);
 		});
 	};
 
-	//Get Quotation table data
+	//Get Option table data
 	useEffect(() => {
 		fetchData();
 	}, []);
@@ -159,12 +159,13 @@ const ManageOption = () => {
 	};
 
 	//delete
-	const [optionToDelete, setOptionToDelete] = useState({
-		option_id: '',
+	const [optionSelected, setOptionSelected] = useState({
+		option_id: -99,
 		option_name: '',
 		option_value: '',
 	});
-	const [state, setState] = useState(false);
+	const [stateDeleteModal, setStateDeleteModal] = useState(false);
+	const [stateEditModal, setStateEditModal] = useState<boolean>(false);
 	const [staticBackdropStatus, setStaticBackdropStatus] = useState(false);
 	const [scrollableStatus, setScrollableStatus] = useState(false);
 	const [centeredStatus, setCenteredStatus] = useState(false);
@@ -187,9 +188,7 @@ const ManageOption = () => {
 		setHeaderCloseStatus(true);
 	};
 
-	//const [isAlertVisible, setIsAlertVisible] = useState(false);
-
-	const handleDelete = (id: string) => {
+	const handleDelete = (id: number) => {
 		//handleRemove(id);
 		const config = {
 			headers: { Authorization: `${localStorage.getItem('bts_token')}` },
@@ -265,15 +264,13 @@ const ManageOption = () => {
 			return errors;
 		},
 		onSubmit: async (values) => {
-			//api call
-			//console.log(values);
-
 			const option_name = values.option_name_dropdown
 				? values.option_name_dropdown
 				: values.option_name;
 			await handleSubmitAddOption(option_name, values.option_value);
 		},
 	});
+
 
 	//distinct option_name only
 	const option_names = optionData.map((item) => item.option_name);
@@ -286,6 +283,42 @@ const ManageOption = () => {
 	});
 	dropdown_optionNames_add.splice(0, 0, { value: '', text: 'Create New Option' });
 	dropdown_optionNames_view.splice(0, 0, { value: '', text: 'All Option' });
+
+
+	//Edit Option
+	const handleSubmit_EditOption = async (option_id: number, option_name: string, option_value:string) => {
+		const config = {
+			headers: { Authorization: `${localStorage.getItem('bts_token')}` },
+		};
+
+		const payload = {
+			option_name: option_name,
+			option_value: option_value
+		};
+
+		axios
+			.put(`http://127.0.0.1:5000/option/${option_id}`, payload, config)
+			.then((response) => {
+				showNotification(
+					<span className='d-flex align-items-center'>
+						<Icon icon='Info' size='lg' className='me-1' />
+						<span>Option Deleted</span>
+					</span>,
+					'Option updated successfully',
+				);
+				fetchData();
+
+			})
+			.catch((errors) => 
+				showNotification(
+					<span className='d-flex align-items-center'>
+						<Icon icon='Info' size='lg' className='me-1' />
+						<span>Error update option</span>
+					</span>,
+					errors,
+				)
+			)
+	}
 
 	return (
 		<>
@@ -353,7 +386,7 @@ const ManageOption = () => {
 							</FormGroup>
 						</div>
 						<div
-							className='col-md-4'
+							className='col-md-3'
 							hidden={formikAddOption.values.option_name_dropdown != ''}>
 							<FormGroup id='option_name' label='Option Name' isFloating>
 								<Input
@@ -369,7 +402,7 @@ const ManageOption = () => {
 								/>
 							</FormGroup>
 						</div>
-						<div className='col-md-4'>
+						<div className='col-md-3'>
 							<FormGroup id='option_value' label='Option Value' isFloating>
 								<Input
 									placeholder='Option Value'
@@ -497,6 +530,7 @@ const ManageOption = () => {
 								onClick={() => {
 									setIsCreateMode(true);
 									formik.resetForm();
+									formikAddOption.resetForm();
 								}}>
 								Add
 							</Button>
@@ -592,20 +626,35 @@ const ManageOption = () => {
 											</td>
 											<td>{item.updated_by}</td>
 											<td>
-												<Button
+											<Button
 													className='me-4'
-													color='danger'
+													color='primary'
 													isLight
-													icon='Delete'
+													icon='Edit'
 													onClick={() => {
-														setOptionToDelete({
+														setOptionSelected({
 															option_id: item.option_id,
 															option_name: item.option_name,
 															option_value: item.option_value,
 														});
 														initialStatus();
 														setCenteredStatus(true);
-														setState(true);
+														setStateEditModal(true);
+													}}></Button>
+												<Button
+													className='me-4'
+													color='danger'
+													isLight
+													icon='Delete'
+													onClick={() => {
+														setOptionSelected({
+															option_id: item.option_id,
+															option_name: item.option_name,
+															option_value: item.option_value,
+														});
+														initialStatus();
+														setCenteredStatus(true);
+														setStateDeleteModal(true);
 													}}></Button>
 											</td>
 										</tr>
@@ -624,9 +673,11 @@ const ManageOption = () => {
 					setPerPage={setPerPage}
 				/>
 			</Card>
+
+			{/* DELETE MODAL */}
 			<Modal
-				isOpen={state}
-				setIsOpen={setState}
+				isOpen={stateDeleteModal}
+				setIsOpen={setStateDeleteModal}
 				titleId='exampleModalLabel'
 				isStaticBackdrop={staticBackdropStatus}
 				isScrollable={scrollableStatus}
@@ -634,16 +685,15 @@ const ManageOption = () => {
 				size={sizeStatus}
 				fullScreen={fullScreenStatus}
 				isAnimation={animationStatus}>
-				<ModalHeader setIsOpen={headerCloseStatus ? setState : undefined}>
+				<ModalHeader setIsOpen={headerCloseStatus ? setStateDeleteModal : undefined}>
 					<ModalTitle id='confirmDeleteUserModal'>
 						Confirm Delete:
-						{optionToDelete.option_value}
 					</ModalTitle>
 				</ModalHeader>
 				<ModalBody>
 					<p>
-						Option Name: {optionToDelete.option_name} <br /> Option Value:{' '}
-						{optionToDelete.option_value}
+						Option Name: {optionSelected.option_name} <br /> Option Value:{' '}
+						{optionSelected.option_value}
 					</p>
 				</ModalBody>
 				<ModalFooter>
@@ -651,8 +701,8 @@ const ManageOption = () => {
 						color='danger'
 						icon='Delete'
 						onClick={() => {
-							setState(false);
-							handleDelete(optionToDelete.option_id);
+							setStateDeleteModal(false);
+							handleDelete(optionSelected.option_id);
 						}}>
 						Delete
 					</Button>
@@ -660,11 +710,22 @@ const ManageOption = () => {
 						color='info'
 						isOutline
 						className='border-0'
-						onClick={() => setState(false)}>
+						onClick={() => setStateDeleteModal(false)}>
 						Cancel
 					</Button>
 				</ModalFooter>
 			</Modal>
+
+
+			{/* EDIT MODAL */}
+			{stateEditModal && <EditOptionModal 
+			option_id={optionSelected.option_id}
+			option_name={optionSelected.option_name}
+			option_value={optionSelected.option_value}
+			stateEditModal = {stateEditModal}
+			setStateEditModal={setStateEditModal}
+			handleSubmit_EditOption={handleSubmit_EditOption}
+			/>}
 		</>
 	);
 };

@@ -37,16 +37,16 @@ import ManageOption from './components/ManageOption';
 
 
 
-type TTabs = 'User Management' | 'Manage Options' ;
+type TTabs = 'Manage Users' | 'Manage Options' ;
 const TABS: { [key: string]: TTabs } = {
-	USER_MANAGEMENT: 'User Management',
+	MANAGE_USERS: 'Manage Users',
 	MANAGE_OPTIONS: 'Manage Options'
 };
 
 
 const AdminPage = () => {
 
-	const [activeTab, setActiveTab] = useState<TTabs>(TABS.USER_MANAGEMENT);
+	const [activeTab, setActiveTab] = useState<TTabs>(TABS.MANAGE_USERS);
 	
 
 	const navigate = useNavigate();
@@ -73,7 +73,7 @@ const AdminPage = () => {
 				</SubHeaderLeft>
 			</SubHeader>
 			<Page container='fluid'>
-				{activeTab==TABS.USER_MANAGEMENT?<UsersTable/>:<ManageOption/>}
+				{activeTab==TABS.MANAGE_USERS?<UsersTable/>:<ManageOption/>}
 			</Page>
 		</PageWrapper>
 	);

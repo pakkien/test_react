@@ -327,28 +327,15 @@ const QuotationList = () => {
 	};
 
 	const goToViewQuotationPage = (quotation_rev_id: string) => {
-		//navigate('view-quotation');
-
-		navigate('view-quotation', {
-			state: {
-				quotation_rev_id: quotation_rev_id,
-			},
-		});
+		navigate(`view/${quotation_rev_id}`);
 	};
 
-	const goToEditQuotationPage = (quotation_id: string, quotation_rev_id: string) => {
-		//navigate('edit-quotation');
-
-		navigate('edit-quotation', {
-			state: {
-				quotation_id: quotation_id,
-				quotation_rev_id: quotation_rev_id,
-			},
-		});
+	const goToEditQuotationPage = (quotation_rev_id: string) => {
+		navigate(`edit/${quotation_rev_id}`);
 	};
 
 	const goToCreateQuotationPage = () => {
-		navigate('create-quotation');
+		navigate('create');
 	};
 
 	return (
@@ -526,7 +513,6 @@ const QuotationList = () => {
 																	tag='a'
 																	onClick={() =>
 																		goToEditQuotationPage(
-																			item.quotation_id,
 																			item.quotation_rev_id,
 																		)
 																	}></Button>
