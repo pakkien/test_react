@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { FormTypeQuotation, useFormContextQuotation } from '../components/QuotationForm';
 import { SubmitHandler, useFieldArray } from 'react-hook-form';
@@ -28,11 +28,16 @@ import Icon from '../../../../components/icon/Icon';
 import Input from '../../../../components/bootstrap/forms/Input';
 import Dropzone from '../uploadFileComponents/Dropzone';
 import axios from 'axios';
+import Badge from '../../../../components/bootstrap/Badge';
 
 type QuotationProps = {
 	mode: 'create' | 'view' | 'edit';
 	quotation_id?: string;
 	quotation_rev_id?: string;
+	quotation_no?: string;
+	status?: string;
+	revision?: number;
+	variance?: number;
 };
 
 export const Quotation = (props: QuotationProps) => {
@@ -50,6 +55,9 @@ export const Quotation = (props: QuotationProps) => {
 	const isViewMode = props.mode.toLowerCase() == 'view' ? true : false;
 	const title =
 		props.mode.charAt(0).toUpperCase() + props.mode.slice(1).toLowerCase() + ' Quotation ';
+
+	//status
+	const [status, setStatus] = useState(props.status);
 
 	// upload file
 	const [attachmentIDs, setAttachmentIds] = useState<string[]>();
@@ -124,7 +132,12 @@ export const Quotation = (props: QuotationProps) => {
 		'90 Days from the date of this quotation',
 	];
 
-	// }
+	const statusOptions = ['', 'Draft', 'Submitted', 'Awarded', 'Completed', 'Rejected'];
+
+	useEffect(() => {
+		//console.log(formData.status);
+		setStatus(formData.status);
+	}, [formData.status]);
 
 	return (
 		<PageWrapper title={title}>
@@ -135,6 +148,27 @@ export const Quotation = (props: QuotationProps) => {
 					</Button>
 					<SubheaderSeparator />
 					<strong className='fs-5'>{title}</strong>
+
+					{(props.mode == 'view' || props.mode == 'edit') && (
+						<>
+							<SubheaderSeparator />
+							<div className='row'>
+								<div className='col-md-12'>
+									<span>
+										Quotation No: {props.quotation_no} &nbsp;&nbsp;&nbsp;
+										<Badge className='statusBadge' color='info'>
+											{status}
+										</Badge>
+									</span>
+								</div>
+								<div className='col-md-12'>
+									<span>
+										Revision: {props.variance}.{props.revision}
+									</span>
+								</div>
+							</div>
+						</>
+					)}
 				</SubHeaderLeft>
 			</SubHeader>
 			<Page container='fluid'>
@@ -293,7 +327,7 @@ export const Quotation = (props: QuotationProps) => {
 										</>
 									</FormGroup>
 								</div>
-								<div className='col-md-8'>
+								<div className='col-md-4'>
 									<FormGroup id='email' label='Email' isFloating>
 										<input
 											id='email'
@@ -309,6 +343,31 @@ export const Quotation = (props: QuotationProps) => {
 											{errors.email ? (
 												<div className='invalid-feedback'>
 													{errors.email.message}
+												</div>
+											) : (
+												''
+											)}
+										</>
+									</FormGroup>
+								</div>
+								<div className='col-md-4'>
+									<FormGroup id='status' label='Status' isFloating>
+										<select
+											id='status'
+											className={
+												'form-control ' +
+												(errors.lead_time ? 'is-invalid' : '')
+											}
+											{...register('status')}
+											disabled={isViewMode}>
+											{statusOptions.map((op) => (
+												<option value={op}>{op}</option>
+											))}
+										</select>
+										<>
+											{errors.status ? (
+												<div className='invalid-feedback'>
+													{errors.status.message}
 												</div>
 											) : (
 												''
@@ -352,9 +411,13 @@ export const Quotation = (props: QuotationProps) => {
 
 					<ManageItem isViewMode={isViewMode} />
 
-
-					{/* <UploadFiles/> */}			
-					<Dropzone setAttachmentIds={updateAttachmentID} className={''} quotation_rev_id={props.quotation_rev_id} isViewMode={isViewMode}/>
+					{/* <UploadFiles/> */}
+					<Dropzone
+						setAttachmentIds={updateAttachmentID}
+						className={''}
+						quotation_rev_id={props.quotation_rev_id}
+						isViewMode={isViewMode}
+					/>
 
 					{/* Options */}
 					<Card>
@@ -377,9 +440,9 @@ export const Quotation = (props: QuotationProps) => {
 											}
 											{...register('lead_time')}
 											disabled={isViewMode}>
-											{leadTimeOptions.map(
-												op => <option value={op}>{op}</option>
-											)}
+											{leadTimeOptions.map((op) => (
+												<option value={op}>{op}</option>
+											))}
 										</select>
 										<>
 											{errors.lead_time ? (
@@ -403,9 +466,9 @@ export const Quotation = (props: QuotationProps) => {
 											}
 											{...register('payment_terms')}
 											disabled={isViewMode}>
-											{paymentTermsOptions.map(
-												op => <option value={op}>{op}</option>
-											)}
+											{paymentTermsOptions.map((op) => (
+												<option value={op}>{op}</option>
+											))}
 										</select>
 										<>
 											{errors.payment_terms ? (
@@ -429,9 +492,9 @@ export const Quotation = (props: QuotationProps) => {
 											}
 											{...register('validity')}
 											disabled={isViewMode}>
-											{validityOptions.map(
-												op => <option value={op}>{op}</option>
-											)}
+											{validityOptions.map((op) => (
+												<option value={op}>{op}</option>
+											))}
 										</select>
 										<>
 											{errors.validity ? (
@@ -564,8 +627,20 @@ export const Quotation = (props: QuotationProps) => {
 						</CardBody>
 						<CardFooter>
 							<CardFooterRight>
-								<Button color='dark' icon='Edit' hidden={isViewMode}>
-									Draft
+								<Button
+									color='dark'
+									icon='Edit'
+									type='submit'
+									hidden={isViewMode}
+									isDisable={isSubmitting}
+									onClick={() => {
+										formData.status = 'Draft';
+									}}>
+									{isSubmitting ? (
+										<Spinner isSmall inButton='onlyIcon' />
+									) : (
+										'Draft'
+									)}
 								</Button>
 								<Button
 									type='submit'

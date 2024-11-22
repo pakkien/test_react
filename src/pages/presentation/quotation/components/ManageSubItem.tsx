@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useFormContextQuotation } from '../components/QuotationForm'
 import { useFieldArray } from 'react-hook-form';
 import Accordion, { AccordionItem } from '../../../../components/bootstrap/Accordion';
@@ -18,7 +18,10 @@ const ManageSubItem = (props: SubItemProps) => {
 		register,
 		control,
 		formState: { errors },
+		setValue,
+		watch,
 	} = useFormContextQuotation();
+	const formData = watch();
 
 	const { append, remove, fields } = useFieldArray({
 		name: `items.${itemIndex}.sub_items`,
@@ -40,6 +43,13 @@ const ManageSubItem = (props: SubItemProps) => {
 			total_price: 0
 		});
 	};
+
+	useEffect(() => {
+		formData.items[itemIndex].sub_items.map((sub_item, subItemIndex) => {
+			setValue(`items.${itemIndex}.sub_items.${subItemIndex}.total_cost`, parseFloat((sub_item.quantity * sub_item.unit_cost).toFixed(2)));
+			setValue(`items.${itemIndex}.sub_items.${subItemIndex}.margin`, parseFloat(((sub_item.unit_price / sub_item.unit_cost - 1)*100).toFixed(2)) );
+		});
+	}, [JSON.stringify(formData.items[itemIndex].sub_items.map(sub_item => {return sub_item.quantity+sub_item.unit_cost}))]);
 
 	return (
 		<>
@@ -286,6 +296,11 @@ const ManageSubItem = (props: SubItemProps) => {
 													type='text'
 													placeholder='margin'
 													disabled={props.isViewMode}
+													onChange={
+														(e) => {
+															setValue(`items.${itemIndex}.sub_items.${subItemIndex}.unit_price`, parseFloat((formData.items[itemIndex].sub_items[subItemIndex].unit_cost * (100+parseFloat(e.target.value)) / 100).toFixed(2)));
+															setValue(`items.${itemIndex}.sub_items.${subItemIndex}.total_price`, parseFloat((formData.items[itemIndex].sub_items[subItemIndex].quantity * formData.items[itemIndex].sub_items[subItemIndex].unit_price).toFixed(2)));	}
+														}
 												/>
 												<div className='invalid-feedback'>
 													{errors.items?.[itemIndex]?.sub_items?.[subItemIndex]?.margin?.message}
@@ -309,6 +324,12 @@ const ManageSubItem = (props: SubItemProps) => {
 													type='text'
 													placeholder='unit_price'
 													disabled={props.isViewMode}
+													onChange={
+														(e) => {
+															setValue(`items.${itemIndex}.sub_items.${subItemIndex}.margin`, parseFloat(((parseFloat(e.target.value)/ formData.items[itemIndex].sub_items[subItemIndex].unit_cost - 1)*100).toFixed(2)));
+															setValue(`items.${itemIndex}.sub_items.${subItemIndex}.total_price`, parseFloat((formData.items[itemIndex].sub_items[subItemIndex].quantity * parseFloat(e.target.value)).toFixed(2)));	}
+														
+												}
 												/>
 												<div className='invalid-feedback'>
 													{errors.items?.[itemIndex]?.sub_items?.[subItemIndex]?.unit_price?.message}

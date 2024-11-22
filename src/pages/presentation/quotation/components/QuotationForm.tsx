@@ -13,7 +13,7 @@ const schemaSubItem = z.object({
 	unit: z.string(),
 	unit_cost: z.coerce.number().min(0),
 	total_cost: z.coerce.number().min(0),
-	margin: z.coerce.number().min(0),
+	margin: z.coerce.number(),
 	unit_price: z.coerce.number().min(0),
 	total_price: z.coerce.number().min(0),
 });
@@ -27,7 +27,7 @@ const schemaItem = z.object({
 	unit: z.string(),
 	unit_cost: z.coerce.number().min(0),
 	total_cost: z.coerce.number().min(0),
-	margin: z.coerce.number().min(0),
+	margin: z.coerce.number(),
 	unit_price: z.coerce.number().min(0),
 	total_price: z.coerce.number().min(0),
 	sub_items: z.array(schemaSubItem)
@@ -42,6 +42,7 @@ export const schemaQuotation = z.object({
 	pic: z.string().min(3),
 	email: z.string().email(),
 	project_reference: z.string(),
+	status: z.string().min(3),
 
 	//Summary
 	reference_status: z.string(),
@@ -81,9 +82,15 @@ export const useFormQuotation = (props: QuotationFormProps) =>
 		pic: props.data.pic,
 		email: props.data.email,
 		project_reference: props.data.project_reference,
+		status: props.data.status,
+
+
 		items: props.data.items, //check again
+		
+		
 		reference_status: props.data.reference_status,
 		note: props.data.note,
+		
 		// total: props.data.total,
 		// g_total: props.data.g_total,
 		total: 0,

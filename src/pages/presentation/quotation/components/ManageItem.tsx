@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useFormContextQuotation } from '../components/QuotationForm'
 import { useFieldArray } from 'react-hook-form';
 import Card, {
@@ -25,7 +25,10 @@ const ManageItem = (props: ItemProps) => {
 		register,
 		control,
 		formState: { errors },
+		watch,
+		setValue,
 	} = useFormContextQuotation();
+	const formData = watch();
 
 	const { append, remove, fields } = useFieldArray({
 		name: 'items',
@@ -48,6 +51,15 @@ const ManageItem = (props: ItemProps) => {
 			sub_items: [],
 		});
 	};
+
+	//auto calculation
+	useEffect(() => {
+		formData.items.map((item, itemIndex) => {
+			setValue(`items.${itemIndex}.total_cost`, parseFloat((item.quantity * item.unit_cost).toFixed(2)));
+			setValue(`items.${itemIndex}.margin`, parseFloat(((item.unit_price / item.unit_cost - 1)*100).toFixed(2)) );
+		});
+	}, [JSON.stringify(formData.items.map(item => {return item.quantity+item.unit_cost}))]);
+
 
 	return (
 		<div className='pb-0'>
@@ -293,6 +305,11 @@ const ManageItem = (props: ItemProps) => {
 													type='text'
 													placeholder='margin'
 													disabled={props.isViewMode}
+													onChange={
+														(e) => {
+															setValue(`items.${itemIndex}.unit_price`, parseFloat((formData.items[itemIndex].unit_cost * (100+parseFloat(e.target.value)) / 100).toFixed(2)));
+															setValue(`items.${itemIndex}.total_price`, parseFloat((formData.items[itemIndex].quantity * formData.items[itemIndex].unit_price).toFixed(2)));	}
+														}
 												/>
 												<div className='invalid-feedback'>
 													{errors.items?.[itemIndex]?.margin?.message}
@@ -316,6 +333,12 @@ const ManageItem = (props: ItemProps) => {
 													type='text'
 													placeholder='unit_price'
 													disabled={props.isViewMode}
+													onChange={
+															(e) => {
+																setValue(`items.${itemIndex}.margin`, parseFloat(((parseFloat(e.target.value)/ formData.items[itemIndex].unit_cost - 1)*100).toFixed(2)));
+																setValue(`items.${itemIndex}.total_price`, parseFloat((formData.items[itemIndex].quantity * parseFloat(e.target.value)).toFixed(2)));	}
+															
+													}
 												/>
 												<div className='invalid-feedback'>
 													{errors.items?.[itemIndex]?.unit_price?.message}

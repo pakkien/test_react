@@ -239,7 +239,16 @@ const ManageOption = () => {
 				fetchData();
 				formikAddOption.resetForm();
 			})
-			.catch((errors) => console.log(errors));
+			.catch((errors) => {
+				//console.log(errors);
+				showNotification(
+					<span className='d-flex align-items-center'>
+						<Icon icon='Info' size='lg' className='me-1' />
+						<span>Error</span>
+					</span>,
+					errors,
+				);
+			});
 	};
 
 	const formikAddOption = useFormik({
@@ -271,7 +280,6 @@ const ManageOption = () => {
 		},
 	});
 
-
 	//distinct option_name only
 	const option_names = optionData.map((item) => item.option_name);
 	const distinctOptions = [...new Set(option_names)];
@@ -284,16 +292,19 @@ const ManageOption = () => {
 	dropdown_optionNames_add.splice(0, 0, { value: '', text: 'Create New Option' });
 	dropdown_optionNames_view.splice(0, 0, { value: '', text: 'All Option' });
 
-
 	//Edit Option
-	const handleSubmit_EditOption = async (option_id: number, option_name: string, option_value:string) => {
+	const handleSubmit_EditOption = async (
+		option_id: number,
+		option_name: string,
+		option_value: string,
+	) => {
 		const config = {
 			headers: { Authorization: `${localStorage.getItem('bts_token')}` },
 		};
 
 		const payload = {
 			option_name: option_name,
-			option_value: option_value
+			option_value: option_value,
 		};
 
 		axios
@@ -302,23 +313,23 @@ const ManageOption = () => {
 				showNotification(
 					<span className='d-flex align-items-center'>
 						<Icon icon='Info' size='lg' className='me-1' />
-						<span>Option Deleted</span>
+						<span>Option Updated</span>
 					</span>,
 					'Option updated successfully',
 				);
 				fetchData();
-
+				
 			})
-			.catch((errors) => 
+			.catch((errors) => {
 				showNotification(
 					<span className='d-flex align-items-center'>
 						<Icon icon='Info' size='lg' className='me-1' />
 						<span>Error update option</span>
 					</span>,
 					errors,
-				)
-			)
-	}
+				);
+			});
+	};
 
 	return (
 		<>
@@ -459,11 +470,7 @@ const ManageOption = () => {
 									ariaLabel='Default select option name'
 									value={formikAddOption.values.option_name_dropdown}
 									list={dropdown_optionNames_view}
-									//onBlur={formikAddOption.handleBlur}
-									//isValid={formikAddOption.isValid}
 									isTouched={formikAddOption.touched.option_name_dropdown}
-									//invalidFeedback={formikAddOption.errors.option_name_dropdown}
-									//validFeedback='Valid Option Name'
 									onChange={(e: { target: { value: any } }) => {
 										formikAddOption.handleChange(e);
 
@@ -626,7 +633,7 @@ const ManageOption = () => {
 											</td>
 											<td>{item.updated_by}</td>
 											<td>
-											<Button
+												<Button
 													className='me-4'
 													color='primary'
 													isLight
@@ -686,9 +693,7 @@ const ManageOption = () => {
 				fullScreen={fullScreenStatus}
 				isAnimation={animationStatus}>
 				<ModalHeader setIsOpen={headerCloseStatus ? setStateDeleteModal : undefined}>
-					<ModalTitle id='confirmDeleteUserModal'>
-						Confirm Delete:
-					</ModalTitle>
+					<ModalTitle id='confirmDeleteUserModal'>Confirm Delete:</ModalTitle>
 				</ModalHeader>
 				<ModalBody>
 					<p>
@@ -716,16 +721,17 @@ const ManageOption = () => {
 				</ModalFooter>
 			</Modal>
 
-
 			{/* EDIT MODAL */}
-			{stateEditModal && <EditOptionModal 
-			option_id={optionSelected.option_id}
-			option_name={optionSelected.option_name}
-			option_value={optionSelected.option_value}
-			stateEditModal = {stateEditModal}
-			setStateEditModal={setStateEditModal}
-			handleSubmit_EditOption={handleSubmit_EditOption}
-			/>}
+			{stateEditModal && (
+				<EditOptionModal
+					option_id={optionSelected.option_id}
+					option_name={optionSelected.option_name}
+					option_value={optionSelected.option_value}
+					stateEditModal={stateEditModal}
+					setStateEditModal={setStateEditModal}
+					handleSubmit_EditOption={handleSubmit_EditOption}
+				/>
+			)}
 		</>
 	);
 };

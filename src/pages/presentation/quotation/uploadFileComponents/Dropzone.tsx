@@ -54,13 +54,13 @@ const Dropzone = (props: DropZoneProps) => {
 		axios
 			.get(`http://127.0.0.1:5000/quotation/${quotation_rev_id}/attachments`, config)
 			.then((response) => {
-				console.log(response.data);
+				//console.log(response.data);
 				setPrevFiles(response.data.attachments);
 			});
 	};
 
 	useEffect(() => {
-		console.log("quotation_rev_id:" + props.quotation_rev_id);
+		//console.log("quotation_rev_id:" + props.quotation_rev_id);
 		if (props.quotation_rev_id) {
 			fetchAttachments(props.quotation_rev_id);
 		}
@@ -131,7 +131,7 @@ const Dropzone = (props: DropZoneProps) => {
 				});
 			})
 			.catch(function (err) {
-				console.log(err);
+				//console.log(err);
 				setFiles((prevState) => {
 					const newFiles = [...prevState];
 					newFiles.map((file) =>

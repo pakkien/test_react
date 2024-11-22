@@ -256,7 +256,7 @@ const ViewQuotation = () => {
 		axios
 			.get(`http://127.0.0.1:5000/quotation/revision/${quotation_rev_id}`, config)
 			.then((response) => {
-				console.log(response.data);
+				//console.log(response.data);
 				setQuotationRevData(response.data);
 			});
 	};
@@ -272,7 +272,12 @@ const ViewQuotation = () => {
 		<>
 			{quotationRevData ? (
 				<FormProviderQuotation data={quotationRevData}>
-					<Quotation mode={'view'} quotation_rev_id={quotation_rev_id} />
+					<Quotation mode={'view'} quotation_rev_id={quotation_rev_id} 
+					quotation_no={quotationRevData.quotation_no}
+					status={quotationRevData.status}
+					revision={quotationRevData.revision}
+					//variance={1}
+					/>
 				</FormProviderQuotation>
 			) : (
 				<></>

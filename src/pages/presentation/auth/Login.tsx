@@ -63,7 +63,7 @@ const Login: FC<ILoginProps> = ({ isSignUp }) => {
 		axios
 			.post(`http://127.0.0.1:5000/auth/login`, payload)
 			.then((response) => {
-				console.log(response.data);
+				//console.log(response.data);
 				if (setUser) {
 					setUser(email);
 				}

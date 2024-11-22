@@ -271,7 +271,13 @@ const EditQuotation = () => {
 		<>
 			{quotationRevData ? (
 				<FormProviderQuotation data={quotationRevData}>
-					<Quotation mode={'edit'} quotation_rev_id={quotationRevData.quotation_revision_id} />
+					<Quotation mode={'edit'} quotation_id={quotationRevData.quotation_id} 
+					quotation_rev_id={quotationRevData.quotation_revision_id} 
+					quotation_no={quotationRevData.quotation_no}
+					status={quotationRevData.status}
+					revision={quotationRevData.revision}
+					//variance={1}
+					/>
 				</FormProviderQuotation>
 			) : (
 				<></>
