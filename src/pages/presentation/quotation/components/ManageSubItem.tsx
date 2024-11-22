@@ -47,6 +47,7 @@ const ManageSubItem = (props: SubItemProps) => {
 	useEffect(() => {
 		formData.items[itemIndex].sub_items.map((sub_item, subItemIndex) => {
 			setValue(`items.${itemIndex}.sub_items.${subItemIndex}.total_cost`, parseFloat((sub_item.quantity * sub_item.unit_cost).toFixed(2)));
+			setValue(`items.${itemIndex}.sub_items.${subItemIndex}.total_price`, parseFloat((sub_item.quantity * sub_item.unit_price).toFixed(2)));
 			setValue(`items.${itemIndex}.sub_items.${subItemIndex}.margin`, parseFloat(((sub_item.unit_price / sub_item.unit_cost - 1)*100).toFixed(2)) );
 		});
 	}, [JSON.stringify(formData.items[itemIndex].sub_items.map(sub_item => {return sub_item.quantity+sub_item.unit_cost}))]);

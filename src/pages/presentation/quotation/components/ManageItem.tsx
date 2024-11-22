@@ -56,6 +56,7 @@ const ManageItem = (props: ItemProps) => {
 	useEffect(() => {
 		formData.items.map((item, itemIndex) => {
 			setValue(`items.${itemIndex}.total_cost`, parseFloat((item.quantity * item.unit_cost).toFixed(2)));
+			setValue(`items.${itemIndex}.total_price`, parseFloat((item.quantity * item.unit_price).toFixed(2)));
 			setValue(`items.${itemIndex}.margin`, parseFloat(((item.unit_price / item.unit_cost - 1)*100).toFixed(2)) );
 		});
 	}, [JSON.stringify(formData.items.map(item => {return item.quantity+item.unit_cost}))]);
