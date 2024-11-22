@@ -111,12 +111,20 @@ export const Quotation = (props: QuotationProps) => {
 	};
 
 	//OPTIONS
+	// const leadTimeOptions = [
+	// 	'',
+	// 	'30 Working days from the date of payment received',
+	// 	'60 Working days from the date of payment received',
+	// 	'90 Working days from the date of payment received',
+	// ];
 	const leadTimeOptions = [
 		'',
-		'30 Working days from the date of payment received',
-		'60 Working days from the date of payment received',
-		'90 Working days from the date of payment received',
+		'30',
+		'60',
+		'90',
 	];
+
+
 
 	const paymentTermsOptions = [
 		'',
@@ -431,33 +439,42 @@ export const Quotation = (props: QuotationProps) => {
 						<CardBody className='pb-0'>
 							<div className='row g-4'>
 								<div className='col-md-4'>
-									<FormGroup id='lead_time' label='Lead Time' isFloating>
-										<select
-											id='lead_time'
-											className={
-												'form-control ' +
-												(errors.lead_time ? 'is-invalid' : '')
-											}
-											{...register('lead_time')}
-											disabled={isViewMode}>
-											{leadTimeOptions.map((op) => (
-												<option value={op}>{op}</option>
-											))}
-										</select>
+								<div className='row g-4'>
+									{/* <label htmlFor="lead_time" className="form-label">Lead Time</label> */}
+										<FormGroup id='lead_time' tag='div' className='col-md-3'
+										label='Lead Time'
+										>
+											<select
+												id='lead_time'
+												className={
+													'form-control ' +
+													(errors.lead_time ? 'is-invalid' : '') 
+												}
+												//</FormGroup>={3}
+												{...register('lead_time')}
+												disabled={isViewMode}>
+												{leadTimeOptions.map((op) => (
+													<option value={op}>{op}</option>
+												))}
+											</select> 										
+										</FormGroup>
+										<div className='col-md-8 d-flex align-items-end'><p>
+										Working days from the date of payment received.</p ></div>
 										<>
-											{errors.lead_time ? (
-												<div className='invalid-feedback'>
-													{errors.lead_time.message}
-												</div>
-											) : (
-												''
-											)}
-										</>
-									</FormGroup>
+												{errors.lead_time ? (
+													<div className='col-md-12 invalid-feedback'>
+														{errors.lead_time.message}
+													</div>
+												) : (
+													''
+												)}
+											</>	
+									</div>
+									
 								</div>
 
 								<div className='col-md-4'>
-									<FormGroup id='payment_terms' label='Payment Terms' isFloating>
+									<FormGroup id='payment_terms' label='Payment Terms'>
 										<select
 											id='payment_terms'
 											className={
@@ -483,7 +500,7 @@ export const Quotation = (props: QuotationProps) => {
 								</div>
 
 								<div className='col-md-4'>
-									<FormGroup id='validity' label='Validity' isFloating>
+									<FormGroup id='validity' label='Validity'>
 										<select
 											id='validity'
 											className={
@@ -507,7 +524,10 @@ export const Quotation = (props: QuotationProps) => {
 										</>
 									</FormGroup>
 								</div>
+
+								<div></div>
 							</div>
+							
 						</CardBody>
 						<CardFooter>
 							<></>

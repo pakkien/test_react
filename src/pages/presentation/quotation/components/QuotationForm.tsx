@@ -56,9 +56,9 @@ export const schemaQuotation = z.object({
 
 
 	//options
-	lead_time: z.string(),
-	payment_terms: z.string(),
-	validity: z.string()
+	lead_time: z.string().min(1),
+	payment_terms: z.string().min(1),
+	validity: z.string().min(1)
 });
 
 export type FormTypeQuotation = z.infer<typeof schemaQuotation>
