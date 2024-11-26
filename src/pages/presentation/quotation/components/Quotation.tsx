@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import { FormTypeQuotation, useFormContextQuotation } from '../components/QuotationForm';
-import { SubmitHandler, useFieldArray } from 'react-hook-form';
+import { SubmitHandler, useFieldArray, Controller } from 'react-hook-form';
 import PageWrapper from '../../../../layout/PageWrapper/PageWrapper';
 import Card, {
 	CardBody,
@@ -29,6 +29,7 @@ import Input from '../../../../components/bootstrap/forms/Input';
 import Dropzone from '../uploadFileComponents/Dropzone';
 import axios from 'axios';
 import Badge from '../../../../components/bootstrap/Badge';
+import Select from 'react-select';
 
 type QuotationProps = {
 	mode: 'create' | 'view' | 'edit';
@@ -46,6 +47,8 @@ export const Quotation = (props: QuotationProps) => {
 		formState: { errors, isSubmitting },
 		watch,
 		handleSubmit,
+		setValue,
+		control,
 	} = useFormContextQuotation();
 	const formData = watch();
 
@@ -111,18 +114,18 @@ export const Quotation = (props: QuotationProps) => {
 	};
 
 	//OPTIONS
-	// const leadTimeOptions = [
-	// 	'',
-	// 	'30 Working days from the date of payment received',
-	// 	'60 Working days from the date of payment received',
-	// 	'90 Working days from the date of payment received',
-	// ];
 	const leadTimeOptions = [
 		'',
-		'30',
-		'60',
-		'90',
+		'30 Working days from the date of payment received',
+		'60 Working days from the date of payment received',
+		'90 Working days from the date of payment received',
 	];
+	// const leadTimeOptions = [
+	// 	'',
+	// 	'30',
+	// 	'60',
+	// 	'90',
+	// ];
 
 
 
@@ -228,6 +231,7 @@ export const Quotation = (props: QuotationProps) => {
 											type='text'
 											placeholder='client'
 											disabled={isViewMode}
+											//list={['list']}
 										/>
 										<>
 											{errors.client ? (
@@ -438,39 +442,31 @@ export const Quotation = (props: QuotationProps) => {
 						</CardHeader>
 						<CardBody className='pb-0'>
 							<div className='row g-4'>
+
 								<div className='col-md-4'>
-								<div className='row g-4'>
-									{/* <label htmlFor="lead_time" className="form-label">Lead Time</label> */}
-										<FormGroup id='lead_time' tag='div' className='col-md-3'
-										label='Lead Time'
-										>
-											<select
-												id='lead_time'
-												className={
-													'form-control ' +
-													(errors.lead_time ? 'is-invalid' : '') 
-												}
-												//</FormGroup>={3}
-												{...register('lead_time')}
-												disabled={isViewMode}>
-												{leadTimeOptions.map((op) => (
-													<option value={op}>{op}</option>
-												))}
-											</select> 										
-										</FormGroup>
-										<div className='col-md-8 d-flex align-items-end'><p>
-										Working days from the date of payment received.</p ></div>
+									<FormGroup id='lead_time' label='Lead Time'>
+										<select
+											id='lead_time'
+											className={
+												'form-control ' +
+												(errors.lead_time ? 'is-invalid' : '')
+											}
+											{...register('lead_time')}
+											disabled={isViewMode}>
+											{paymentTermsOptions.map((op) => (
+												<option value={op}>{op}</option>
+											))}
+										</select>
 										<>
-												{errors.lead_time ? (
-													<div className='col-md-12 invalid-feedback'>
-														{errors.lead_time.message}
-													</div>
-												) : (
-													''
-												)}
-											</>	
-									</div>
-									
+											{errors.lead_time ? (
+												<div className='invalid-feedback'>
+													{errors.lead_time.message}
+												</div>
+											) : (
+												''
+											)}
+										</>
+									</FormGroup>
 								</div>
 
 								<div className='col-md-4'>
@@ -654,7 +650,7 @@ export const Quotation = (props: QuotationProps) => {
 									hidden={isViewMode}
 									isDisable={isSubmitting}
 									onClick={() => {
-										formData.status = 'Draft';
+										setValue('status', 'Draft');
 									}}>
 									{isSubmitting ? (
 										<Spinner isSmall inButton='onlyIcon' />
