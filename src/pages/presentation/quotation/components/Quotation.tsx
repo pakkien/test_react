@@ -9,6 +9,7 @@ import Card, {
 	CardFooterRight,
 	CardHeader,
 	CardLabel,
+	CardTabItem,
 	CardTitle,
 } from '../../../../components/bootstrap/Card';
 import FormGroup from '../../../../components/bootstrap/forms/FormGroup';
@@ -18,6 +19,7 @@ import Alert from '../../../../components/bootstrap/Alert';
 import QuotationDataType from '../../../dataTypes/QuotationDataType';
 import SubHeader, {
 	SubHeaderLeft,
+	SubHeaderRight,
 	SubheaderSeparator,
 } from '../../../../layout/SubHeader/SubHeader';
 import { useNavigate } from 'react-router-dom';
@@ -30,6 +32,7 @@ import Dropzone from '../uploadFileComponents/Dropzone';
 import axios from 'axios';
 import Badge from '../../../../components/bootstrap/Badge';
 import Select from 'react-select';
+import Nav, { NavItem } from '../../../../components/bootstrap/Nav';
 
 type QuotationProps = {
 	mode: 'create' | 'view' | 'edit';
@@ -127,8 +130,6 @@ export const Quotation = (props: QuotationProps) => {
 	// 	'90',
 	// ];
 
-
-
 	const paymentTermsOptions = [
 		'',
 		'30 Days upon Invoice Date',
@@ -181,6 +182,9 @@ export const Quotation = (props: QuotationProps) => {
 						</>
 					)}
 				</SubHeaderLeft>
+				<SubHeaderRight>
+					<Button color='info'>Create Variation</Button>
+				</SubHeaderRight>
 			</SubHeader>
 			<Page container='fluid'>
 				<form
@@ -421,15 +425,79 @@ export const Quotation = (props: QuotationProps) => {
 						</CardFooter>
 					</Card>
 
-					<ManageItem isViewMode={isViewMode} />
+					<Card hasTab tabButtonColor='info'>
+						<CardTabItem id='item_tab' title='Items'>
+							{(props.mode == 'view' || props.mode == 'edit') && (
+								<>
+									<div className='row gt-4'>
+										<div className='col-md-6 d-flex'>
+											<div className='row'>
+												<div className='col-md-12'>
+													<span>
+														Quotation No: {props.quotation_no}{' '}
+														&nbsp;&nbsp;
+													</span>
+													<Badge className='statusBadge' color='info'>
+														{status}
+													</Badge>
+													&nbsp;&nbsp;&nbsp;
+													<br />
+													<span>
+														Revision: {props.variance}.{props.revision}
+													</span>
+												</div>
+											</div>
+											<Button
+												color='info'
+												isLight
+												icon='Download'
+												onClick={() => navigate(-1)}>
+												PDF
+											</Button>
+										</div>
 
-					{/* <UploadFiles/> */}
-					<Dropzone
-						setAttachmentIds={updateAttachmentID}
-						className={''}
-						quotation_rev_id={props.quotation_rev_id}
-						isViewMode={isViewMode}
-					/>
+										<div className='col-md-6 d-flex justify-content-end'>
+											<Button
+												color='info'
+												icon='Edit'
+												hidden={isViewMode}
+												className='order-0 float-end'
+												onClick={() => {
+													//setValue('status', 'Draft');
+												}}>
+												Update Status
+											</Button>
+											<div className='order-2 float-end'>&nbsp;</div>
+											<Button
+												color='info'
+												icon='Edit'
+												hidden={isViewMode}
+												className='order-2 float-end'
+												onClick={() => {
+													//setValue('status', 'Draft');
+												}}>
+												Create Revision
+											</Button>
+										</div>
+									</div>
+								</>
+							)}
+							<br />
+							<ManageItem isViewMode={isViewMode} />
+						</CardTabItem>
+						<CardTabItem id='attachments_tab' title='Attachments'>
+							{/* <UploadFiles/> */}
+							<Dropzone
+								setAttachmentIds={updateAttachmentID}
+								className={''}
+								quotation_rev_id={props.quotation_rev_id}
+								isViewMode={isViewMode}
+							/>
+						</CardTabItem>
+						<CardTabItem id='revisions_tab' title='Revisions'>
+							<span>Revisions</span>
+						</CardTabItem>
+					</Card>
 
 					{/* Options */}
 					<Card>
@@ -442,7 +510,6 @@ export const Quotation = (props: QuotationProps) => {
 						</CardHeader>
 						<CardBody className='pb-0'>
 							<div className='row g-4'>
-
 								<div className='col-md-4'>
 									<FormGroup id='lead_time' label='Lead Time'>
 										<select
@@ -523,7 +590,6 @@ export const Quotation = (props: QuotationProps) => {
 
 								<div></div>
 							</div>
-							
 						</CardBody>
 						<CardFooter>
 							<></>

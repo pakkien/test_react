@@ -69,7 +69,7 @@ const ManageSubItem = (props: SubItemProps) => {
 								<CardHeader>
 									<CardLabel>
 										<CardTitle tag='div' className='h3'>
-											Sub Item - {subItemIndex + 1}/{fields.length}{' '}
+											Sub Item {itemIndex+1}.{subItemIndex + 1}{' '}
 											&nbsp;&nbsp;
 										</CardTitle>
 									</CardLabel>
@@ -177,7 +177,7 @@ const ManageSubItem = (props: SubItemProps) => {
 										</div>
 										<div className='col-md-8'>
 											<div className='row'>
-												<div className='col-4'>
+												<div className='col-3'>
 													<FormGroup
 														id='quantity'
 														label='Quantity'
@@ -205,7 +205,7 @@ const ManageSubItem = (props: SubItemProps) => {
 														</div>
 													</FormGroup>
 												</div>
-												<div className='col-4'>
+												<div className='col-3'>
 													<FormGroup id='unit' label='Unit' isFloating>
 														<input
 															id='unit'
@@ -257,6 +257,36 @@ const ManageSubItem = (props: SubItemProps) => {
 														</div>
 													</FormGroup>
 												</div>
+												<div className='col-2 d-flex align-items-center'>
+												<FormGroup
+														id='unit_cost'
+														label='Estimated Cost'
+														className='form-check form-check-inline'
+														>
+														<input
+															id='unit_cost'
+															className={
+																'form-check-input ' +
+																(errors.items?.[itemIndex]
+																	?.sub_items?.[subItemIndex]?.unit_cost
+																	? 'is-invalid'
+																	: '')
+															}
+															{...register(
+																`items.${itemIndex}.sub_items.${subItemIndex}.unit_cost`,
+															)}
+															type='checkbox'
+															placeholder='unit_cost'
+															disabled={props.isViewMode}
+														/>
+														<div className='invalid-feedback'>
+															{
+																errors.items?.[itemIndex]?.sub_items?.[subItemIndex]?.unit_cost
+																	?.message
+															}
+														</div>
+													</FormGroup>
+													</div>
 											</div>
 										</div>
 										<div className='col-md-4'>
@@ -283,8 +313,35 @@ const ManageSubItem = (props: SubItemProps) => {
 												</div>
 											</FormGroup>
 										</div>
+										<div className='col-md-8'>
+												<div className='row'>
 										<div className='col-md-4'>
 											<FormGroup id='margin' label='Margin' isFloating>
+												<input
+													id='margin'
+													className={
+														'form-control ' +
+														(errors.items?.[itemIndex]?.sub_items?.[subItemIndex]?.margin
+															? 'is-invalid'
+															: '')
+													}
+													{...register(`items.${itemIndex}.sub_items.${subItemIndex}.margin`)}
+													type='text'
+													placeholder='margin'
+													disabled={props.isViewMode}
+													onChange={
+														(e) => {
+															setValue(`items.${itemIndex}.sub_items.${subItemIndex}.unit_price`, parseFloat((formData.items[itemIndex].sub_items[subItemIndex].unit_cost * (100+parseFloat(e.target.value)) / 100).toFixed(2)));
+															setValue(`items.${itemIndex}.sub_items.${subItemIndex}.total_price`, parseFloat((formData.items[itemIndex].sub_items[subItemIndex].quantity * formData.items[itemIndex].sub_items[subItemIndex].unit_price).toFixed(2)));	}
+														}
+												/>
+												<div className='invalid-feedback'>
+													{errors.items?.[itemIndex]?.sub_items?.[subItemIndex]?.margin?.message}
+												</div>
+											</FormGroup>
+										</div>
+										<div className='col-md-4'>
+											<FormGroup id='margin' label='Margin Percentage' isFloating>
 												<input
 													id='margin'
 													className={
@@ -336,6 +393,8 @@ const ManageSubItem = (props: SubItemProps) => {
 													{errors.items?.[itemIndex]?.sub_items?.[subItemIndex]?.unit_price?.message}
 												</div>
 											</FormGroup>
+										</div>
+										</div>
 										</div>
 										<div className='col-md-4'>
 											<FormGroup
