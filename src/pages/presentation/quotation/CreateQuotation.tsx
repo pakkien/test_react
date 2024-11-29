@@ -39,7 +39,7 @@ const CreateQuotation = () => {
 
 	return(
 		<FormProviderQuotation data={QuotationData}>
-			<Quotation mode={'create'}/>
+			<Quotation mode={'create'} status={'None'}/>
 		</FormProviderQuotation>
 	)
 };

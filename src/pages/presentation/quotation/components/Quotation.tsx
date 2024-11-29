@@ -33,6 +33,12 @@ import axios from 'axios';
 import Badge from '../../../../components/bootstrap/Badge';
 import Select from 'react-select';
 import Nav, { NavItem } from '../../../../components/bootstrap/Nav';
+import Dropdown, {
+	DropdownItem,
+	DropdownMenu,
+	DropdownToggle,
+} from '../../../../components/bootstrap/Dropdown';
+import QUOTATION_STATUS from '../../../../common/data/enumQuotationStatus';
 
 type QuotationProps = {
 	mode: 'create' | 'view' | 'edit';
@@ -63,7 +69,16 @@ export const Quotation = (props: QuotationProps) => {
 		props.mode.charAt(0).toUpperCase() + props.mode.slice(1).toLowerCase() + ' Quotation ';
 
 	//status
-	const [status, setStatus] = useState(props.status);
+	const key = props.status?.toUpperCase() as keyof typeof QUOTATION_STATUS;
+	var enum_val = QUOTATION_STATUS[key];
+	const [status, setStatus] = useState<any>(enum_val);
+
+	useEffect(() => {
+
+		setValue('status', status.name);
+		
+
+	}, [status]);
 
 	// upload file
 	const [attachmentIDs, setAttachmentIds] = useState<string[]>();
@@ -146,10 +161,37 @@ export const Quotation = (props: QuotationProps) => {
 
 	const statusOptions = ['', 'Draft', 'Submitted', 'Awarded', 'Completed', 'Rejected'];
 
+	// useEffect(() => {
+	// 	//console.log(formData.status);
+	// 	setStatus(formData.status);
+	// }, [formData.status]);
+
+	const[activeTab, setActiveTab] = useState("Items");
+
+
+	//auto-calculation total and gtotal
 	useEffect(() => {
-		//console.log(formData.status);
-		setStatus(formData.status);
-	}, [formData.status]);
+		var total = 0;
+		var gtotal = 0;
+
+		for(const item of formData.items){
+			total += item.total_cost;
+			gtotal += item.total_price;
+			for (const sub_item of item.sub_items){
+				total += sub_item.total_cost;
+				gtotal += sub_item.total_price;
+			}
+		}
+
+		// console.log("total: "+ total);
+		// console.log("gtotal: "+ gtotal);
+		setValue('total', total);
+		setValue('g_total', gtotal);
+
+
+	}, [JSON.stringify(formData.items.map(item => {return item.total_cost+item.total_price})) + 
+		JSON.stringify(formData.items.map(item => item.sub_items.map((sub_item) => sub_item.total_cost+sub_item.total_price)))
+	]);
 
 	return (
 		<PageWrapper title={title}>
@@ -168,8 +210,8 @@ export const Quotation = (props: QuotationProps) => {
 								<div className='col-md-12'>
 									<span>
 										Quotation No: {props.quotation_no} &nbsp;&nbsp;&nbsp;
-										<Badge className='statusBadge' color='info'>
-											{status}
+										<Badge className='statusBadge' color={status.color}>
+											{status.name}
 										</Badge>
 									</span>
 								</div>
@@ -199,7 +241,7 @@ export const Quotation = (props: QuotationProps) => {
 							{
 								attachment_list: attachmentIDs,
 								//created_by: "tester1@email.com",
-								status: 'submitted',
+								//status: 'submitted',
 							},
 							data,
 						);
@@ -343,7 +385,7 @@ export const Quotation = (props: QuotationProps) => {
 										</>
 									</FormGroup>
 								</div>
-								<div className='col-md-4'>
+								<div className='col-md-8'>
 									<FormGroup id='email' label='Email' isFloating>
 										<input
 											id='email'
@@ -366,7 +408,7 @@ export const Quotation = (props: QuotationProps) => {
 										</>
 									</FormGroup>
 								</div>
-								<div className='col-md-4'>
+								{/* <div className='col-md-4'>
 									<FormGroup id='status' label='Status' isFloating>
 										<select
 											id='status'
@@ -390,7 +432,7 @@ export const Quotation = (props: QuotationProps) => {
 											)}
 										</>
 									</FormGroup>
-								</div>
+								</div> */}
 								<div className='col-md-12'>
 									<FormGroup
 										id='project_ref'
@@ -424,10 +466,23 @@ export const Quotation = (props: QuotationProps) => {
 							<></>
 						</CardFooter>
 					</Card>
-
-					<Card hasTab tabButtonColor='info'>
-						<CardTabItem id='item_tab' title='Items'>
-							{(props.mode == 'view' || props.mode == 'edit') && (
+	
+					<Card>
+						<CardBody>
+						<Nav>
+							<NavItem onClick={() => setActiveTab('Items')} isActive={activeTab == "Items" ? true : false}>
+								<Button>Items</Button>
+							</NavItem>
+							<NavItem onClick={() => setActiveTab('Attachments')} isActive={activeTab == "Attachments" ? true : false}>
+								<Button>Attachments</Button>
+							</NavItem>
+							<NavItem onClick={() => setActiveTab('Revisions')} isActive={activeTab == "Revisions" ? true : false}>
+								<Button>Revisions</Button>
+							</NavItem>
+						</Nav>
+						<hr />
+						<div hidden={activeTab!="Items"}>
+						{(props.mode == 'view' || props.mode == 'edit' || props.mode == 'create') && (
 								<>
 									<div className='row gt-4'>
 										<div className='col-md-6 d-flex'>
@@ -437,8 +492,10 @@ export const Quotation = (props: QuotationProps) => {
 														Quotation No: {props.quotation_no}{' '}
 														&nbsp;&nbsp;
 													</span>
-													<Badge className='statusBadge' color='info'>
-														{status}
+													<Badge
+														className='statusBadge'
+														color={status.color}>
+														{status.name}
 													</Badge>
 													&nbsp;&nbsp;&nbsp;
 													<br />
@@ -457,16 +514,38 @@ export const Quotation = (props: QuotationProps) => {
 										</div>
 
 										<div className='col-md-6 d-flex justify-content-end'>
-											<Button
-												color='info'
-												icon='Edit'
-												hidden={isViewMode}
-												className='order-0 float-end'
-												onClick={() => {
-													//setValue('status', 'Draft');
-												}}>
-												Update Status
-											</Button>
+											<Dropdown>
+												<DropdownToggle hasIcon={false}>
+													<Button
+														isLink
+														color={status.color}
+														icon='Circle'
+														className='text-nowrap order-0 float-end'
+														hidden={isViewMode}>
+														{status.name}
+													</Button>
+												</DropdownToggle>
+												<DropdownMenu>
+													{Object.keys(QUOTATION_STATUS).map((key) => (
+														<DropdownItem
+															key={key}
+															onClick={() =>
+																setStatus(QUOTATION_STATUS[key])
+															}>
+															<div>
+																<Icon
+																	icon='Circle'
+																	color={
+																		QUOTATION_STATUS[key].color
+																	}
+																/>
+																{QUOTATION_STATUS[key].name}
+															</div>
+														</DropdownItem>
+													))}
+												</DropdownMenu>
+											</Dropdown>
+
 											<div className='order-2 float-end'>&nbsp;</div>
 											<Button
 												color='info'
@@ -484,20 +563,29 @@ export const Quotation = (props: QuotationProps) => {
 							)}
 							<br />
 							<ManageItem isViewMode={isViewMode} />
-						</CardTabItem>
-						<CardTabItem id='attachments_tab' title='Attachments'>
-							{/* <UploadFiles/> */}
-							<Dropzone
+						</div>
+						<div hidden={activeTab!="Attachments"}>
+						<Dropzone
 								setAttachmentIds={updateAttachmentID}
 								className={''}
 								quotation_rev_id={props.quotation_rev_id}
 								isViewMode={isViewMode}
 							/>
-						</CardTabItem>
-						<CardTabItem id='revisions_tab' title='Revisions'>
-							<span>Revisions</span>
-						</CardTabItem>
+							<span>attachment</span>
+						</div>
+						<div hidden={activeTab!="Revisions"}>
+						<span>Revisions</span>
+						</div>
+						</CardBody>
+					
 					</Card>
+
+					{/* <Dropzone
+								setAttachmentIds={updateAttachmentID}
+								className={''}
+								quotation_rev_id={props.quotation_rev_id}
+								isViewMode={isViewMode}
+							/> */}
 
 					{/* Options */}
 					<Card>
