@@ -65,7 +65,7 @@ const ManageSubItem = (props: SubItemProps) => {
 				<Accordion id='SubItemAccordion' color='dark' activeItemId={'SubItemAccordionItem_'+ itemIndex}>
 					<AccordionItem id={'SubItemAccordionItem_'+ itemIndex} title='Sub Items'>
 						{fields.map((sub_item, subItemIndex) => (
-							<Card shadow='lg'>
+							<Card shadow='lg' key={sub_item.id}>
 								<CardHeader>
 									<CardLabel>
 										<CardTitle tag='div' className='h3'>
