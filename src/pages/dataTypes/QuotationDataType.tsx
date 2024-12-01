@@ -10,12 +10,15 @@ namespace QuotationDataType {
 		quotation_no: string;
 		quotation_date: string;
 		revision: number;
+		variance: number;
+		client_code: string;
 		client: string;
 		end_user: string;
 		site_location: string;
 		building: string;
 		pic: string;
-		email: string;
+		pic_email: string;
+		pic_contact_number: string;
 		project_reference: string;
 		items: Item[];
 		status: string;
@@ -44,6 +47,8 @@ namespace QuotationDataType {
 		unit_cost: number;
 		total_cost: number;
 		margin: number;
+		margin_percentage: number;
+		estimated_cost: boolean;
 		unit_price: number;
 		total_price: number;
 		sub_items: Sub_item[];
@@ -61,6 +66,8 @@ namespace QuotationDataType {
 		unit_cost: number;
 		total_cost: number;
 		margin: number;
+		margin_percentage: number;
+		estimated_cost: boolean;
 		unit_price: number;
 		total_price: number;
 	};

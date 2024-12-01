@@ -247,7 +247,8 @@ const ViewQuotation = () => {
 	//const location = useLocation();
 	const { quotation_rev_id } = useParams();
 
-	const [quotationRevData, setQuotationRevData] = useState<QuotationDataType.QuotationData>();
+	// const [quotationRevData, setQuotationRevData] = useState<QuotationDataType.QuotationData>();
+	const [quotationRevData, setQuotationRevData] = useState<any>();
 
 	const fetchQuotationRevData = async (quotation_rev_id: string) => {
 		const config = {
@@ -263,20 +264,22 @@ const ViewQuotation = () => {
 
 	//const quotation_rev_id = location.state.quotation_rev_id;
 	useEffect(() => {
+		setQuotationRevData(null);
 		if (quotation_rev_id) {
 			fetchQuotationRevData(quotation_rev_id);
 		}
-	}, []);
+	}, [quotation_rev_id]);
 
 	return (
 		<>
-			{quotationRevData ? (
+			{quotationRevData? (
 				<FormProviderQuotation data={quotationRevData}>
-					<Quotation mode={'view'} quotation_rev_id={quotation_rev_id} 
+					<Quotation mode={'view'} quotation_id={quotationRevData.quotation_id}
+					quotation_rev_id={quotation_rev_id} 
 					quotation_no={quotationRevData.quotation_no}
 					status={quotationRevData.status}
 					revision={quotationRevData.revision}
-					//variance={1}
+					variance={quotationRevData.variance}
 					/>
 				</FormProviderQuotation>
 			) : (

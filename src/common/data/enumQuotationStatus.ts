@@ -6,7 +6,7 @@ export interface IEventStatus {
 }
 const QUOTATION_STATUS: IEventStatus = {
     NONE: { name: 'Update State', color: COLORS.LIGHT.name },
-    SUCCESS: { name: 'Success', color: COLORS.PRIMARY.name },
+    //SUCCESS: { name: 'Success', color: COLORS.PRIMARY.name },
     DRAFT: { name: 'Draft', color: COLORS.PRIMARY.name },
     SUBMITTED: { name: 'Submitted', color: COLORS.INFO.name },
 	AWARDED: { name: 'Awarded', color: COLORS.SUCCESS.name },

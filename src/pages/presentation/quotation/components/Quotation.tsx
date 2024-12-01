@@ -39,6 +39,7 @@ import Dropdown, {
 	DropdownToggle,
 } from '../../../../components/bootstrap/Dropdown';
 import QUOTATION_STATUS from '../../../../common/data/enumQuotationStatus';
+import RevisionsView from './RevisionsView';
 
 type QuotationProps = {
 	mode: 'create' | 'view' | 'edit';
@@ -48,6 +49,7 @@ type QuotationProps = {
 	status?: string;
 	revision?: number;
 	variance?: number;
+	create_new_variance?: boolean
 };
 
 export const Quotation = (props: QuotationProps) => {
@@ -64,6 +66,9 @@ export const Quotation = (props: QuotationProps) => {
 	//console.log('formData', formData)
 	//console.log('errors', errors)
 
+	//save as new variation
+	const [isCreateVariation, setIsCreateVariation] = useState(props.create_new_variance);
+
 	const isViewMode = props.mode.toLowerCase() == 'view' ? true : false;
 	const title =
 		props.mode.charAt(0).toUpperCase() + props.mode.slice(1).toLowerCase() + ' Quotation ';
@@ -71,13 +76,13 @@ export const Quotation = (props: QuotationProps) => {
 	//status
 	const key = props.status?.toUpperCase() as keyof typeof QUOTATION_STATUS;
 	var enum_val = QUOTATION_STATUS[key];
+	if (enum_val == null) {
+		enum_val = QUOTATION_STATUS.NONE;
+	}
 	const [status, setStatus] = useState<any>(enum_val);
 
 	useEffect(() => {
-
 		setValue('status', status.name);
-		
-
 	}, [status]);
 
 	// upload file
@@ -104,9 +109,11 @@ export const Quotation = (props: QuotationProps) => {
 	};
 
 	const goToViewQuotationListPage = () => {
-		//navigate('view-quotation');
-
 		navigate('../quotation');
+	};
+
+	const goToEditQuotationPage = (create_new_variance: boolean) => {
+		navigate(`../quotation/edit/${props.quotation_rev_id}`, {state:{create_new_variance: create_new_variance}});
 	};
 
 	const config = {
@@ -123,7 +130,11 @@ export const Quotation = (props: QuotationProps) => {
 
 	const postUpdateQuotation = async (quotation_id: string, payload: any) => {
 		axios
-			.put(`http://127.0.0.1:5000/quotation/${quotation_id}`, payload, config)
+			.put(
+				`http://127.0.0.1:5000/quotation/${quotation_id}/${isCreateVariation}`,
+				payload,
+				config,
+			)
 			.then((response) => {
 				//console.log(response.data);
 				showSuccessNotification();
@@ -166,18 +177,17 @@ export const Quotation = (props: QuotationProps) => {
 	// 	setStatus(formData.status);
 	// }, [formData.status]);
 
-	const[activeTab, setActiveTab] = useState("Items");
-
+	const [activeTab, setActiveTab] = useState('Items');
 
 	//auto-calculation total and gtotal
 	useEffect(() => {
 		var total = 0;
 		var gtotal = 0;
 
-		for(const item of formData.items){
+		for (const item of formData.items) {
 			total += item.total_cost;
 			gtotal += item.total_price;
-			for (const sub_item of item.sub_items){
+			for (const sub_item of item.sub_items) {
 				total += sub_item.total_cost;
 				gtotal += sub_item.total_price;
 			}
@@ -187,10 +197,17 @@ export const Quotation = (props: QuotationProps) => {
 		// console.log("gtotal: "+ gtotal);
 		setValue('total', total);
 		setValue('g_total', gtotal);
-
-
-	}, [JSON.stringify(formData.items.map(item => {return item.total_cost+item.total_price})) + 
-		JSON.stringify(formData.items.map(item => item.sub_items.map((sub_item) => sub_item.total_cost+sub_item.total_price)))
+	}, [
+		JSON.stringify(
+			formData.items.map((item) => {
+				return item.total_cost + item.total_price;
+			}),
+		) +
+			JSON.stringify(
+				formData.items.map((item) =>
+					item.sub_items.map((sub_item) => sub_item.total_cost + sub_item.total_price),
+				),
+			),
 	]);
 
 	return (
@@ -225,7 +242,31 @@ export const Quotation = (props: QuotationProps) => {
 					)}
 				</SubHeaderLeft>
 				<SubHeaderRight>
-					<Button color='info'>Create Variation</Button>
+					{props.mode == 'edit' && (
+						<div>
+						Create New Variation: &nbsp;&nbsp;
+						<Button
+							color={isCreateVariation ? 'info' : 'info'}
+							icon='PublishedWithChanges'
+							onClick={() => setIsCreateVariation(isCreateVariation ? false : true)}
+							isLight={isCreateVariation ? false : true}>
+							{isCreateVariation ? 'Yes' : 'No'}
+						</Button>
+					</div>
+					)}
+					
+					{props.mode == 'view' && (
+						<div>
+						<Button
+							color='info'
+							onClick={() => goToEditQuotationPage(true)}
+							
+							>
+							Create New Variation
+						</Button>
+					</div>
+					)}
+					
 				</SubHeaderRight>
 			</SubHeader>
 			<Page container='fluid'>
@@ -240,8 +281,7 @@ export const Quotation = (props: QuotationProps) => {
 						const payload = Object.assign(
 							{
 								attachment_list: attachmentIDs,
-								//created_by: "tester1@email.com",
-								//status: 'submitted',
+								variance: props.variance,
 							},
 							data,
 						);
@@ -265,7 +305,32 @@ export const Quotation = (props: QuotationProps) => {
 						</CardHeader>
 						<CardBody className='pb-0'>
 							<div className='row g-4'>
-								<div className='col-md-12'>
+								<div className='col-md-3'>
+									<FormGroup id='client_code' label='Client Code' isFloating>
+										<input
+											id='client_code'
+											className={
+												'form-control ' +
+												(errors.client_code ? 'is-invalid' : '')
+											}
+											{...register('client_code')}
+											type='text'
+											placeholder='client_code'
+											disabled={isViewMode}
+											//list={['list']}
+										/>
+										<>
+											{errors.client_code ? (
+												<div className='invalid-feedback'>
+													{errors.client_code.message}
+												</div>
+											) : (
+												''
+											)}
+										</>
+									</FormGroup>
+								</div>
+								<div className='col-md-9'>
 									<FormGroup id='client' label='Client' isFloating>
 										<input
 											id='client'
@@ -386,21 +451,22 @@ export const Quotation = (props: QuotationProps) => {
 									</FormGroup>
 								</div>
 								<div className='col-md-8'>
-									<FormGroup id='email' label='Email' isFloating>
+									<FormGroup id='pic_email' label='PIC Email' isFloating>
 										<input
 											id='email'
 											className={
-												'form-control ' + (errors.email ? 'is-invalid' : '')
+												'form-control ' +
+												(errors.pic_email ? 'is-invalid' : '')
 											}
-											{...register('email')}
+											{...register('pic_email')}
 											type='text'
-											placeholder='email'
+											placeholder='pic_email'
 											disabled={isViewMode}
 										/>
 										<>
-											{errors.email ? (
+											{errors.pic_email ? (
 												<div className='invalid-feedback'>
-													{errors.email.message}
+													{errors.pic_email.message}
 												</div>
 											) : (
 												''
@@ -408,32 +474,34 @@ export const Quotation = (props: QuotationProps) => {
 										</>
 									</FormGroup>
 								</div>
-								{/* <div className='col-md-4'>
-									<FormGroup id='status' label='Status' isFloating>
-										<select
-											id='status'
+								<div className='col-md-4'>
+									<FormGroup
+										id='pic_contact_number'
+										label='PIC Contact No.'
+										isFloating>
+										<input
+											id='pic_contact_number'
 											className={
 												'form-control ' +
-												(errors.lead_time ? 'is-invalid' : '')
+												(errors.pic_contact_number ? 'is-invalid' : '')
 											}
-											{...register('status')}
-											disabled={isViewMode}>
-											{statusOptions.map((op) => (
-												<option value={op}>{op}</option>
-											))}
-										</select>
+											{...register('pic_contact_number')}
+											type='text'
+											placeholder='pic_contact_number'
+											disabled={isViewMode}
+										/>
 										<>
-											{errors.status ? (
+											{errors.pic_contact_number ? (
 												<div className='invalid-feedback'>
-													{errors.status.message}
+													{errors.pic_contact_number.message}
 												</div>
 											) : (
 												''
 											)}
 										</>
 									</FormGroup>
-								</div> */}
-								<div className='col-md-12'>
+								</div>
+								<div className='col-md-8'>
 									<FormGroup
 										id='project_ref'
 										label='Project Reference'
@@ -466,118 +534,131 @@ export const Quotation = (props: QuotationProps) => {
 							<></>
 						</CardFooter>
 					</Card>
-	
+
 					<Card>
 						<CardBody>
-						<Nav>
-							<NavItem onClick={() => setActiveTab('Items')} isActive={activeTab == "Items" ? true : false}>
-								<Button>Items</Button>
-							</NavItem>
-							<NavItem onClick={() => setActiveTab('Attachments')} isActive={activeTab == "Attachments" ? true : false}>
-								<Button>Attachments</Button>
-							</NavItem>
-							<NavItem onClick={() => setActiveTab('Revisions')} isActive={activeTab == "Revisions" ? true : false}>
-								<Button>Revisions</Button>
-							</NavItem>
-						</Nav>
-						<hr />
-						<div hidden={activeTab!="Items"}>
-						{(props.mode == 'view' || props.mode == 'edit' || props.mode == 'create') && (
-								<>
-									<div className='row gt-4'>
-										<div className='col-md-6 d-flex'>
-											<div className='row'>
-												<div className='col-md-12'>
-													<span>
-														Quotation No: {props.quotation_no}{' '}
-														&nbsp;&nbsp;
-													</span>
-													<Badge
-														className='statusBadge'
-														color={status.color}>
-														{status.name}
-													</Badge>
-													&nbsp;&nbsp;&nbsp;
-													<br />
-													<span>
-														Revision: {props.variance}.{props.revision}
-													</span>
+							<Nav>
+								<NavItem
+									onClick={() => setActiveTab('Items')}
+									isActive={activeTab == 'Items' ? true : false}>
+									<Button>Items</Button>
+								</NavItem>
+								<NavItem
+									onClick={() => setActiveTab('Attachments')}
+									isActive={activeTab == 'Attachments' ? true : false}>
+									<Button>Attachments</Button>
+								</NavItem>
+								<NavItem
+									onClick={() => setActiveTab('Revisions')}
+									isActive={activeTab == 'Revisions' ? true : false}>
+									<Button>Revisions</Button>
+								</NavItem>
+							</Nav>
+							<hr />
+							<div hidden={activeTab != 'Items'}>
+							<>
+										<div className='row gt-4'>
+											<div className='col-md-6 d-flex'>
+												<div className='row'>
+													<div className='col-md-12'>
+														<span>
+															Quotation No: {props.quotation_no}{' '}
+															&nbsp;&nbsp;
+														</span>
+														<Badge
+															className='statusBadge'
+															color={status.color}>
+															{status.name}
+														</Badge>
+														&nbsp;&nbsp;&nbsp;
+														<br />
+														<span>
+															Revision: {props.variance}.
+															{props.revision}
+														</span>
+													</div>
 												</div>
+												<Button
+													color='info'
+													isLight
+													icon='Download'
+													onClick={() => navigate(-1)}>
+													PDF
+												</Button>
 											</div>
-											<Button
-												color='info'
-												isLight
-												icon='Download'
-												onClick={() => navigate(-1)}>
-												PDF
-											</Button>
-										</div>
 
-										<div className='col-md-6 d-flex justify-content-end'>
-											<Dropdown>
-												<DropdownToggle hasIcon={false}>
-													<Button
-														isLink
-														color={status.color}
-														icon='Circle'
-														className='text-nowrap order-0 float-end'
-														hidden={isViewMode}>
-														{status.name}
-													</Button>
-												</DropdownToggle>
-												<DropdownMenu>
-													{Object.keys(QUOTATION_STATUS).map((key) => (
-														<DropdownItem
-															key={key}
-															onClick={() =>
-																setStatus(QUOTATION_STATUS[key])
-															}>
-															<div>
-																<Icon
-																	icon='Circle'
-																	color={
-																		QUOTATION_STATUS[key].color
-																	}
-																/>
-																{QUOTATION_STATUS[key].name}
-															</div>
-														</DropdownItem>
-													))}
-												</DropdownMenu>
-											</Dropdown>
+											<div className='col-md-6 d-flex justify-content-end'>
+												<Dropdown>
+													<DropdownToggle hasIcon={false}>
+														<Button
+															isLink
+															color={status.color}
+															icon='Circle'
+															className='text-nowrap order-0 float-end'
+															isDisable={isViewMode}>
+															{status.name}
+														</Button>
+													</DropdownToggle>
+													<DropdownMenu>
+														{Object.keys(QUOTATION_STATUS).map(
+															(key) => (
+																<DropdownItem
+																	key={key}
+																	onClick={() =>
+																		setStatus(
+																			QUOTATION_STATUS[key],
+																		)
+																	}>
+																	<div>
+																		<Icon
+																			icon='Circle'
+																			color={
+																				QUOTATION_STATUS[
+																					key
+																				].color
+																			}
+																		/>
+																		{QUOTATION_STATUS[key].name}
+																	</div>
+																</DropdownItem>
+															),
+														)}
+													</DropdownMenu>
+												</Dropdown>
 
-											<div className='order-2 float-end'>&nbsp;</div>
-											<Button
-												color='info'
-												icon='Edit'
-												hidden={isViewMode}
-												className='order-2 float-end'
-												onClick={() => {
-													//setValue('status', 'Draft');
-												}}>
-												Create Revision
-											</Button>
+												<div className='order-2 float-end'>&nbsp;</div>
+												<Button
+													color='info'
+													//icon='Edit'
+													hidden={!isViewMode}
+													className='order-2 float-end'
+													onClick={() => goToEditQuotationPage(false)}
+													//isLight
+													>
+													Create Revision
+												</Button>
+											</div>
 										</div>
-									</div>
-								</>
-							)}
-							<br />
-							<ManageItem isViewMode={isViewMode} />
-						</div>
-						<div hidden={activeTab!="Attachments"}>
-						<Dropzone
-								setAttachmentIds={updateAttachmentID}
-								className={''}
-								quotation_rev_id={props.quotation_rev_id}
-								isViewMode={isViewMode}
-							/>
-							<span>attachment</span>
-						</div>
-						<div hidden={activeTab!="Revisions"}>
-						<span>Revisions</span>
-						</div>
+									</>
+								<br />
+								<ManageItem isViewMode={isViewMode} />
+							</div>
+							<div hidden={activeTab != 'Attachments'}>
+								<Dropzone
+									setAttachmentIds={updateAttachmentID}
+									className={''}
+									quotation_rev_id={props.quotation_rev_id}
+									isViewMode={isViewMode}
+								/>
+								<span>attachment</span>
+							</div>
+							<div hidden={activeTab != 'Revisions'}>
+								<RevisionsView
+									quotation_id={props.quotation_id}
+									variance={props.variance}
+								/>
+							</div>
 						</CardBody>
-					
 					</Card>
 
 					{/* <Dropzone

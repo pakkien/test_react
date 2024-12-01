@@ -14,6 +14,8 @@ const schemaSubItem = z.object({
 	unit_cost: z.coerce.number().min(0),
 	total_cost: z.coerce.number().min(0),
 	margin: z.coerce.number(),
+	margin_percentage: z.coerce.number(),
+	estimated_cost: z.boolean(),
 	unit_price: z.coerce.number().min(0),
 	total_price: z.coerce.number().min(0),
 });
@@ -28,6 +30,8 @@ const schemaItem = z.object({
 	unit_cost: z.coerce.number().min(0),
 	total_cost: z.coerce.number().min(0),
 	margin: z.coerce.number(),
+	margin_percentage: z.coerce.number(),
+	estimated_cost: z.boolean(),
 	unit_price: z.coerce.number().min(0),
 	total_price: z.coerce.number().min(0),
 	sub_items: z.array(schemaSubItem)
@@ -36,11 +40,13 @@ const schemaItem = z.object({
 
 export const schemaQuotation = z.object({
 	client: z.string().min(3),
+	client_code: z.string().min(3),	
 	end_user: z.string().min(3),
 	site_location: z.string().min(3),
 	building: z.string().min(3),
 	pic: z.string().min(3),
-	email: z.string().email(),
+	pic_email: z.string().min(3),
+	pic_contact_number: z.string().min(3),
 	project_reference: z.string(),
 	status: z.string().min(3),
 
@@ -76,11 +82,13 @@ export const useFormQuotation = (props: QuotationFormProps) =>
     resolver: zodResolver(schemaQuotation),
 	defaultValues:{
 		client: props.data.client,
+		client_code: props.data.client_code,
 		end_user: props.data.end_user,
 		site_location: props.data.site_location,
 		building: props.data.building,
 		pic: props.data.pic,
-		email: props.data.email,
+		pic_email: props.data.pic_email,
+		pic_contact_number: props.data.pic_contact_number,
 		project_reference: props.data.project_reference,
 		status: props.data.status,
 

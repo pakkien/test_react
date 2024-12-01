@@ -48,6 +48,8 @@ const ManageItem = (props: ItemProps) => {
 			unit_cost: 0,
 			total_cost: 0,
 			margin: 0,
+			margin_percentage: 0,
+			estimated_cost: false,
 			unit_price: 0,
 			total_price: 0,
 			sub_items: [],

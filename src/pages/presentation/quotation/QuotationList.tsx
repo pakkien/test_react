@@ -32,6 +32,7 @@ import Icon from '../../../components/icon/Icon';
 import Input from '../../../components/bootstrap/forms/Input';
 import axios from 'axios';
 import QuotationDataType from '../../dataTypes/QuotationDataType';
+import QUOTATION_STATUS from '../../../common/data/enumQuotationStatus';
 
 import utc from 'dayjs/plugin/utc';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
@@ -46,16 +47,12 @@ dayjs.extend(timezone);
 
 
 function ReturnBatchColor(state: string) {
-	switch (state.toLowerCase()) {
-		case 'in progress':
-			return 'danger';
-		case 'closed':
-			return 'dark';
-		case 'awarded':
-			return 'success';
-		default:
-			return 'primary';
+	const key = state?.toUpperCase() as keyof typeof QUOTATION_STATUS;
+	var enum_val = QUOTATION_STATUS[key];
+	if (enum_val == null){
+		enum_val = QUOTATION_STATUS.NONE;
 	}
+	return enum_val.color;
 }
 
 const QuotationList = () => {
@@ -276,7 +273,7 @@ const QuotationList = () => {
 													</td>
 													<td>{item.quotation_no}</td>
 													<td>{item.end_user}</td>
-													<td>{item.revision}</td>
+													<td>{item.variance + '.' + item.revision}</td>
 													<td>{item.quotation_amount.toFixed(2)}</td>
 													<td>{item.cost.toFixed(2)}</td>
 													<td>{item.margin.toFixed(2)}</td>

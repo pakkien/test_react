@@ -245,9 +245,13 @@ const QuotationData = {
 };
 
 const EditQuotation = () => {
-	//const location = useLocation();
+	const {state} = useLocation();
+	const create_new_variance = state?.create_new_variance;
+	//console.log("location.create_new_variance:" + create_new_variance);
+
+
 	const { quotation_rev_id } = useParams();
-	const [quotationRevData, setQuotationRevData] = useState<QuotationDataType.QuotationData>();
+	const [quotationRevData, setQuotationRevData] = useState<any>();
 
 	const fetchQuotationRevData = async (quotation_rev_id: string) => {
 		const config = {
@@ -262,10 +266,11 @@ const EditQuotation = () => {
 	};
 
 	useEffect(() => {
+		setQuotationRevData(null);
 		if (quotation_rev_id) {
 			fetchQuotationRevData(quotation_rev_id);
 		}
-	}, []);
+	}, [quotation_rev_id]);
 
 	return (
 		<>
@@ -276,7 +281,8 @@ const EditQuotation = () => {
 					quotation_no={quotationRevData.quotation_no}
 					status={quotationRevData.status}
 					revision={quotationRevData.revision}
-					//variance={1}
+					create_new_variance={create_new_variance}
+					variance={quotationRevData.variance}
 					/>
 				</FormProviderQuotation>
 			) : (
