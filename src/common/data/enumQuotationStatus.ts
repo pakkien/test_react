@@ -5,7 +5,7 @@ export interface IEventStatus {
 	[key: string]: { name: string; color: TColor };
 }
 const QUOTATION_STATUS: IEventStatus = {
-    NONE: { name: 'Update State', color: COLORS.LIGHT.name },
+    NONE: { name: 'Update Status', color: COLORS.LIGHT.name },
     //SUCCESS: { name: 'Success', color: COLORS.PRIMARY.name },
     DRAFT: { name: 'Draft', color: COLORS.PRIMARY.name },
     SUBMITTED: { name: 'Submitted', color: COLORS.INFO.name },

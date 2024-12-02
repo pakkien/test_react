@@ -67,7 +67,7 @@ export const Quotation = (props: QuotationProps) => {
 	//console.log('errors', errors)
 
 	//save as new variation
-	const [isCreateVariation, setIsCreateVariation] = useState(props.create_new_variance);
+	const [isCreateVariation, setIsCreateVariation] = useState(props.create_new_variance? props.create_new_variance:false);
 
 	const isViewMode = props.mode.toLowerCase() == 'view' ? true : false;
 	const title =
@@ -541,7 +541,7 @@ export const Quotation = (props: QuotationProps) => {
 								<NavItem
 									onClick={() => setActiveTab('Items')}
 									isActive={activeTab == 'Items' ? true : false}>
-									<Button>Items</Button>
+									<Button>Quotation</Button>
 								</NavItem>
 								<NavItem
 									onClick={() => setActiveTab('Attachments')}
@@ -582,6 +582,7 @@ export const Quotation = (props: QuotationProps) => {
 													color='info'
 													isLight
 													icon='Download'
+													hidden={!isViewMode}
 													onClick={() => navigate(-1)}>
 													PDF
 												</Button>
