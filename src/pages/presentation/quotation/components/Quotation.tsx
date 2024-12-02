@@ -244,13 +244,13 @@ export const Quotation = (props: QuotationProps) => {
 				<SubHeaderRight>
 					{props.mode == 'edit' && (
 						<div>
-						Create New Variation: &nbsp;&nbsp;
+						Save As: &nbsp;&nbsp;
 						<Button
-							color={isCreateVariation ? 'info' : 'info'}
+							color={isCreateVariation ? 'danger' : 'info'}
 							icon='PublishedWithChanges'
 							onClick={() => setIsCreateVariation(isCreateVariation ? false : true)}
 							isLight={isCreateVariation ? false : true}>
-							{isCreateVariation ? 'Yes' : 'No'}
+							{isCreateVariation ? 'New Variation' : 'New Revision'}
 						</Button>
 					</div>
 					)}
