@@ -1,1 +1,0 @@
-import{a0 as e}from"./index-CV3AXN6v.js";const o={NONE:{name:"Update State",color:e.LIGHT.name},DRAFT:{name:"Draft",color:e.PRIMARY.name},SUBMITTED:{name:"Submitted",color:e.INFO.name},AWARDED:{name:"Awarded",color:e.SUCCESS.name},COMPLETED:{name:"Completed",color:e.DANGER.name},REJECTED:{name:"Rejected",color:e.DARK.name}};export{o as Q};
