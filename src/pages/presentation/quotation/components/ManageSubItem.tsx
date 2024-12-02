@@ -50,7 +50,7 @@ const ManageSubItem = (props: SubItemProps) => {
 		formData.items[itemIndex].sub_items.map((sub_item, subItemIndex) => {
 			setValue(`items.${itemIndex}.sub_items.${subItemIndex}.total_cost`, parseFloat((sub_item.quantity * sub_item.unit_cost).toFixed(2)));
 			setValue(`items.${itemIndex}.sub_items.${subItemIndex}.total_price`, parseFloat((sub_item.quantity * sub_item.unit_price).toFixed(2)));
-			setValue(`items.${itemIndex}.sub_items.${subItemIndex}.margin`, parseFloat(((sub_item.unit_price / sub_item.unit_cost - 1)*100).toFixed(2)) );
+			setValue(`items.${itemIndex}.sub_items.${subItemIndex}.margin_percentage`, parseFloat(((sub_item.unit_price / sub_item.unit_cost - 1)*100).toFixed(2)) );
 		});
 	}, [JSON.stringify(formData.items[itemIndex].sub_items.map(sub_item => {return sub_item.quantity+sub_item.unit_cost}))]);
 
@@ -261,29 +261,29 @@ const ManageSubItem = (props: SubItemProps) => {
 												</div>
 												<div className='col-2 d-flex align-items-center'>
 												<FormGroup
-														id='unit_cost'
+														id='estimated_cost'
 														label='Estimated Cost'
 														className='form-check form-check-inline'
 														>
 														<input
-															id='unit_cost'
+															id='estimated_cost'
 															className={
 																'form-check-input ' +
 																(errors.items?.[itemIndex]
-																	?.sub_items?.[subItemIndex]?.unit_cost
+																	?.sub_items?.[subItemIndex]?.estimated_cost
 																	? 'is-invalid'
 																	: '')
 															}
 															{...register(
-																`items.${itemIndex}.sub_items.${subItemIndex}.unit_cost`,
+																`items.${itemIndex}.sub_items.${subItemIndex}.estimated_cost`,
 															)}
 															type='checkbox'
-															placeholder='unit_cost'
+															placeholder='estimated_cost'
 															disabled={props.isViewMode}
 														/>
 														<div className='invalid-feedback'>
 															{
-																errors.items?.[itemIndex]?.sub_items?.[subItemIndex]?.unit_cost
+																errors.items?.[itemIndex]?.sub_items?.[subItemIndex]?.estimated_cost
 																	?.message
 															}
 														</div>
@@ -331,11 +331,11 @@ const ManageSubItem = (props: SubItemProps) => {
 													type='text'
 													placeholder='margin'
 													disabled={props.isViewMode}
-													onChange={
-														(e) => {
-															setValue(`items.${itemIndex}.sub_items.${subItemIndex}.unit_price`, parseFloat((formData.items[itemIndex].sub_items[subItemIndex].unit_cost * (100+parseFloat(e.target.value)) / 100).toFixed(2)));
-															setValue(`items.${itemIndex}.sub_items.${subItemIndex}.total_price`, parseFloat((formData.items[itemIndex].sub_items[subItemIndex].quantity * formData.items[itemIndex].sub_items[subItemIndex].unit_price).toFixed(2)));	}
-														}
+													// onChange={
+													// 	(e) => {
+													// 		setValue(`items.${itemIndex}.sub_items.${subItemIndex}.unit_price`, parseFloat((formData.items[itemIndex].sub_items[subItemIndex].unit_cost * (100+parseFloat(e.target.value)) / 100).toFixed(2)));
+													// 		setValue(`items.${itemIndex}.sub_items.${subItemIndex}.total_price`, parseFloat((formData.items[itemIndex].sub_items[subItemIndex].quantity * formData.items[itemIndex].sub_items[subItemIndex].unit_price).toFixed(2)));	}
+													// 	}
 												/>
 												<div className='invalid-feedback'>
 													{errors.items?.[itemIndex]?.sub_items?.[subItemIndex]?.margin?.message}
@@ -343,18 +343,18 @@ const ManageSubItem = (props: SubItemProps) => {
 											</FormGroup>
 										</div>
 										<div className='col-md-4'>
-											<FormGroup id='margin' label='Margin Percentage' isFloating>
+											<FormGroup id='margin_percentage' label='Margin Percentage' isFloating>
 												<input
-													id='margin'
+													id='margin_percentage'
 													className={
 														'form-control ' +
-														(errors.items?.[itemIndex]?.sub_items?.[subItemIndex]?.margin
+														(errors.items?.[itemIndex]?.sub_items?.[subItemIndex]?.margin_percentage
 															? 'is-invalid'
 															: '')
 													}
-													{...register(`items.${itemIndex}.sub_items.${subItemIndex}.margin`)}
+													{...register(`items.${itemIndex}.sub_items.${subItemIndex}.margin_percentage`)}
 													type='text'
-													placeholder='margin'
+													placeholder='margin_percentage'
 													disabled={props.isViewMode}
 													onChange={
 														(e) => {
@@ -363,7 +363,7 @@ const ManageSubItem = (props: SubItemProps) => {
 														}
 												/>
 												<div className='invalid-feedback'>
-													{errors.items?.[itemIndex]?.sub_items?.[subItemIndex]?.margin?.message}
+													{errors.items?.[itemIndex]?.sub_items?.[subItemIndex]?.margin_percentage?.message}
 												</div>
 											</FormGroup>
 										</div>

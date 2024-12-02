@@ -61,7 +61,7 @@ const ManageItem = (props: ItemProps) => {
 		formData.items.map((item, itemIndex) => {
 			setValue(`items.${itemIndex}.total_cost`, parseFloat((item.quantity * item.unit_cost).toFixed(2)));
 			setValue(`items.${itemIndex}.total_price`, parseFloat((item.quantity * item.unit_price).toFixed(2)));
-			setValue(`items.${itemIndex}.margin`, parseFloat(((item.unit_price / item.unit_cost - 1)*100).toFixed(2)) );
+			setValue(`items.${itemIndex}.margin_percentage`, parseFloat(((item.unit_price / item.unit_cost - 1)*100).toFixed(2)) );
 		});
 	}, [JSON.stringify(formData.items.map(item => {return item.quantity+item.unit_cost}))]);
 
@@ -270,27 +270,27 @@ const ManageItem = (props: ItemProps) => {
 													</div>
 													<div className='col-2 d-flex align-items-center'>
 														<FormGroup
-															id='unit_cost'
+															id='estimated_cost'
 															label='Estimated Cost'
 															className='form-check form-check-inline'
 															//isFloating
 															>
 															<input
-																id='unit_cost'
+																id='estimated_cost'
 																className={
 																	'form-check-input'
 																}
 																{...register(
-																	`items.${itemIndex}.unit_cost`,
+																	`items.${itemIndex}.estimated_cost`,
 																)}
 																type='checkbox'
-																placeholder='unit_cost'
+																placeholder='estimated_cost'
 																disabled={props.isViewMode}
 															/>
 															{/* <label className='form-check label'>Estimated Cost</label> */}
 															<div className='invalid-feedback'>
 																{
-																	errors.items?.[itemIndex]?.unit_cost
+																	errors.items?.[itemIndex]?.estimated_cost
 																		?.message
 																}
 															</div>
@@ -338,11 +338,11 @@ const ManageItem = (props: ItemProps) => {
 														type='text'
 														placeholder='margin'
 														disabled={props.isViewMode}
-														onChange={
-															(e) => {
-																setValue(`items.${itemIndex}.unit_price`, parseFloat((formData.items[itemIndex].unit_cost * (100+parseFloat(e.target.value)) / 100).toFixed(2)));
-																setValue(`items.${itemIndex}.total_price`, parseFloat((formData.items[itemIndex].quantity * formData.items[itemIndex].unit_price).toFixed(2)));	}
-															}
+														// onChange={
+														// 	(e) => {
+														// 		setValue(`items.${itemIndex}.unit_price`, parseFloat((formData.items[itemIndex].unit_cost * (100+parseFloat(e.target.value)) / 100).toFixed(2)));
+														// 		setValue(`items.${itemIndex}.total_price`, parseFloat((formData.items[itemIndex].quantity * formData.items[itemIndex].unit_price).toFixed(2)));	}
+														// 	}
 													/>
 													<div className='invalid-feedback'>
 														{errors.items?.[itemIndex]?.margin?.message}
@@ -350,18 +350,18 @@ const ManageItem = (props: ItemProps) => {
 												</FormGroup>
 											</div>
 											<div className='col-4'>
-												<FormGroup id='margin' label='Margin Percentage' isFloating>
+												<FormGroup id='margin_percentage' label='Margin Percentage' isFloating>
 													<input
-														id='margin'
+														id='margin_percentage'
 														className={
 															'form-control ' +
-															(errors.items?.[itemIndex]?.margin
+															(errors.items?.[itemIndex]?.margin_percentage
 																? 'is-invalid'
 																: '')
 														}
-														{...register(`items.${itemIndex}.margin`)}
+														{...register(`items.${itemIndex}.margin_percentage`)}
 														type='text'
-														placeholder='margin'
+														placeholder='margin_percentage'
 														disabled={props.isViewMode}
 														onChange={
 															(e) => {
@@ -370,7 +370,7 @@ const ManageItem = (props: ItemProps) => {
 															}
 													/>
 													<div className='invalid-feedback'>
-														{errors.items?.[itemIndex]?.margin?.message}
+														{errors.items?.[itemIndex]?.margin_percentage?.message}
 													</div>
 												</FormGroup>
 											</div>
