@@ -125,7 +125,7 @@ export const Quotation = (props: QuotationProps) => {
 	};
 
 	const postCreateQuotation = async (payload: any) => {
-		axios.post(`http://127.0.0.1:5000/quotation/`, payload, config).then((response) => {
+		axios.post(import.meta.env.VITE_BASE_URL + `/quotation/`, payload, config).then((response) => {
 			//console.log(response.data);
 			showSuccessNotification();
 			goToViewQuotationListPage();
@@ -135,7 +135,7 @@ export const Quotation = (props: QuotationProps) => {
 	const postUpdateQuotation = async (quotation_id: string, payload: any) => {
 		axios
 			.put(
-				`http://127.0.0.1:5000/quotation/${quotation_id}/${isCreateVariation}`,
+				import.meta.env.VITE_BASE_URL + `/quotation/${quotation_id}/${isCreateVariation}`,
 				payload,
 				config,
 			)
@@ -654,7 +654,6 @@ export const Quotation = (props: QuotationProps) => {
 									quotation_rev_id={props.quotation_rev_id}
 									isViewMode={isViewMode}
 								/>
-								<span>attachment</span>
 							</div>
 							<div hidden={activeTab != 'Revisions'}>
 								<RevisionsView

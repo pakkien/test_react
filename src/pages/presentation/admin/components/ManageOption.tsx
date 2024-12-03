@@ -100,7 +100,7 @@ const ManageOption = () => {
 			headers: { Authorization: `${localStorage.getItem('bts_token')}` },
 		};
 
-		axios.get('http://127.0.0.1:5000/option/', config).then((response) => {
+		axios.get(import.meta.env.VITE_BASE_URL + '/option/', config).then((response) => {
 			setOptionData(response.data.options);
 			setTableData(response.data.options);
 		});
@@ -195,7 +195,7 @@ const ManageOption = () => {
 		};
 
 		axios
-			.delete(`http://127.0.0.1:5000/option/${id}`, config)
+			.delete(import.meta.env.VITE_BASE_URL + `/option/${id}`, config)
 			.then((response) => {
 				showNotification(
 					<span className='d-flex align-items-center'>
@@ -225,7 +225,7 @@ const ManageOption = () => {
 		};
 
 		axios
-			.post(`http://127.0.0.1:5000/option/`, payload, config)
+			.post(import.meta.env.VITE_BASE_URL + `/option/`, payload, config)
 			.then((response) => {
 				showNotification(
 					<span className='d-flex align-items-center'>
@@ -308,7 +308,7 @@ const ManageOption = () => {
 		};
 
 		axios
-			.put(`http://127.0.0.1:5000/option/${option_id}`, payload, config)
+			.put(import.meta.env.VITE_BASE_URL + `/option/${option_id}`, payload, config)
 			.then((response) => {
 				showNotification(
 					<span className='d-flex align-items-center'>

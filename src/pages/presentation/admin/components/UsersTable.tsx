@@ -71,7 +71,7 @@ const UsersTable = () => {
 			headers: { Authorization: `${localStorage.getItem('bts_token')}` },
 		};
 
-		axios.get('http://127.0.0.1:5000/users', config).then((response) => {
+		axios.get(import.meta.env.VITE_BASE_URL + '/users', config).then((response) => {
 			setUserData(response.data.data);
 			setTableData(response.data.data);
 			//console.log(response.data.options);
@@ -89,7 +89,7 @@ const UsersTable = () => {
 		};
 
 		axios
-			.delete(`http://127.0.0.1:5000/users/${id}`, config)
+			.delete(import.meta.env.VITE_BASE_URL + `/users/${id}`, config)
 			.then((response) => {
 				showNotification(
 					<span className='d-flex align-items-center'>

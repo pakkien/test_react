@@ -255,7 +255,7 @@ const ViewQuotation = () => {
 			headers: { Authorization: `${localStorage.getItem('bts_token')}` },
 		};
 		axios
-			.get(`http://127.0.0.1:5000/quotation/revision/${quotation_rev_id}`, config)
+			.get(import.meta.env.VITE_BASE_URL + `/quotation/revision/${quotation_rev_id}`, config)
 			.then((response) => {
 				//console.log(response.data);
 				setQuotationRevData(response.data);

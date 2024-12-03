@@ -45,7 +45,7 @@ export const schemaQuotation = z.object({
 	site_location: z.string().min(3),
 	building: z.string().min(3),
 	pic: z.string().min(3),
-	pic_email: z.string().min(3),
+	pic_email: z.string().email(),
 	pic_contact_number: z.string().min(3),
 	project_reference: z.string(),
 	status: z.string().min(3),

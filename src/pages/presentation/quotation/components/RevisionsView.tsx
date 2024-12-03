@@ -7,6 +7,7 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import timezone from 'dayjs/plugin/timezone'
 import { useNavigate } from 'react-router-dom';
 
+
 dayjs.extend(utc);
 dayjs.extend(localizedFormat);
 dayjs.extend(customParseFormat);
@@ -27,7 +28,7 @@ const RevisionsView = (props: RevisionViewProps) => {
             params: {variance: `${variance}`}
 		};
 		axios
-			.get(`http://127.0.0.1:5000/quotation/revisions/${quotation_id}`, config)
+			.get(import.meta.env.VITE_BASE_URL + `/quotation/revisions/${quotation_id}`, config)
 			.then((response) => {
 				//console.log(response.data.data);
                 setRevisionData(response.data.data);
@@ -55,9 +56,10 @@ const RevisionsView = (props: RevisionViewProps) => {
         <>
 
         {revisionData.map((item: any) => {
-            return(<><a 
-                onClick={() => goToViewQuotationPage(item.quotation_revision_id)}
-                href='#'
+            return(<><a
+                //onClick={() => goToViewQuotationPage(item.quotation_revision_id)}
+                href={'/quotation/view/' + item.quotation_revision_id}
+                target='_blank'
                 >Revision {item.variance}.{item.revision}</a> - Created at: {convertLocalTime(item.created_at)}<br/></>);
         })}
         </>

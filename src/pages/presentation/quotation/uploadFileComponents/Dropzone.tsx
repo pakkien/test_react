@@ -52,7 +52,7 @@ const Dropzone = (props: DropZoneProps) => {
 			headers: { Authorization: `${localStorage.getItem('bts_token')}` },
 		};
 		axios
-			.get(`http://127.0.0.1:5000/quotation/${quotation_rev_id}/attachments`, config)
+			.get(import.meta.env.VITE_BASE_URL + `/quotation/${quotation_rev_id}/attachments`, config)
 			.then((response) => {
 				//console.log(response.data);
 				setPrevFiles(response.data.attachments);
@@ -68,7 +68,7 @@ const Dropzone = (props: DropZoneProps) => {
 
 	const handleDownload = async (attachment_id: string, file_name: string) => {
 		axios
-		.get(`http://127.0.0.1:5000/quotation/attachment/${attachment_id}`, {responseType: 'blob', headers: { Authorization: `${localStorage.getItem('bts_token')}` }})
+		.get(import.meta.env.VITE_BASE_URL + `/quotation/attachment/${attachment_id}`, {responseType: 'blob', headers: { Authorization: `${localStorage.getItem('bts_token')}` }})
 		.then((response) => {
 			//console.log(response.data);
 			fileDownload(response.data, file_name);
@@ -118,7 +118,7 @@ const Dropzone = (props: DropZoneProps) => {
 		};
 
 		axios
-			.post('http://127.0.0.1:5000/quotation/attachment', data, config)
+			.post(import.meta.env.VITE_BASE_URL + '/quotation/attachment', data, config)
 			.then(function (res) {
 				const attachment_id = res.data.attachment_id;
 

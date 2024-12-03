@@ -55,7 +55,7 @@ const ManageUser = () => {
 			headers: { Authorization: `${localStorage.getItem('bts_token')}` },
 		};
 
-		axios.get(`http://127.0.0.1:5000/users/${user_id}`, config).then((response) => {
+		axios.get(import.meta.env.VITE_BASE_URL + `/users/${user_id}`, config).then((response) => {
 			setUserData(response.data.data);
 		});
 	};
@@ -121,7 +121,7 @@ const ManageUser = () => {
 		};
 
 		axios
-			.put(`http://127.0.0.1:5000/users/${user_id}`, payload, config)
+			.put(import.meta.env.VITE_BASE_URL + `/users/${user_id}`, payload, config)
 			.then((response) => {
 				showNotification(
 					<span className='d-flex align-items-center'>
