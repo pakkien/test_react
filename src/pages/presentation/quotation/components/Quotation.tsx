@@ -49,7 +49,7 @@ type QuotationProps = {
 	status?: string;
 	revision?: number;
 	variance?: number;
-	create_new_variance?: boolean
+	create_new_variance?: boolean;
 };
 
 export const Quotation = (props: QuotationProps) => {
@@ -67,7 +67,9 @@ export const Quotation = (props: QuotationProps) => {
 	//console.log('errors', errors)
 
 	//save as new variation
-	const [isCreateVariation, setIsCreateVariation] = useState(props.create_new_variance? props.create_new_variance:false);
+	const [isCreateVariation, setIsCreateVariation] = useState(
+		props.create_new_variance ? props.create_new_variance : false,
+	);
 
 	const isViewMode = props.mode.toLowerCase() == 'view' ? true : false;
 	const title =
@@ -113,7 +115,9 @@ export const Quotation = (props: QuotationProps) => {
 	};
 
 	const goToEditQuotationPage = (create_new_variance: boolean) => {
-		navigate(`../quotation/edit/${props.quotation_rev_id}`, {state:{create_new_variance: create_new_variance}});
+		navigate(`../quotation/edit/${props.quotation_rev_id}`, {
+			state: { create_new_variance: create_new_variance },
+		});
 	};
 
 	const config = {
@@ -244,29 +248,35 @@ export const Quotation = (props: QuotationProps) => {
 				<SubHeaderRight>
 					{props.mode == 'edit' && (
 						<div>
-						Save As: &nbsp;&nbsp;
-						<Button
-							color={isCreateVariation ? 'danger' : 'info'}
-							icon='PublishedWithChanges'
-							onClick={() => setIsCreateVariation(isCreateVariation ? false : true)}
-							isLight={isCreateVariation ? false : true}>
-							{isCreateVariation ? 'New Variation' : 'New Revision'}
-						</Button>
-					</div>
+							{isCreateVariation ? (
+								<div
+									onClick={() =>
+										setIsCreateVariation(isCreateVariation ? false : true)
+									}
+									>
+									<span className='text-muted'>Cancel save as new variation</span>
+									
+								</div>
+							) : (
+								<Button
+									color='info'
+									onClick={() =>
+										setIsCreateVariation(isCreateVariation ? false : true)
+									}
+									isLight={isCreateVariation ? true : false}>
+									Create New Variation
+								</Button>
+							)}
+						</div>
 					)}
-					
+
 					{props.mode == 'view' && (
 						<div>
-						<Button
-							color='info'
-							onClick={() => goToEditQuotationPage(true)}
-							
-							>
-							Create New Variation
-						</Button>
-					</div>
+							<Button color='info' onClick={() => goToEditQuotationPage(true)}>
+								Create New Variation
+							</Button>
+						</div>
 					)}
-					
 				</SubHeaderRight>
 			</SubHeader>
 			<Page container='fluid'>
@@ -556,91 +566,84 @@ export const Quotation = (props: QuotationProps) => {
 							</Nav>
 							<hr />
 							<div hidden={activeTab != 'Items'}>
-							<>
-										<div className='row gt-4'>
-											<div className='col-md-6 d-flex'>
-												<div className='row'>
-													<div className='col-md-12'>
-														<span>
-															Quotation No: {props.quotation_no}{' '}
-															&nbsp;&nbsp;
-														</span>
-														<Badge
-															className='statusBadge'
-															color={status.color}>
-															{status.name}
-														</Badge>
-														&nbsp;&nbsp;&nbsp;
-														<br />
-														<span>
-															Revision: {props.variance}.
-															{props.revision}
-														</span>
-													</div>
+								<>
+									<div className='row gt-4'>
+										<div className='col-md-6 d-flex'>
+											<div className='row'>
+												<div className='col-md-12'>
+													<span>
+														Quotation No: {props.quotation_no}{' '}
+														&nbsp;&nbsp;
+													</span>
+													<Badge
+														className='statusBadge'
+														color={status.color}>
+														{status.name}
+													</Badge>
+													&nbsp;&nbsp;&nbsp;
+													<br />
+													<span>
+														Revision: {props.variance}.{props.revision}
+													</span>
 												</div>
-												<Button
-													color='info'
-													isLight
-													icon='Download'
-													hidden={!isViewMode}
-													onClick={() => navigate(-1)}>
-													PDF
-												</Button>
 											</div>
-
-											<div className='col-md-6 d-flex justify-content-end'>
-												<Dropdown>
-													<DropdownToggle hasIcon={false}>
-														<Button
-															isLink
-															color={status.color}
-															icon='Circle'
-															className='text-nowrap order-0 float-end'
-															isDisable={isViewMode}>
-															{status.name}
-														</Button>
-													</DropdownToggle>
-													<DropdownMenu>
-														{Object.keys(QUOTATION_STATUS).map(
-															(key) => (
-																<DropdownItem
-																	key={key}
-																	onClick={() =>
-																		setStatus(
-																			QUOTATION_STATUS[key],
-																		)
-																	}>
-																	<div>
-																		<Icon
-																			icon='Circle'
-																			color={
-																				QUOTATION_STATUS[
-																					key
-																				].color
-																			}
-																		/>
-																		{QUOTATION_STATUS[key].name}
-																	</div>
-																</DropdownItem>
-															),
-														)}
-													</DropdownMenu>
-												</Dropdown>
-
-												<div className='order-2 float-end'>&nbsp;</div>
-												<Button
-													color='info'
-													//icon='Edit'
-													hidden={!isViewMode}
-													className='order-2 float-end'
-													onClick={() => goToEditQuotationPage(false)}
-													//isLight
-													>
-													Create Revision
-												</Button>
-											</div>
+											<Button
+												color='info'
+												isLight
+												icon='Download'
+												hidden={!isViewMode}
+												onClick={() => navigate(-1)}>
+												PDF
+											</Button>
 										</div>
-									</>
+
+										<div className='col-md-6 d-flex justify-content-end'>
+											<Dropdown>
+												<DropdownToggle hasIcon={false}>
+													<Button
+														isLink
+														color={status.color}
+														icon='Circle'
+														className='text-nowrap order-0 float-end'
+														isDisable={isViewMode}>
+														{status.name}
+													</Button>
+												</DropdownToggle>
+												<DropdownMenu>
+													{Object.keys(QUOTATION_STATUS).map((key) => (
+														<DropdownItem
+															key={key}
+															onClick={() =>
+																setStatus(QUOTATION_STATUS[key])
+															}>
+															<div>
+																<Icon
+																	icon='Circle'
+																	color={
+																		QUOTATION_STATUS[key].color
+																	}
+																/>
+																{QUOTATION_STATUS[key].name}
+															</div>
+														</DropdownItem>
+													))}
+												</DropdownMenu>
+											</Dropdown>
+
+											<div className='order-2 float-end'>&nbsp;</div>
+											<Button
+												color='info'
+												//icon='Edit'
+												hidden={!isViewMode}
+												className='order-2 float-end'
+												onClick={() => goToEditQuotationPage(false)}
+												//isLight
+											>
+												Create Revision
+											</Button>
+										</div>
+									</div>
+								</>
 								<br />
 								<ManageItem isViewMode={isViewMode} />
 							</div>
@@ -891,19 +894,24 @@ export const Quotation = (props: QuotationProps) => {
 									{isSubmitting ? (
 										<Spinner isSmall inButton='onlyIcon' />
 									) : (
-										'Draft'
+										<span>Draft</span>
 									)}
 								</Button>
 								<Button
 									type='submit'
 									color='success'
-									icon='Save'
+									icon={isCreateVariation ? 'null' : 'Save'}
 									hidden={isViewMode}
 									isDisable={isSubmitting}>
 									{isSubmitting ? (
 										<Spinner isSmall inButton='onlyIcon' />
+									) : //<span>Save</span>
+									isCreateVariation ? (
+										<span>
+											Save <small className='text-decoration-underline'>(as New Variation)</small>
+										</span>
 									) : (
-										'Save'
+										<span>Save</span>
 									)}
 								</Button>
 							</CardFooterRight>
