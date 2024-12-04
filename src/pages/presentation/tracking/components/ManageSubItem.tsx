@@ -22,7 +22,7 @@ const ManageSubItem = (props: SubItemProps) => {
 			{props.sub_items.map((sub_item, subItemIndex) => {
 				return (
 					<>
-						<div className='col-xl-12'>
+						<div className='col-xl-12' key={sub_item.sub_item_id}>
 							<Accordion
 								id='SubItemAccordion'
 								color='dark'

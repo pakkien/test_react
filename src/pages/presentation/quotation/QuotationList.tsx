@@ -371,7 +371,7 @@ const QuotationList = () => {
 													</td>
 													<td>{item.quotation_no}</td>
 													<td>{item.end_user}</td>
-													<td>{item.variance + '.' + item.revision}</td>
+													<td>{item.revision}</td>
 													<td>{item.quotation_amount.toFixed(2)}</td>
 													<td>{item.cost.toFixed(2)}</td>
 													<td>{item.margin.toFixed(2)}</td>

@@ -166,6 +166,7 @@ const ManageItem = (props: ItemProps) => {
 												<div className='col-md-12'>
                                                     <ManageSubItem itemIndex={itemIndex} sub_items={item.sub_items}/>
                                                 </div>
+												<div className='col-md-12'></div>
 											</div>
 										</CardBody>
 									</Card>

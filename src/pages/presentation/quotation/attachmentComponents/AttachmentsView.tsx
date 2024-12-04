@@ -60,20 +60,14 @@ const AttachmentsView = (props: AttachmentsViewProps) => {
 			)
 			.then((response) => {
 				if (response.data.attachments) {
-					// let updated = revisionData;
-					// updated.forEach((item: any) => {
-					// 	if (item.quotation_revision_id == quotation_rev_id) {
-					// 		item.attachment_list = response.data.attachments;
-					// 	}
-					// });
-					// setRevisionData(updated);
+
 					const item = Object.assign({
 						data: revisionData.filter(x => x.quotation_revision_id == quotation_rev_id)[0],
 						attachment_list: response.data.attachments
 					});
 					displayData?.push(item);
-					//console.log(item);
 				}
+				
 			});
 	};
 
@@ -97,7 +91,7 @@ const AttachmentsView = (props: AttachmentsViewProps) => {
 							//onClick={() => goToViewQuotationPage(item.quotation_revision_id)}
 							href={'/quotation/view/' + item.data.quotation_revision_id}
 							target='_blank'>
-							Revision {item.data.variance}.{item.data.revision}
+							Revision {item.data.revision}
 						</a>
 						<br />
 

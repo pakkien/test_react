@@ -242,7 +242,7 @@ export const Quotation = (props: QuotationProps) => {
 								</div>
 								<div className='col-md-12'>
 									<span>
-										Revision: {props.variance}.{props.revision}
+										Revision: {props.revision}
 									</span>
 								</div>
 							</div>
@@ -589,7 +589,7 @@ export const Quotation = (props: QuotationProps) => {
 													&nbsp;&nbsp;&nbsp;
 													<br />
 													<span>
-														Revision: {props.variance}.{props.revision}
+														Revision: {props.revision}
 													</span>
 												</div>
 											</div>

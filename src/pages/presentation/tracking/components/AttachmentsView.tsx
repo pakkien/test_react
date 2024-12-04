@@ -43,6 +43,8 @@ const AttachmentsView = (props: AttachmentsViewProps) => {
 	};
 
 	useEffect(() => {
+		//setRevisionData([]);
+		//setDisplayData([]);
 		fetchRevisions(props.quotation_id, props.variance);
 		revisionData.map((item) => fetchAttachments(item.quotation_revision_id));
 		//console.log(revisionData);
@@ -97,7 +99,7 @@ const AttachmentsView = (props: AttachmentsViewProps) => {
 							//onClick={() => goToViewQuotationPage(item.quotation_revision_id)}
 							href={'/quotation/view/' + item.data.quotation_revision_id}
 							target='_blank'>
-							Revision {item.data.variance}.{item.data.revision}
+							Revision {item.data.revision}
 						</a>
 						<br />
 
