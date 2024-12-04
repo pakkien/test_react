@@ -28,7 +28,7 @@ import Spinner from '../../../../components/bootstrap/Spinner';
 import showNotification from '../../../../components/extras/showNotification';
 import Icon from '../../../../components/icon/Icon';
 import Input from '../../../../components/bootstrap/forms/Input';
-import Dropzone from '../uploadFileComponents/Dropzone';
+import Dropzone from '../attachmentComponents/Dropzone';
 import axios from 'axios';
 import Badge from '../../../../components/bootstrap/Badge';
 import Select from 'react-select';
@@ -40,6 +40,7 @@ import Dropdown, {
 } from '../../../../components/bootstrap/Dropdown';
 import QUOTATION_STATUS from '../../../../common/data/enumQuotationStatus';
 import RevisionsView from './RevisionsView';
+import AttachmentsView from '../attachmentComponents/AttachmentsView';
 
 type QuotationProps = {
 	mode: 'create' | 'view' | 'edit';
@@ -66,6 +67,7 @@ export const Quotation = (props: QuotationProps) => {
 	//console.log('formData', formData)
 	//console.log('errors', errors)
 
+
 	//save as new variation
 	const [isCreateVariation, setIsCreateVariation] = useState(
 		props.create_new_variance ? props.create_new_variance : false,
@@ -74,6 +76,21 @@ export const Quotation = (props: QuotationProps) => {
 	const isViewMode = props.mode.toLowerCase() == 'view' ? true : false;
 	const title =
 		props.mode.charAt(0).toUpperCase() + props.mode.slice(1).toLowerCase() + ' Quotation ';
+		
+
+	//hide status change button when status initially = awarded, completed, cancelled
+	const[allowStatusUpdate, setAllowStatusUpdate] = useState((props.status?.toLowerCase() == 'awarded' ||
+	props.status?.toLowerCase() == 'completed' || props.status?.toLowerCase() == 'rejected')? false:true);
+
+	useEffect(() => {
+		if(isCreateVariation){
+			setAllowStatusUpdate(true);
+		}
+
+	}, [isCreateVariation]);
+
+
+
 
 	//status
 	const key = props.status?.toUpperCase() as keyof typeof QUOTATION_STATUS;
@@ -250,8 +267,10 @@ export const Quotation = (props: QuotationProps) => {
 						<div>
 							{isCreateVariation ? (
 								<div
-									onClick={() =>
-										setIsCreateVariation(isCreateVariation ? false : true)
+									onClick={() =>{
+										setIsCreateVariation(isCreateVariation ? false : true);
+										//setAllowStatusUpdate(true);
+									}
 									}
 									>
 									<span className='text-muted'>Cancel save as new variation</span>
@@ -260,8 +279,10 @@ export const Quotation = (props: QuotationProps) => {
 							) : (
 								<Button
 									color='info'
-									onClick={() =>
-										setIsCreateVariation(isCreateVariation ? false : true)
+									onClick={() =>{
+										setIsCreateVariation(isCreateVariation ? false : true);
+										//setAllowStatusUpdate(true);
+									}
 									}
 									isLight={isCreateVariation ? true : false}>
 									Create New Variation
@@ -605,7 +626,9 @@ export const Quotation = (props: QuotationProps) => {
 														color={status.color}
 														icon='Circle'
 														className='text-nowrap order-0 float-end'
-														isDisable={isViewMode}>
+														isDisable={isViewMode}
+														hidden={!allowStatusUpdate}
+														>
 														{status.name}
 													</Button>
 												</DropdownToggle>
@@ -648,12 +671,15 @@ export const Quotation = (props: QuotationProps) => {
 								<ManageItem isViewMode={isViewMode} />
 							</div>
 							<div hidden={activeTab != 'Attachments'}>
+								{isViewMode?
+								<AttachmentsView quotation_id={props.quotation_id} variance={props.variance}/>:
 								<Dropzone
 									setAttachmentIds={updateAttachmentID}
 									className={''}
 									quotation_rev_id={props.quotation_rev_id}
-									isViewMode={isViewMode}
-								/>
+									isViewMode={isViewMode}/>
+								}
+								
 							</div>
 							<div hidden={activeTab != 'Revisions'}>
 								<RevisionsView
@@ -663,13 +689,6 @@ export const Quotation = (props: QuotationProps) => {
 							</div>
 						</CardBody>
 					</Card>
-
-					{/* <Dropzone
-								setAttachmentIds={updateAttachmentID}
-								className={''}
-								quotation_rev_id={props.quotation_rev_id}
-								isViewMode={isViewMode}
-							/> */}
 
 					{/* Options */}
 					<Card>
@@ -885,7 +904,7 @@ export const Quotation = (props: QuotationProps) => {
 									color='dark'
 									icon='Edit'
 									type='submit'
-									hidden={isViewMode}
+									hidden={isViewMode || !allowStatusUpdate}
 									isDisable={isSubmitting}
 									onClick={() => {
 										setValue('status', 'Draft');

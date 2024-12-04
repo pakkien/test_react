@@ -234,8 +234,26 @@ const QuotationList = () => {
 									<thead>
 										<tr>
 											<th>No.</th>
-											<th>Prepared By</th>
-											<th>Client</th>
+											<th
+												onClick={() => requestSort('created_by')}
+												className='cursor-pointer text-decoration-underline'>
+												Prepared By
+												<Icon
+													size='lg'
+													className={getClassNamesFor('created_by')}
+													icon='FilterList'
+												/>
+											</th>
+											<th
+												onClick={() => requestSort('client')}
+												className='cursor-pointer text-decoration-underline'>
+												Client
+												<Icon
+													size='lg'
+													className={getClassNamesFor('client')}
+													icon='FilterList'
+												/>
+											</th>
 											<th
 												onClick={() => requestSort('quotation_date')}
 												className='cursor-pointer text-decoration-underline'>
@@ -246,16 +264,96 @@ const QuotationList = () => {
 													icon='FilterList'
 												/>
 											</th>
-											<th>Quotation No.</th>
-											<th>End User</th>
-											<th>Revision</th>
-											<th>Quotation Amount</th>
-											<th>Cost</th>
-											<th>Margin</th>
-											{/* <th>%</th> */}
-											<th>Status</th>
-											<th>Site Location</th>
-											<th>Building</th>
+											<th
+												onClick={() => requestSort('quotation_no')}
+												className='cursor-pointer text-decoration-underline'>
+												Quotation No.
+												<Icon
+													size='lg'
+													className={getClassNamesFor('quotation_no')}
+													icon='FilterList'
+												/>
+											</th>
+											<th
+												onClick={() => requestSort('end_user')}
+												className='cursor-pointer text-decoration-underline'>
+												End User
+												<Icon
+													size='lg'
+													className={getClassNamesFor('end_user')}
+													icon='FilterList'
+												/>
+											</th>
+											<th
+												onClick={() => requestSort('revision')}
+												className='cursor-pointer text-decoration-underline'>
+												Revision
+												<Icon
+													size='lg'
+													className={getClassNamesFor('revision')}
+													icon='FilterList'
+												/>
+											</th>
+											<th
+												onClick={() => requestSort('quotation_amount')}
+												className='cursor-pointer text-decoration-underline'>
+												Quotation Amount
+												<Icon
+													size='lg'
+													className={getClassNamesFor('quotation_amount')}
+													icon='FilterList'
+												/>
+											</th>
+											<th
+												onClick={() => requestSort('cost')}
+												className='cursor-pointer text-decoration-underline'>
+												Cost
+												<Icon
+													size='lg'
+													className={getClassNamesFor('cost')}
+													icon='FilterList'
+												/>
+											</th>
+											<th
+												onClick={() => requestSort('margin')}
+												className='cursor-pointer text-decoration-underline'>
+												Margin
+												<Icon
+													size='lg'
+													className={getClassNamesFor('margin')}
+													icon='FilterList'
+												/>
+											</th>
+											<th
+												onClick={() => requestSort('status')}
+												className='cursor-pointer text-decoration-underline'>
+												Status
+												<Icon
+													size='lg'
+													className={getClassNamesFor('status')}
+													icon='FilterList'
+												/>
+											</th>
+											<th
+												onClick={() => requestSort('site_location')}
+												className='cursor-pointer text-decoration-underline'>
+												Site Location
+												<Icon
+													size='lg'
+													className={getClassNamesFor('site_location')}
+													icon='FilterList'
+												/>
+											</th>
+											<th
+												onClick={() => requestSort('building')}
+												className='cursor-pointer text-decoration-underline'>
+												Building
+												<Icon
+													size='lg'
+													className={getClassNamesFor('building')}
+													icon='FilterList'
+												/>
+											</th>
 											<th>Action</th>
 										</tr>
 									</thead>
