@@ -1,1 +1,0 @@
-import{a0 as e}from"./index-CPd05Nh9.js";const o={NONE:{name:"Update Status",color:e.LIGHT.name},DRAFT:{name:"Draft",color:e.PRIMARY.name},SUBMITTED:{name:"Submitted",color:e.INFO.name},AWARDED:{name:"Awarded",color:e.SUCCESS.name},COMPLETED:{name:"Completed",color:e.DANGER.name},REJECTED:{name:"Rejected",color:e.DARK.name}};export{o as Q};
