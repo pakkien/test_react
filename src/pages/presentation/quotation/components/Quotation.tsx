@@ -79,17 +79,16 @@ export const Quotation = (props: QuotationProps) => {
 		
 
 	//hide status change button when status initially = awarded, completed, cancelled
-	const[allowStatusUpdate, setAllowStatusUpdate] = useState((props.status?.toLowerCase() == 'awarded' ||
-	props.status?.toLowerCase() == 'completed' || props.status?.toLowerCase() == 'rejected')? false:true);
+	const[allowStatusUpdate, setAllowStatusUpdate] = useState((props.status?.toLowerCase() == QUOTATION_STATUS.AWARDED.name.toLowerCase()  ||
+	props.status?.toLowerCase() == QUOTATION_STATUS.COMPLETED.name.toLowerCase()  || 
+	props.status?.toLowerCase() == QUOTATION_STATUS.REJECTED.name.toLowerCase() )? false:true);
+
 
 	useEffect(() => {
 		if(isCreateVariation){
 			setAllowStatusUpdate(true);
 		}
-
 	}, [isCreateVariation]);
-
-
 
 
 	//status
@@ -110,10 +109,6 @@ export const Quotation = (props: QuotationProps) => {
 	const updateAttachmentID = (ids: string[]) => {
 		setAttachmentIds(ids);
 	};
-
-	function timeout(delay: number) {
-		return new Promise((res) => setTimeout(res, delay));
-	}
 
 	const navigate = useNavigate();
 
@@ -170,12 +165,6 @@ export const Quotation = (props: QuotationProps) => {
 		'60 Working days from the date of payment received',
 		'90 Working days from the date of payment received',
 	];
-	// const leadTimeOptions = [
-	// 	'',
-	// 	'30',
-	// 	'60',
-	// 	'90',
-	// ];
 
 	const paymentTermsOptions = [
 		'',
@@ -191,14 +180,12 @@ export const Quotation = (props: QuotationProps) => {
 		'90 Days from the date of this quotation',
 	];
 
-	const statusOptions = ['', 'Draft', 'Submitted', 'Awarded', 'Completed', 'Rejected'];
-
 	// useEffect(() => {
 	// 	//console.log(formData.status);
 	// 	setStatus(formData.status);
 	// }, [formData.status]);
 
-	const [activeTab, setActiveTab] = useState('Items');
+	const [activeTab, setActiveTab] = useState('Quotation');
 
 	//auto-calculation total and gtotal
 	useEffect(() => {
@@ -216,8 +203,8 @@ export const Quotation = (props: QuotationProps) => {
 
 		// console.log("total: "+ total);
 		// console.log("gtotal: "+ gtotal);
-		setValue('total', total);
-		setValue('g_total', gtotal);
+		setValue('total_cost', total);
+		setValue('grand_total', gtotal);
 	}, [
 		JSON.stringify(
 			formData.items.map((item) => {
@@ -266,22 +253,20 @@ export const Quotation = (props: QuotationProps) => {
 					{props.mode == 'edit' && (
 						<div>
 							{isCreateVariation ? (
-								<div
-									onClick={() =>{
-										setIsCreateVariation(isCreateVariation ? false : true);
-										//setAllowStatusUpdate(true);
-									}
-									}
-									>
-									<span className='text-muted'>Cancel save as new variation</span>
-									
-								</div>
+								// <div
+								// 	onClick={() =>{
+								// 		setIsCreateVariation(isCreateVariation ? false : true);
+								// 	}
+								// 	}
+								// 	>
+								// 	<span className='text-muted'>Cancel save as new variation</span>								
+								// </div>
+								<></>
 							) : (
 								<Button
 									color='info'
 									onClick={() =>{
 										setIsCreateVariation(isCreateVariation ? false : true);
-										//setAllowStatusUpdate(true);
 									}
 									}
 									isLight={isCreateVariation ? true : false}>
@@ -570,8 +555,8 @@ export const Quotation = (props: QuotationProps) => {
 						<CardBody>
 							<Nav>
 								<NavItem
-									onClick={() => setActiveTab('Items')}
-									isActive={activeTab == 'Items' ? true : false}>
+									onClick={() => setActiveTab('Quotation')}
+									isActive={activeTab == 'Quotation' ? true : false}>
 									<Button>Quotation</Button>
 								</NavItem>
 								<NavItem
@@ -586,7 +571,7 @@ export const Quotation = (props: QuotationProps) => {
 								</NavItem>
 							</Nav>
 							<hr />
-							<div hidden={activeTab != 'Items'}>
+							<div hidden={activeTab != 'Quotation'}>
 								<>
 									<div className='row gt-4'>
 										<div className='col-md-6 d-flex'>
@@ -691,7 +676,7 @@ export const Quotation = (props: QuotationProps) => {
 					</Card>
 
 					{/* Options */}
-					<Card>
+					<Card hidden={activeTab != 'Quotation'}>
 						<CardHeader>
 							<CardLabel>
 								<CardTitle tag='div' className='h3'>
@@ -788,7 +773,7 @@ export const Quotation = (props: QuotationProps) => {
 					</Card>
 
 					{/* Summary */}
-					<Card>
+					<Card hidden={activeTab != 'Quotation'}>
 						<CardHeader>
 							<CardLabel>
 								<CardTitle tag='div' className='h3'>
@@ -827,21 +812,21 @@ export const Quotation = (props: QuotationProps) => {
 									</FormGroup>
 								</div>
 								<div className='col-md-4'>
-									<FormGroup id='total' label='Total (RM)' isFloating>
+									<FormGroup id='total_cost' label='Total (RM)' isFloating>
 										<input
-											id='total'
+											id='total_cost'
 											className={
-												'form-control ' + (errors.total ? 'is-invalid' : '')
+												'form-control ' + (errors.total_cost ? 'is-invalid' : '')
 											}
-											{...register('total')}
+											{...register('total_cost')}
 											type='text'
-											placeholder='total'
+											placeholder='total_cost'
 											disabled={isViewMode}
 										/>
 										<>
-											{errors.total ? (
+											{errors.total_cost ? (
 												<div className='invalid-feedback'>
-													{errors.total.message}
+													{errors.total_cost.message}
 												</div>
 											) : (
 												''
@@ -873,22 +858,22 @@ export const Quotation = (props: QuotationProps) => {
 									</FormGroup>
 								</div>
 								<div className='col-md-4'>
-									<FormGroup id='g_total' label='G/Total (RM)' isFloating>
+									<FormGroup id='grand_total' label='G/Total (RM)' isFloating>
 										<input
-											id='g_total'
+											id='grand_total'
 											className={
 												'form-control ' +
-												(errors.g_total ? 'is-invalid' : '')
+												(errors.grand_total ? 'is-invalid' : '')
 											}
-											{...register('g_total')}
+											{...register('grand_total')}
 											type='text'
-											placeholder='g_total'
+											placeholder='grand_total'
 											disabled={isViewMode}
 										/>
 										<>
-											{errors.g_total ? (
+											{errors.grand_total ? (
 												<div className='invalid-feedback'>
-													{errors.g_total.message}
+													{errors.grand_total.message}
 												</div>
 											) : (
 												''

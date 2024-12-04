@@ -30,21 +30,31 @@ import FormGroup from '../../../components/bootstrap/forms/FormGroup';
 import Alert from '../../../components/bootstrap/Alert';
 import OffCanvas, { OffCanvasBody, OffCanvasHeader, OffCanvasTitle } from '../../../components/bootstrap/OffCanvas';
 import PlaceholderImage from '../../../components/extras/PlaceholderImage';
-import AdditionalInfoForm from './components/AdditionalInfoForm';
+//import AdditionalInfoForm from './components/AdditionalInfoForm';
 import { TModalFullScreen, TModalSize } from '../../../type/modal-type';
 import Modal, { ModalBody, ModalFooter, ModalHeader, ModalTitle } from '../../../components/bootstrap/Modal';
+import axios from 'axios';
+import QUOTATION_STATUS from '../../../common/data/enumQuotationStatus';
 
-function ReturnStateColor(state: string) {
-	switch (state.toLowerCase().trim()) {
-		case 'inprogress':
-			return 'danger';
-		case 'closed':
-			return 'dark';
-		case 'awarded':
-			return 'success';
-		default:
-			return 'primary';
+import utc from 'dayjs/plugin/utc';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+import timezone from 'dayjs/plugin/timezone'
+
+dayjs.extend(utc);
+dayjs.extend(localizedFormat);
+dayjs.extend(customParseFormat);
+dayjs.extend(timezone);
+
+
+
+function ReturnBatchColor(state: string) {
+	const key = state?.toUpperCase() as keyof typeof QUOTATION_STATUS;
+	var enum_val = QUOTATION_STATUS[key];
+	if (enum_val == null){
+		enum_val = QUOTATION_STATUS.NONE;
 	}
+	return enum_val.color;
 }
 
 interface IValues {
@@ -55,168 +65,168 @@ interface IValues {
 	image?: string | null;
 }
 
-const trackingListData = [
-	{
-		id: '1',
-		prepared_by: 'Gary',
-		client: 'Tech Group',
-		quotation_date: '2024-04-04T16:00:00.000Z',
-		quotation_no: 'Q-012345',
-		end_user: 'Tech Group',
-		revision: 0,
-		quotation_amount: 9800,
-		cost: 6000,
-		margin: 3500,
-		percent: 27,
-		status: 'In Progress',
-		site_location: 'Penang',
-		building: 'Lab 1',
-	},
-	{
-		id: '2',
-		prepared_by: 'Gary',
-		client: 'Tech Group',
-		quotation_date: '2024-04-03T16:00:00.000Z',
-		quotation_no: 'Q-012345',
-		end_user: 'Tech Group',
-		revision: 0,
-		quotation_amount: 9800.0,
-		cost: 6000.0,
-		margin: 3500.0,
-		percent: 27.96,
-		status: 'Closed',
-		site_location: 'Penang',
-		building: 'Lab 1',
-	},
-	{
-		id: '3',
-		prepared_by: 'Gary',
-		client: 'Tech Group',
-		quotation_date: '2024-04-02T16:00:00.000Z',
-		quotation_no: 'Q-012345',
-		end_user: 'Tech Group',
-		revision: 0,
-		quotation_amount: 9800.0,
-		cost: 6000.1,
-		margin: 3500.0,
-		percent: 27.96,
-		status: 'Awarded',
-		site_location: 'Penang',
-		building: 'Lab 1',
-	},
-	{
-		id: '4',
-		prepared_by: 'Gary',
-		client: 'Tech Group',
-		quotation_date: '2024-04-01T16:00:00.000Z',
-		quotation_no: 'Q-012345',
-		end_user: 'Tech Group',
-		revision: 0,
-		quotation_amount: 9800.0,
-		cost: 6000.03,
-		margin: 3500.0,
-		percent: 27.96,
-		status: 'Awarded',
-		site_location: 'Penang',
-		building: 'Lab 1',
-	},
-	{
-		id: '5',
-		prepared_by: 'Gary',
-		client: 'Tech Group',
-		quotation_date: '2023-04-04T16:00:00.000Z',
-		quotation_no: 'Q-012345',
-		end_user: 'Tech Group',
-		revision: 0,
-		quotation_amount: 9800.0,
-		cost: 6000.0,
-		margin: 3500.0,
-		percent: 27.96,
-		status: 'Awarded',
-		site_location: 'Penang',
-		building: 'Lab 1',
-	},
-	{
-		id: '6',
-		prepared_by: 'Gary',
-		client: 'Tech Group',
-		quotation_date: '2025-04-04T16:00:00.000Z',
-		quotation_no: 'Q-012345',
-		end_user: 'Tech Group',
-		revision: 0,
-		quotation_amount: 9800.0,
-		cost: 6000.0,
-		margin: 3500.0,
-		percent: 27.96,
-		status: 'Awarded',
-		site_location: 'Penang',
-		building: 'Lab 1',
-	},
-	{
-		id: '7',
-		prepared_by: 'Gary',
-		client: 'Tech Group',
-		quotation_date: '2022-04-04T16:00:00.000Z',
-		quotation_no: 'Q-012345',
-		end_user: 'Tech Group',
-		revision: 0,
-		quotation_amount: 9800.0,
-		cost: 6000.0,
-		margin: 3500.0,
-		percent: 27.96,
-		status: 'Awarded',
-		site_location: 'Penang',
-		building: 'Lab 1',
-	},
-	{
-		id: '8',
-		prepared_by: 'Gary',
-		client: 'Tech Group',
-		quotation_date: '2024-04-04T16:00:00.000Z',
-		quotation_no: 'Q-012345',
-		end_user: 'Tech Group',
-		revision: 0,
-		quotation_amount: 9800.0,
-		cost: 6000.0,
-		margin: 3500.0,
-		percent: 27.96,
-		status: 'Awarded',
-		site_location: 'Penang',
-		building: 'Lab 1',
-	},
-	{
-		id: '9',
-		prepared_by: 'Gary',
-		client: 'Tech Group',
-		quotation_date: '2024-04-04T16:00:00.000Z',
-		quotation_no: 'Q-012345',
-		end_user: 'Tech Group',
-		revision: 0,
-		quotation_amount: 9800.0,
-		cost: 6000.0,
-		margin: 3500.0,
-		percent: 27.96,
-		status: 'Awarded',
-		site_location: 'Penang',
-		building: 'Lab 1',
-	},
-	{
-		id: '10',
-		prepared_by: 'Gary',
-		client: 'Tech Group',
-		quotation_date: '2024-04-04T16:00:00.000Z',
-		quotation_no: 'Q-012345',
-		end_user: 'Tech Group',
-		revision: 0,
-		quotation_amount: 9800.0,
-		cost: 6000.0,
-		margin: 3500.0,
-		percent: 27.96,
-		status: 'Awarded',
-		site_location: 'Penang',
-		building: 'Lab 1',
-	},
-];
+// const trackingListData = [
+// 	{
+// 		id: '1',
+// 		prepared_by: 'Gary',
+// 		client: 'Tech Group',
+// 		quotation_date: '2024-04-04T16:00:00.000Z',
+// 		quotation_no: 'Q-012345',
+// 		end_user: 'Tech Group',
+// 		revision: 0,
+// 		quotation_amount: 9800,
+// 		cost: 6000,
+// 		margin: 3500,
+// 		percent: 27,
+// 		status: 'In Progress',
+// 		site_location: 'Penang',
+// 		building: 'Lab 1',
+// 	},
+// 	{
+// 		id: '2',
+// 		prepared_by: 'Gary',
+// 		client: 'Tech Group',
+// 		quotation_date: '2024-04-03T16:00:00.000Z',
+// 		quotation_no: 'Q-012345',
+// 		end_user: 'Tech Group',
+// 		revision: 0,
+// 		quotation_amount: 9800.0,
+// 		cost: 6000.0,
+// 		margin: 3500.0,
+// 		percent: 27.96,
+// 		status: 'Closed',
+// 		site_location: 'Penang',
+// 		building: 'Lab 1',
+// 	},
+// 	{
+// 		id: '3',
+// 		prepared_by: 'Gary',
+// 		client: 'Tech Group',
+// 		quotation_date: '2024-04-02T16:00:00.000Z',
+// 		quotation_no: 'Q-012345',
+// 		end_user: 'Tech Group',
+// 		revision: 0,
+// 		quotation_amount: 9800.0,
+// 		cost: 6000.1,
+// 		margin: 3500.0,
+// 		percent: 27.96,
+// 		status: 'Awarded',
+// 		site_location: 'Penang',
+// 		building: 'Lab 1',
+// 	},
+// 	{
+// 		id: '4',
+// 		prepared_by: 'Gary',
+// 		client: 'Tech Group',
+// 		quotation_date: '2024-04-01T16:00:00.000Z',
+// 		quotation_no: 'Q-012345',
+// 		end_user: 'Tech Group',
+// 		revision: 0,
+// 		quotation_amount: 9800.0,
+// 		cost: 6000.03,
+// 		margin: 3500.0,
+// 		percent: 27.96,
+// 		status: 'Awarded',
+// 		site_location: 'Penang',
+// 		building: 'Lab 1',
+// 	},
+// 	{
+// 		id: '5',
+// 		prepared_by: 'Gary',
+// 		client: 'Tech Group',
+// 		quotation_date: '2023-04-04T16:00:00.000Z',
+// 		quotation_no: 'Q-012345',
+// 		end_user: 'Tech Group',
+// 		revision: 0,
+// 		quotation_amount: 9800.0,
+// 		cost: 6000.0,
+// 		margin: 3500.0,
+// 		percent: 27.96,
+// 		status: 'Awarded',
+// 		site_location: 'Penang',
+// 		building: 'Lab 1',
+// 	},
+// 	{
+// 		id: '6',
+// 		prepared_by: 'Gary',
+// 		client: 'Tech Group',
+// 		quotation_date: '2025-04-04T16:00:00.000Z',
+// 		quotation_no: 'Q-012345',
+// 		end_user: 'Tech Group',
+// 		revision: 0,
+// 		quotation_amount: 9800.0,
+// 		cost: 6000.0,
+// 		margin: 3500.0,
+// 		percent: 27.96,
+// 		status: 'Awarded',
+// 		site_location: 'Penang',
+// 		building: 'Lab 1',
+// 	},
+// 	{
+// 		id: '7',
+// 		prepared_by: 'Gary',
+// 		client: 'Tech Group',
+// 		quotation_date: '2022-04-04T16:00:00.000Z',
+// 		quotation_no: 'Q-012345',
+// 		end_user: 'Tech Group',
+// 		revision: 0,
+// 		quotation_amount: 9800.0,
+// 		cost: 6000.0,
+// 		margin: 3500.0,
+// 		percent: 27.96,
+// 		status: 'Awarded',
+// 		site_location: 'Penang',
+// 		building: 'Lab 1',
+// 	},
+// 	{
+// 		id: '8',
+// 		prepared_by: 'Gary',
+// 		client: 'Tech Group',
+// 		quotation_date: '2024-04-04T16:00:00.000Z',
+// 		quotation_no: 'Q-012345',
+// 		end_user: 'Tech Group',
+// 		revision: 0,
+// 		quotation_amount: 9800.0,
+// 		cost: 6000.0,
+// 		margin: 3500.0,
+// 		percent: 27.96,
+// 		status: 'Awarded',
+// 		site_location: 'Penang',
+// 		building: 'Lab 1',
+// 	},
+// 	{
+// 		id: '9',
+// 		prepared_by: 'Gary',
+// 		client: 'Tech Group',
+// 		quotation_date: '2024-04-04T16:00:00.000Z',
+// 		quotation_no: 'Q-012345',
+// 		end_user: 'Tech Group',
+// 		revision: 0,
+// 		quotation_amount: 9800.0,
+// 		cost: 6000.0,
+// 		margin: 3500.0,
+// 		percent: 27.96,
+// 		status: 'Awarded',
+// 		site_location: 'Penang',
+// 		building: 'Lab 1',
+// 	},
+// 	{
+// 		id: '10',
+// 		prepared_by: 'Gary',
+// 		client: 'Tech Group',
+// 		quotation_date: '2024-04-04T16:00:00.000Z',
+// 		quotation_no: 'Q-012345',
+// 		end_user: 'Tech Group',
+// 		revision: 0,
+// 		quotation_amount: 9800.0,
+// 		cost: 6000.0,
+// 		margin: 3500.0,
+// 		percent: 27.96,
+// 		status: 'Awarded',
+// 		site_location: 'Penang',
+// 		building: 'Lab 1',
+// 	},
+// ];
 
 const TrackingList = () => {
 	const navigate = useNavigate();
@@ -268,10 +278,28 @@ const TrackingList = () => {
 		},
 	});
 
+	const [quotationData, setQuotationData] = useState([]);
+	const [tableData, setTableData] = useState([]);
 
+	const fetchData = async () => {
+		const config = {
+			headers: { Authorization: `${localStorage.getItem('bts_token')}` },
+		};
 
+		axios
+			.get(import.meta.env.VITE_BASE_URL + '/quotation/all_quotations_table', config)
+			.then((response) => {
+				setQuotationData(response.data.quotations);
+				setTableData(response.data.quotations);
+				//console.log(response.data.quotations);
+			});
+	};
 
-	const [tableData, setTableData] = useState(trackingListData);
+	//Get Quotation table data
+	useEffect(() => {
+		fetchData();
+	}, []);
+
 
 	const [currentPage, setCurrentPage] = useState(1);
 	const [perPage, setPerPage] = useState(PER_COUNT['5']);
@@ -282,7 +310,7 @@ const TrackingList = () => {
 		const newData = searchAndFilterData(searchValue);
 
 		if (!values.search) {
-			setTableData(trackingListData);
+			setTableData(quotationData);
 		} else {
 			setTableData(newData);
 		}
@@ -293,11 +321,11 @@ const TrackingList = () => {
 			search: '',
 		},
 		onSubmit: onFormSubmit,
-		onReset: () => setTableData(trackingListData),
+		onReset: () => setTableData(quotationData),
 	});
 
 	const searchAndFilterData = (search_string: string) => {
-		return trackingListData.filter((item) => {
+		return quotationData.filter((item: any) => {
 			return (
 				item.prepared_by.toLowerCase().includes(search_string) ||
 				item.client.toLowerCase().includes(search_string) ||
@@ -308,7 +336,7 @@ const TrackingList = () => {
 				item.quotation_amount.toFixed(2).toString().toLowerCase().includes(search_string) ||
 				item.cost.toFixed(2).toString().toLowerCase().includes(search_string) ||
 				item.margin.toFixed(2).toString().toLowerCase().includes(search_string) ||
-				item.percent.toFixed(2).toString().toLowerCase().includes(search_string) ||
+				//item.percent.toFixed(2).toString().toLowerCase().includes(search_string) ||
 				item.status.toLowerCase().includes(search_string) ||
 				item.site_location.toLowerCase().includes(search_string) ||
 				item.building.toLowerCase().includes(search_string)
@@ -316,55 +344,11 @@ const TrackingList = () => {
 		});
 	};
 
-	const goToViewQuotationPage = () => {
-		navigate('view-quotation');
+	const goToViewQuotationPage = (quotation_id: string, variance: number) => {
+		navigate(`view/${quotation_id}/${variance}`);
 	};
 
 
-
-	//Edit form
-	// const [editItem, setEditItem] = useState<IValues | null>(null);
-	// const [editPanel, setEditPanel] = useState<boolean>(false);
-
-	// function handleEdit(id: number) {
-	// 	//const newData = tableData.filter((item) => item.id === id.toString());
-	// 	//setEditItem(newData[0]);
-	// 	setEditItem(null);
-	// }
-
-	// const formik = useFormik({
-	// 	initialValues: {
-	// 		name: '',
-	// 		price: 0,
-	// 		stock: 0,
-	// 		category: '',
-	// 	},
-	// 	//validate,
-	// 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	// 	onSubmit: (values) => {
-	// 		setEditPanel(false);
-	// 	},
-	// });
-
-	// useEffect(() => {
-	// 	if (editItem) {
-	// 		formik.setValues({
-	// 			name: editItem.name,
-	// 			price: editItem.price,
-	// 			stock: editItem.stock,
-	// 			category: editItem.category,
-	// 		});
-	// 	}
-	// 	return () => {
-	// 		formik.setValues({
-	// 			name: '',
-	// 			price: 0,
-	// 			stock: 0,
-	// 			category: '',
-	// 		});
-	// 	};
-	// 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	// }, [editItem]);
 
 	return (
 		<PageWrapper title='Tracking List'>
@@ -431,10 +415,28 @@ const TrackingList = () => {
 							<div className='col-md-12'>
 								<table className='table table-modern'>
 									<thead>
-										<tr>
+									<tr>
 											<th>No.</th>
-											<th>Prepared By</th>
-											<th>Client</th>
+											<th
+												onClick={() => requestSort('created_by')}
+												className='cursor-pointer text-decoration-underline'>
+												Prepared By
+												<Icon
+													size='lg'
+													className={getClassNamesFor('created_by')}
+													icon='FilterList'
+												/>
+											</th>
+											<th
+												onClick={() => requestSort('client')}
+												className='cursor-pointer text-decoration-underline'>
+												Client
+												<Icon
+													size='lg'
+													className={getClassNamesFor('client')}
+													icon='FilterList'
+												/>
+											</th>
 											<th
 												onClick={() => requestSort('quotation_date')}
 												className='cursor-pointer text-decoration-underline'>
@@ -445,16 +447,96 @@ const TrackingList = () => {
 													icon='FilterList'
 												/>
 											</th>
-											<th>Quotation No.</th>
-											<th>End User</th>
-											<th>Revision</th>
-											<th>Quotation Amount</th>
-											<th>Cost</th>
-											<th>Margin</th>
-											<th>%</th>
-											<th>Status</th>
-											<th>Site Location</th>
-											<th>Building</th>
+											<th
+												onClick={() => requestSort('quotation_no')}
+												className='cursor-pointer text-decoration-underline'>
+												Quotation No.
+												<Icon
+													size='lg'
+													className={getClassNamesFor('quotation_no')}
+													icon='FilterList'
+												/>
+											</th>
+											<th
+												onClick={() => requestSort('end_user')}
+												className='cursor-pointer text-decoration-underline'>
+												End User
+												<Icon
+													size='lg'
+													className={getClassNamesFor('end_user')}
+													icon='FilterList'
+												/>
+											</th>
+											<th
+												onClick={() => requestSort('revision')}
+												className='cursor-pointer text-decoration-underline'>
+												Revision
+												<Icon
+													size='lg'
+													className={getClassNamesFor('revision')}
+													icon='FilterList'
+												/>
+											</th>
+											<th
+												onClick={() => requestSort('quotation_amount')}
+												className='cursor-pointer text-decoration-underline'>
+												Quotation Amount
+												<Icon
+													size='lg'
+													className={getClassNamesFor('quotation_amount')}
+													icon='FilterList'
+												/>
+											</th>
+											<th
+												onClick={() => requestSort('cost')}
+												className='cursor-pointer text-decoration-underline'>
+												Cost
+												<Icon
+													size='lg'
+													className={getClassNamesFor('cost')}
+													icon='FilterList'
+												/>
+											</th>
+											<th
+												onClick={() => requestSort('margin')}
+												className='cursor-pointer text-decoration-underline'>
+												Margin
+												<Icon
+													size='lg'
+													className={getClassNamesFor('margin')}
+													icon='FilterList'
+												/>
+											</th>
+											<th
+												onClick={() => requestSort('status')}
+												className='cursor-pointer text-decoration-underline'>
+												Status
+												<Icon
+													size='lg'
+													className={getClassNamesFor('status')}
+													icon='FilterList'
+												/>
+											</th>
+											<th
+												onClick={() => requestSort('site_location')}
+												className='cursor-pointer text-decoration-underline'>
+												Site Location
+												<Icon
+													size='lg'
+													className={getClassNamesFor('site_location')}
+													icon='FilterList'
+												/>
+											</th>
+											<th
+												onClick={() => requestSort('building')}
+												className='cursor-pointer text-decoration-underline'>
+												Building
+												<Icon
+													size='lg'
+													className={getClassNamesFor('building')}
+													icon='FilterList'
+												/>
+											</th>
 											<th>Action</th>
 										</tr>
 									</thead>
@@ -466,8 +548,8 @@ const TrackingList = () => {
 													<td>{item.prepared_by}</td>
 													<td>{item.client}</td>
 													<td>
-														{dayjs(`${item.quotation_date}`).format(
-															'DD/MM/YYYY',
+													{dayjs.utc(`${item.quotation_date}`).local().format(
+															'DD-MM-YYYY HH:mm:ss',
 														)}
 													</td>
 													<td>{item.quotation_no}</td>
@@ -476,11 +558,11 @@ const TrackingList = () => {
 													<td>{item.quotation_amount.toFixed(2)}</td>
 													<td>{item.cost.toFixed(2)}</td>
 													<td>{item.margin.toFixed(2)}</td>
-													<td>{item.percent.toFixed(2)}%</td>
+													{/* <td>{item.percent.toFixed(2)}%</td> */}
 													<td>
 														<Badge
 															className='statusBadge'
-															color={ReturnStateColor(item.status)}>
+															color={ReturnBatchColor(item.status)}>
 															<h6>{item.status}</h6>
 														</Badge>
 													</td>
@@ -496,23 +578,9 @@ const TrackingList = () => {
 																	hoverShadow='lg'
 																	tag='a'
 																	onClick={() =>
-																		goToViewQuotationPage()
+																		goToViewQuotationPage(item.quotation_id, item.variance)
 																	}></Button>
 															</div>
-															{/* <div className='col-auto'>
-																<Button
-																	color='primary'
-																	icon='Add'
-																	shadow='none'
-																	hoverShadow='lg'
-																	tag='a'
-																	onClick={() =>{
-																		//goToViewQuotationPage()
-																		//console.log('hihi')
-																		setEditPanel(true);
-																		handleEdit(item.id)}}>
-																	</Button>
-															</div> */}
 															<div className='col-auto'>
 																<Button
 																	color='primary'
@@ -715,7 +783,8 @@ const TrackingList = () => {
 				<ModalTitle id='editAdditionalInfoModal'>Edit Additional Info</ModalTitle>
 			</ModalHeader>
 			<ModalBody>
-				<AdditionalInfoForm state={state} id='1' formik={formik}/>
+                <></>
+				{/* <AdditionalInfoForm state={state} id='1' formik={formik}/> */}
 			</ModalBody>
 			<ModalFooter>
 				<Button color='info' icon='Save' onClick={formik.handleSubmit}>

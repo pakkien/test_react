@@ -20,9 +20,10 @@ const ADMIN = {
 };
 
 const TRACKING_LIST = {
-	TRACKING_LIST_PAGE: lazy(() => import('../pages/presentation/tracking-list/TrackingList')),
-	VIEW_QUOTATION_PAGE: lazy(() => import('../pages/presentation/tracking-list/ViewQuotation')),
+	TRACKING_LIST_PAGE: lazy(() => import('../pages/presentation/tracking/TrackingList')),
+	VIEW_QUOTATION_PAGE: lazy(() => import('../pages/presentation/tracking/ViewQuotation')),
 };
+
 
 const QUOTATION = {
 	QUOTATION_LIST_PAGE: lazy(() => import('../pages/presentation/quotation/QuotationList')),
@@ -61,7 +62,7 @@ const presentation = [
 		element: <TRACKING_LIST.TRACKING_LIST_PAGE />,
 	},
 	{
-		path: 'tracking/view-quotation',
+		path: 'tracking/view/:quotation_id/:variance',
 		element: <TRACKING_LIST.VIEW_QUOTATION_PAGE />,
 	},
 	{
