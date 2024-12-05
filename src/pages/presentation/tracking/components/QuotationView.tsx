@@ -48,7 +48,8 @@ const QuotationView = (qv_props: QuotationViewProps) => {
 				(x: any) => x.variance == currentVariance,
 			)[0];
 			setProps(curentQuotationRev);
-            console.log("curr" + JSON.stringify(curentQuotationRev));
+            setStatus(QUOTATION_STATUS[curentQuotationRev.status.toUpperCase() as keyof typeof QUOTATION_STATUS]);
+            //console.log("curr" + JSON.stringify(curentQuotationRev));
 		}
 	}, [currentVariance]);
 

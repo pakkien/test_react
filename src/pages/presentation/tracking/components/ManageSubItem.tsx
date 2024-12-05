@@ -19,29 +19,24 @@ type SubItemProps = {
 const ManageSubItem = (props: SubItemProps) => {
 	return (
 		<div className='pb-0'>
-			{props.sub_items.map((sub_item, subItemIndex) => {
-				return (
-					<>
-						<div className='col-xl-12' key={sub_item.sub_item_id}>
-							<Accordion
-								id='SubItemAccordion'
-								color='dark'
-								activeItemId={'SubItemAccordionItem_' + props.itemIndex}>
-								<AccordionItem
-									id={
-										'SubItemAccordionItem_' +
-										props.itemIndex +
-										'_' +
-										subItemIndex
-									}
-									title={`Sub Item ${props.itemIndex + 1}.0`}>
+			<div className='col-xl-12' key={props.itemIndex}>
+				<Accordion
+					id='SubItemAccordion'
+					color='dark'
+					activeItemId={'SubItemAccordionItem_' + props.itemIndex}>
+					<AccordionItem
+						id={'SubItemAccordionItem_' + props.itemIndex}
+						title='Sub Items'>
+						{props.sub_items.map((sub_item, subItemIndex) => {
+							return (
+								<>
 									<Card
 										id={'#subItem_card_id#' + subItemIndex}
 										key={sub_item.sub_item_id}>
 										<CardHeader>
 											<CardLabel>
 												<CardTitle tag='div' className='h3'>
-													Sub Item {props.itemIndex + 1}.{subItemIndex}{' '}
+													Sub Item {props.itemIndex + 1}.{subItemIndex+1}{' '}
 													&nbsp;&nbsp;
 												</CardTitle>
 											</CardLabel>
@@ -192,12 +187,12 @@ const ManageSubItem = (props: SubItemProps) => {
 											</div>
 										</CardBody>
 									</Card>
-								</AccordionItem>
-							</Accordion>
-						</div>
-					</>
-				);
-			})}
+								</>
+							);
+						})}
+					</AccordionItem>
+				</Accordion>
+			</div>
 		</div>
 	);
 };
