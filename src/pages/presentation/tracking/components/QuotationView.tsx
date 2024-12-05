@@ -18,6 +18,8 @@ import Badge from '../../../../components/bootstrap/Badge';
 import Input from '../../../../components/bootstrap/forms/Input';
 import AttachmentsView from './AttachmentsView';
 import RevisionsView from './RevisionsView';
+import axios from 'axios';
+import fileDownload from 'js-file-download';
 
 
 type QuotationViewProps = {
@@ -69,6 +71,17 @@ const QuotationView = (qv_props: QuotationViewProps) => {
 			state: { create_new_variance: create_new_variance },
 		});
 	};
+
+
+    const handleDownloadPDF = async(quotation_id?: string, quotation_revision_id?: string, quotation_no?:string) => {
+		axios
+		.get(import.meta.env.VITE_BASE_URL + `/quotation/${quotation_id}/pdf/${quotation_revision_id}`, 
+			{responseType: 'blob', headers: { Authorization: `${localStorage.getItem('bts_token')}` }})
+		.then((response) => {
+			//console.log(response.data);
+			fileDownload(response.data, quotation_no+'.pdf');
+		});
+	}
 
 
     return (
@@ -265,7 +278,7 @@ const QuotationView = (qv_props: QuotationViewProps) => {
                                     color='info'
                                     isLight
                                     icon='Download'
-                                    onClick={() => navigate(-1)}>
+                                    onClick={() => handleDownloadPDF(qv_props.quotation_id, props.quotation_revision_id, props.quotation_no)}>
                                     PDF
                                 </Button>
                             </div>

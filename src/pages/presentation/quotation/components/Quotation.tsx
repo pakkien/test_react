@@ -41,6 +41,7 @@ import Dropdown, {
 import QUOTATION_STATUS from '../../../../common/data/enumQuotationStatus';
 import RevisionsView from './RevisionsView';
 import AttachmentsView from '../attachmentComponents/AttachmentsView';
+import fileDownload from 'js-file-download';
 
 type QuotationProps = {
 	mode: 'create' | 'view' | 'edit';
@@ -217,6 +218,17 @@ export const Quotation = (props: QuotationProps) => {
 				),
 			),
 	]);
+
+	const handleDownloadPDF = async(quotation_id?: string, quotation_revision_id?: string, quotation_no?:string) => {
+		axios
+		.get(import.meta.env.VITE_BASE_URL + `/quotation/${quotation_id}/pdf/${quotation_revision_id}`, 
+			{responseType: 'blob', headers: { Authorization: `${localStorage.getItem('bts_token')}` }})
+		.then((response) => {
+			//console.log(response.data);
+			fileDownload(response.data, quotation_no+'.pdf');
+		});
+	}
+	
 
 	return (
 		<PageWrapper title={title}>
@@ -598,7 +610,7 @@ export const Quotation = (props: QuotationProps) => {
 												isLight
 												icon='Download'
 												hidden={!isViewMode}
-												onClick={() => navigate(-1)}>
+												onClick={() => handleDownloadPDF(props.quotation_id, props.quotation_rev_id, props.quotation_no)}>
 												PDF
 											</Button>
 										</div>
