@@ -215,7 +215,7 @@ const TrackingDetailsForm = (props: TrackingDetailsProps) => {
 						<Icon icon='Info' size='lg' className='me-1' />
 						<span>Updated Successfully</span>
 					</span>,
-					'User Updated.',
+					'Tracking Details Updated.',
 				);
 
 			})
@@ -239,7 +239,7 @@ const TrackingDetailsForm = (props: TrackingDetailsProps) => {
 						<Icon icon='Info' size='lg' className='me-1' />
 						<span>Updated Successfully</span>
 					</span>,
-					'User Updated.',
+					'Tracking Details Updated.',
 				);
 
 			})
