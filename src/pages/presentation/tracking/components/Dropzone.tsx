@@ -206,7 +206,7 @@ function formatBytes(bytes: number, decimals = 2) {
     <Card shadow="none" borderSize={0} borderColor='light' >
 			<CardHeader>
 				<CardLabel>
-					<CardTitle tag='div' className='h3'>
+					<CardTitle tag='div' className='h5'>
 						Attachments{' '}
 						{(files?.length||prevFiles?.length)? ' - ' + (files?.length+prevFiles?.length) + '/' + MAX_FILE_COUNT : ''}
 					</CardTitle>

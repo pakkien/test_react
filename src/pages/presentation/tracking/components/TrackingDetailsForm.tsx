@@ -173,7 +173,7 @@ const TrackingDetailsForm = (props: TrackingDetailsProps) => {
 				<Card shadow='none' borderSize={2} borderColor={'light'}>
 					<CardHeader>
 						<CardLabel>
-							<CardTitle tag='div' className='h5'>
+							<CardTitle tag='div' className='h4'>
 								Purchase Order
 							</CardTitle>
 						</CardLabel>
@@ -241,7 +241,7 @@ const TrackingDetailsForm = (props: TrackingDetailsProps) => {
 				<Card shadow='none' borderSize={2} borderColor={'light'}>
 					<CardHeader>
 						<CardLabel>
-							<CardTitle tag='div' className='h5'>
+							<CardTitle tag='div' className='h4'>
 								Sales Order
 							</CardTitle>
 						</CardLabel>
@@ -279,7 +279,7 @@ const TrackingDetailsForm = (props: TrackingDetailsProps) => {
 				<Card shadow='none' borderSize={2} borderColor={'light'}>
 					<CardHeader>
 						<CardLabel>
-							<CardTitle tag='div' className='h5'>
+							<CardTitle tag='div' className='h4'>
 								Invoice
 							</CardTitle>
 						</CardLabel>
