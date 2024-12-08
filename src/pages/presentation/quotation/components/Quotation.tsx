@@ -587,7 +587,7 @@ export const Quotation = (props: QuotationProps) => {
 								<>
 									<div className='row gt-4'>
 										<div className='col-md-6 d-flex'>
-											<div className='row'>
+											<div className='row' hidden={props.mode=='create'}>
 												<div className='col-md-12'>
 													<span>
 														Quotation No: {props.quotation_no}{' '}

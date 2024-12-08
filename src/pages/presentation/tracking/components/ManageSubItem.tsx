@@ -32,7 +32,7 @@ const ManageSubItem = (props: SubItemProps) => {
 								<>
 									<Card
 										id={'#subItem_card_id#' + subItemIndex}
-										key={sub_item.sub_item_id}>
+										key={subItemIndex}>
 										<CardHeader>
 											<CardLabel>
 												<CardTitle tag='div' className='h3'>

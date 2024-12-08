@@ -92,9 +92,9 @@ const AttachmentsView = (props: AttachmentsViewProps) => {
 
 	return (
 		<>
-			{displayData.map((item) => {
+			{displayData.map((item, index) => {
 				return (
-					<>
+					<div key={index}>
 						<a
 							//onClick={() => goToViewQuotationPage(item.quotation_revision_id)}
 							href={'/quotation/view/' + item.data.quotation_revision_id}
@@ -124,7 +124,7 @@ const AttachmentsView = (props: AttachmentsViewProps) => {
 									<br />
 								</li>
 							))}
-					</>
+					</div>
 				);
 			})}
 		</>

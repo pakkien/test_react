@@ -20,6 +20,7 @@ import AttachmentsView from './AttachmentsView';
 import RevisionsView from './RevisionsView';
 import axios from 'axios';
 import fileDownload from 'js-file-download';
+import TrackingDetailsForm from './TrackingDetailsForm';
 
 
 type QuotationViewProps = {
@@ -207,11 +208,17 @@ const QuotationView = (qv_props: QuotationViewProps) => {
                 <CardBody>
                     <Nav design='pills'>
                         <NavItem isActive={activeTab == 'Quotation' ? true : false}>
-                            <Dropdown>
-                                <DropdownToggle>
-                                    <NavLinkDropdown>
+                            <Dropdown isButtonGroup>
+                                {/* <DropdownToggle>
+                                    <NavLinkDropdown className={activeTab == 'Quotation' ? 'btn active' : 'btn'} onClick={() => setActiveTab('Quotation')}>
                                         {(currentVariance == 0)? 'Quotation': 'Variation ' + currentVariance}
                                     </NavLinkDropdown>
+                                </DropdownToggle> */}
+                                <div className={activeTab == 'Quotation' ? 'btn active nav-link' : 'btn nav-link'} onClick={() => setActiveTab('Quotation')}>
+                                    {(currentVariance == 0)? 'Quotation': 'Variation ' + currentVariance}
+                                </div>
+                                <DropdownToggle>
+                                    <Button className={activeTab == 'Quotation' ? 'btn active nav-link' : 'btn nav-link'}></Button>
                                 </DropdownToggle>
                                 <DropdownMenu>
                                     {qv_props.data.map((rev:any) => { return(
@@ -227,6 +234,7 @@ const QuotationView = (qv_props: QuotationViewProps) => {
 
                                 </DropdownMenu>
                             </Dropdown>
+                          
                         </NavItem>
                         <NavItem
                             onClick={() => setActiveTab('Attachments')}
@@ -237,6 +245,11 @@ const QuotationView = (qv_props: QuotationViewProps) => {
                             onClick={() => setActiveTab('Revisions')}
                             isActive={activeTab == 'Revisions' ? true : false}>
                             <Button>Revisions</Button>
+                        </NavItem>
+                        <NavItem
+                            onClick={() => setActiveTab('TrackingDetails')}
+                            isActive={activeTab == 'TrackingDetails' ? true : false}>
+                            <Button>Tracking Details</Button>
                         </NavItem>
                     </Nav>
                     <hr />
@@ -252,6 +265,9 @@ const QuotationView = (qv_props: QuotationViewProps) => {
                             quotation_id={qv_props.quotation_id}
                             variance={currentVariance}
                         />
+                    </div>
+                    <div hidden={activeTab != 'TrackingDetails'} key={'trackingDetailsTab'}>
+                        <TrackingDetailsForm quotation_id={qv_props.quotation_id}/>
                     </div>
 
                     <div hidden={activeTab != 'Quotation'}>

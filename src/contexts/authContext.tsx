@@ -23,6 +23,7 @@ export const AuthContextProvider: FC<IAuthContextProviderProps> = ({ children })
 	useEffect(() => {
 		if (user !== '') {
 			setUserData(getUserDataWithUsername(user));
+			//console.log("userdata:" + JSON.stringify(userData));
 		} else {
 			setUserData({});
 		}
