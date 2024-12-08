@@ -32,13 +32,13 @@ const Dropzone = (props: DropzoneProps) => {
     const [prevFiles, setPrevFiles] = useState<AttachmentFileType[]>([]);
 
 	useEffect(() => {
-
+		//console.log("props:" + JSON.stringify(props));
 		setPrevFiles(props.attachment_list);
-	}, []);
+	}, [props.attachment_list]);
 
-	const handleDownload = async (attachment_id: string, file_name: string) => {
+	const handleDownload = async (attachment_type: string, attachment_id: string, file_name: string) => {
 		axios
-		.get(import.meta.env.VITE_BASE_URL + `/quotation/attachment/${attachment_id}`, {responseType: 'blob', headers: { Authorization: `${localStorage.getItem('bts_token')}` }})
+		.get(import.meta.env.VITE_BASE_URL + `/tracking_list/attachment/${attachment_type}/${attachment_id}`, {responseType: 'blob', headers: { Authorization: `${localStorage.getItem('bts_token')}` }})
 		.then((response) => {
 			//console.log(response.data);
 			fileDownload(response.data, file_name);
@@ -87,7 +87,7 @@ const handleUpload = async (fileToUpload: File) => {
     };
 
     axios
-        .post(import.meta.env.VITE_BASE_URL + '/quotation/attachment', data, config)
+        .post(import.meta.env.VITE_BASE_URL + `/tracking_list/attachment/${props.attachment_type}`, data, config)
         .then(function (res) {
             const attachment_id = res.data.attachment_id;
 
@@ -274,7 +274,7 @@ function formatBytes(bytes: number, decimals = 2) {
 																	style={{
 																		maxWidth: '10rem',
 																	}}
-																	onClick={() => handleDownload(file.id, file.filename)}
+																	onClick={() => handleDownload(props.attachment_type, file.id, file.filename)}
 																	>
 																	<Tooltips
 																		title={file.filename}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Card, {
 	CardBody,
 	CardFooter,
@@ -7,6 +7,7 @@ import Card, {
 	CardLabel,
 	CardTitle,
 } from '../../../../components/bootstrap/Card';
+import showNotification from '../../../../components/extras/showNotification';
 import Button from '../../../../components/bootstrap/Button';
 import FormGroup from '../../../../components/bootstrap/forms/FormGroup';
 import Input from '../../../../components/bootstrap/forms/Input';
@@ -15,36 +16,76 @@ import axios from 'axios';
 import { JSX } from 'react/jsx-runtime';
 import Icon from '../../../../components/icon/Icon';
 import { useFormik } from 'formik';
+import dayjs, { Dayjs } from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+import timezone from 'dayjs/plugin/timezone'
+import { dayjsLocalizer } from 'react-big-calendar';
+
+dayjs.extend(utc);
+dayjs.extend(localizedFormat);
+dayjs.extend(customParseFormat);
+dayjs.extend(timezone);
 
 type TrackingDetailsProps = {
 	quotation_id?: string;
 };
 
-// type TrackingDetailsData = {
-// 	po_no: string;
-// 	po_date: string;
-// 	po_amount: number;
-// 	so_no: string;
-// 	invoice_no: string;
-// 	invoice_date: string;
-// 	payment_terms: string;
-// 	invoice_amount: 0;
-// 	remarks: string;
-// 	status_overwrite: string;
-// };
+type TrackingDataType = {
+	tracking_list_id: string;
+	purchase_order: PurchaseOrderType;
+	sale_order: SaleOrderType;
+	invoice: InvoiceType;
+	remarks: string;
+	status_overwrite: string;
+	revision: number;
+	created_by: string;
+	created_at: string;
+};
 
+type PurchaseOrderType = {
+	po_no: string;
+	po_date: string;
+	po_amount: number;
+	po_attachments: AttachmentFileType[];
+}
+
+type InvoiceType = {
+	invoice_no: string;
+	invoice_date: string;
+	payment_terms: string;
+	invoice_amount: number;
+	invoice_attachments: AttachmentFileType[];
+}
+
+type SaleOrderType = {
+	so_no: string;
+	so_date: string;
+	so_attachments: AttachmentFileType[];
+}
+
+
+type AttachmentFileType = {
+	created_at: string;
+	created_by: string;
+	filename: string;
+	id: string;
+	size: number;
+}
 const TrackingDetailsForm = (props: TrackingDetailsProps) => {
+	const [trackingData, setTrackingData] = useState<TrackingDataType>();
 	const [po_attachment_ids, set_po_attachment_ids] = useState<string[]>([]);
 	const [so_attachment_ids, set_so_attachment_ids] = useState<string[]>([]);
 	const [invoice_attachment_ids, set_invoice_attachment_ids] = useState<string[]>([]);
 
 	const UpdateAttachmentIdsByType = (ids: string[], type: string) => {
 		switch (type) {
-			case 'po': {
+			case 'purchase_order': {
 				set_po_attachment_ids(ids);
 				break;
 			}
-			case 'so': {
+			case 'sale_order': {
 				set_so_attachment_ids(ids);
 				break;
 			}
@@ -58,42 +99,65 @@ const TrackingDetailsForm = (props: TrackingDetailsProps) => {
 		}
 	};
 
+	const fetchTrackingData = async (quotation_id?: string) => {		
+		const config = {
+			headers: { Authorization: `${localStorage.getItem('bts_token')}` },
+		};
+		axios
+			.get(import.meta.env.VITE_BASE_URL + `/tracking_list/quotation/${quotation_id}`, config)
+			.then((response) => {
+				console.log(response.data);
+				setTrackingData(response.data);
+			});
+	};
+
+	useEffect(() => {
+		if (props.quotation_id) {
+			fetchTrackingData(props.quotation_id);
+		}
+	}, []);
+
 	const formik = useFormik({
 		initialValues: {
-			po_no: '',
-			po_date: '',
-			po_amount: 0,
-			so_no: '',
-			invoice_no: '',
-			invoice_date: '',
-			payment_terms: '',
-			invoice_amount: 0,
-			remarks: '',
-			status_overwrite: '',
+			po_no: trackingData? trackingData.purchase_order.po_no: '',
+			po_date: trackingData? (dayjs.utc(`${trackingData.purchase_order.po_date}`).local().format('YYYY-MM-DD')): '',
+			po_amount: trackingData? trackingData.purchase_order.po_amount: '',
+			so_no: trackingData? trackingData.sale_order.so_no: '',
+			so_date: trackingData? (dayjs.utc(`${trackingData.sale_order.so_date}`).local().format('YYYY-MM-DD')): '',
+			invoice_no: trackingData? trackingData.invoice.invoice_no: '',
+			invoice_date: trackingData? (dayjs.utc(`${trackingData.invoice.invoice_date}`).local().format('YYYY-MM-DD')): '',
+			payment_terms: trackingData? trackingData.invoice.payment_terms: '',
+			invoice_amount: trackingData? trackingData.invoice.invoice_amount: '',
+			remarks: trackingData? trackingData.remarks: '',
+			status_overwrite: trackingData? trackingData.status_overwrite: '',
 		},
 		enableReinitialize: true,
 		validate: (values) => {
 			const errors: {
 				po_no?: string;
 				po_date?: string;
-				po_amount?: number;
+				po_amount?: string;
 				so_no?: string;
+				so_date?: string;
 				invoice_no?: string;
 				invoice_date?: string;
 				payment_terms?: string;
-				invoice_amount?: 0;
+				invoice_amount?: string;
 				remarks?: string;
 				status_overwrite?: string;
 			} = {};
 
-			// if (!values.name) {
-			// 	errors.name = 'Required';
+			// if (!values.po_no) {
+			// 	errors.po_no = 'Required';
 			// }
-			// if (!values.role) {
-			// 	errors.role = 'Required';
+			// if (!values.po_date) {
+			// 	errors.po_date = 'Required';
 			// }
-			// if (!values.email) {
-			// 	errors.email = 'Required';
+			// if (Number(values.po_amount) < 0) {
+			// 	errors.po_amount = 'po_amount must be more than 0';
+			// }
+			// if (Number(values.po_amount) < 0) {
+			// 	errors.po_amount = 'po_amount must be more than 0';
 			// }
 
 			return errors;
@@ -102,68 +166,110 @@ const TrackingDetailsForm = (props: TrackingDetailsProps) => {
 			//await handleSubmit(values);
 			const payload = Object.assign(
 				{
-					po_attachment_list: po_attachment_ids,
-					so_attachment_list: so_attachment_ids,
-					invoice_attachment_list: invoice_attachment_ids,
+					quotation_id: props.quotation_id,
+					remarks: values.remarks,
+					status_overwrite: values.status_overwrite,
+					purchase_order: {
+						po_no: values.po_no,
+						po_date: convertToUTC(values.po_date),
+						po_amount: values.po_amount,
+						attachments: po_attachment_ids,
+					},
+					sale_order:{
+						so_no: values.so_no,
+						so_date: convertToUTC(values.so_date),
+						attachments: so_attachment_ids,
+					},
+					invoice: {
+						invoice_no: values.invoice_no,
+						invoice_date: convertToUTC(values.invoice_date),
+						invoice_amount: values.invoice_amount,
+						payment_terms: values.payment_terms,
+						attachments: invoice_attachment_ids,
+					}
 				},
-				values,
 			);
 
 			console.log(JSON.stringify(payload));
+			handleSubmit(payload);
 		},
 	});
 
-	// const handleSubmit = async(values: any) => {
-	// 	const config = {
-	// 		headers: { Authorization: `${localStorage.getItem('bts_token')}` },
-	// 	};
+	const convertToUTC = (date:string, dateFormat='YYYY-MM-DD', tz=dayjs.tz.guess())  => {
+		return dayjs.tz(date, dateFormat, tz).utc().format("YYYY-MM-DDTHH:mm:ss");
+		//return "2023-10-03";
+	}
 
-	// 	const payload = {
-	// 		name: values.name,
-	// 		role: values.role,
-	// 		email: values.email,
-	// 		view_quotation: values.view_quotation,
-	// 		write_quotation: values.write_quotation,
-	// 		view_mccr: values.view_mccr,
-	// 		write_mccr: values.write_mccr,
-	// 	};
+	const handleSubmit = async(payload: any) => {
+		const config = {
+			headers: { Authorization: `${localStorage.getItem('bts_token')}` },
+		};
 
-	// 	axios
-	// 		.put(import.meta.env.VITE_BASE_URL + `/users/${user_id}`, payload, config)
-	// 		.then((response) => {
-	// 			showNotification(
-	// 				<span className='d-flex align-items-center'>
-	// 					<Icon icon='Info' size='lg' className='me-1' />
-	// 					<span>Updated Successfully</span>
-	// 				</span>,
-	// 				'User Updated.',
-	// 			);
+		if(trackingData){
+			//put
+			axios
+			.put(import.meta.env.VITE_BASE_URL + `/tracking_list/${trackingData.tracking_list_id}`, payload, config)
+			.then((response) => {
+				showNotification(
+					<span className='d-flex align-items-center'>
+						<Icon icon='Info' size='lg' className='me-1' />
+						<span>Updated Successfully</span>
+					</span>,
+					'User Updated.',
+				);
 
-	// 		})
-	// 		.catch((errors) =>
-	// 			showNotification(
-	// 				<span className='d-flex align-items-center'>
-	// 					<Icon icon='Info' size='lg' className='me-1' />
-	// 					<span>Error!</span>
-	// 				</span>,
-	// 				errors,
-	// 			)
-	// 		);
-	// };
+			})
+			.catch((errors) =>
+				showNotification(
+					<span className='d-flex align-items-center'>
+						<Icon icon='Info' size='lg' className='me-1' />
+						<span>Error!</span>
+					</span>,
+					errors,
+				)
+			);
+
+		}else{
+			//create
+			axios
+			.post(import.meta.env.VITE_BASE_URL + `/tracking_list/`, payload, config)
+			.then((response) => {
+				showNotification(
+					<span className='d-flex align-items-center'>
+						<Icon icon='Info' size='lg' className='me-1' />
+						<span>Updated Successfully</span>
+					</span>,
+					'User Updated.',
+				);
+
+			})
+			.catch((errors) =>
+				showNotification(
+					<span className='d-flex align-items-center'>
+						<Icon icon='Info' size='lg' className='me-1' />
+						<span>Error!</span>
+					</span>,
+					errors,
+				)
+			);
+			
+
+		}
+	};
 
 	return (
 		<>
 			<div className='col-md-12'>
-				<div className='row g-4'>
+				<div className='row g-4' hidden={!trackingData}>
 					<div className='col-md-4'>
-						<span className='text-muted'>Tracking Revision: 12</span>
+						<span className='text-muted'>Tracking Revision: {trackingData?.revision}</span>
 					</div>
 					<div className='col-md-4'>
-						<span className='text-muted'>Last Updated By: {'tester@email.com'}</span>
+						<span className='text-muted'>Last Updated By: {trackingData?.created_by}</span>
 					</div>
 					<div className='col-md-4'>
 						<span className='text-muted'>
-							Last Updated: {'Sun, 08 Dec 2024 04:39:12 GMT'}
+							Last Updated: {dayjs.utc(`${trackingData?.created_at}`).local().format('DD-MM-YYYY HH:mm:ss',)}
 						</span>
 					</div>
 				</div>
@@ -226,8 +332,8 @@ const TrackingDetailsForm = (props: TrackingDetailsProps) => {
 							</div>
 							<div className='col-md-12'>
 								<Dropzone
-									attachment_type='po'
-									attachment_list={[]}
+									attachment_type='purchase_order'
+									attachment_list={(trackingData?.purchase_order.po_attachments)? trackingData?.purchase_order.po_attachments: []}
 									setAttachmentIds={UpdateAttachmentIdsByType}
 								/>
 							</div>
@@ -248,7 +354,7 @@ const TrackingDetailsForm = (props: TrackingDetailsProps) => {
 					</CardHeader>
 					<CardBody className='pb-0'>
 						<div className='row g-4'>
-							<div className='col-md-4'>
+							<div className='col-md-3'>
 								<FormGroup id='so_no' label='SO No.'>
 									<Input
 										placeholder='Enter SO No.'
@@ -262,10 +368,25 @@ const TrackingDetailsForm = (props: TrackingDetailsProps) => {
 									/>
 								</FormGroup>
 							</div>
+							<div className='col-md-3'>
+								<FormGroup id='so_date' label='SO Date.'>
+									<Input
+										placeholder='Enter SO Date'
+										type='date'
+										onChange={formik.handleChange}
+										onBlur={formik.handleBlur}
+										value={formik.values.so_date}
+										isValid={formik.isValid}
+										isTouched={formik.touched.so_date}
+										invalidFeedback={formik.errors.so_date}
+										validFeedback='Valid SO Date.'
+									/>
+								</FormGroup>
+							</div>
 							<div className='col-md-12'>
 								<Dropzone
-									attachment_type='so'
-									attachment_list={[]}
+									attachment_type='sale_order'
+									attachment_list={(trackingData?.sale_order.so_attachments)? trackingData?.sale_order.so_attachments: []}
 									setAttachmentIds={UpdateAttachmentIdsByType}
 								/>
 							</div>
@@ -347,7 +468,7 @@ const TrackingDetailsForm = (props: TrackingDetailsProps) => {
 							<div className='col-md-12'>
 								<Dropzone
 									attachment_type='invoice'
-									attachment_list={[]}
+									attachment_list={(trackingData?.invoice.invoice_attachments)? trackingData?.invoice.invoice_attachments: []}
 									setAttachmentIds={UpdateAttachmentIdsByType}
 								/>
 							</div>
@@ -406,6 +527,3 @@ const TrackingDetailsForm = (props: TrackingDetailsProps) => {
 };
 
 export default TrackingDetailsForm;
-function showNotification(arg0: JSX.Element, arg1: string) {
-	throw new Error('Function not implemented.');
-}
