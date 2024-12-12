@@ -10,14 +10,17 @@ const QuotationData: QuotationDataType.QuotationData = {
 	quotation_date: '',
 	revision: 0,
 	client: '',
+	client_code: '',
 	end_user: '',
 	site_location: '',
 	building: '',
 	pic: '',
-	email: '',
+	pic_email: '',
+	pic_contact_number: '',
 	project_reference: '',
-	items: [],
+	sections: [],
 	status: '',
+	variance: 0,
 
 	//Summary fields
 	reference_status: '',
@@ -34,9 +37,7 @@ const QuotationData: QuotationDataType.QuotationData = {
 
 
 const CreateQuotation = () => {
-	//const [quotationRevData, setQuotationRevData] = useState<QuotationDataType.QuotationData>();
-
-
+	
 	return(
 		<FormProviderQuotation data={QuotationData}>
 			<Quotation mode={'create'} status={'None'}/>

@@ -17,11 +17,14 @@ import Accordion, { AccordionItem } from '../../../../components/bootstrap/Accor
 import Nav, { NavItem } from '../../../../components/bootstrap/Nav';
 
 type ItemProps = {
-	isViewMode: boolean
+	sectionIndex: number;
+	isViewMode: boolean;
+	sectionMode: boolean;
 };
 
 
 const ManageItem = (props: ItemProps) => {
+	const sectionIndex = props.sectionIndex;
 	
 	const {
 		register,
@@ -33,9 +36,11 @@ const ManageItem = (props: ItemProps) => {
 	const formData = watch();
 
 	const { append, remove, fields } = useFieldArray({
-		name: 'items',
+		name: `sections.${sectionIndex}.items`,
 		control,
 	});
+
+
 
 	const addItem = () => {
 		append({
@@ -52,18 +57,26 @@ const ManageItem = (props: ItemProps) => {
 			estimated_cost: false,
 			unit_price: 0,
 			total_price: 0,
+			order: 0,
 			sub_items: [],
 		});
 	};
 
+	// if(props.sectionMode == false){
+	// 	//addItem();
+	// 	console.log("hihi");
+	// }
+
 	//auto calculation
 	useEffect(() => {
-		formData.items.map((item, itemIndex) => {
-			setValue(`items.${itemIndex}.total_cost`, parseFloat((item.quantity * item.unit_cost).toFixed(2)));
-			setValue(`items.${itemIndex}.total_price`, parseFloat((item.quantity * item.unit_price).toFixed(2)));
-			setValue(`items.${itemIndex}.margin_percentage`, parseFloat(((item.unit_price / item.unit_cost - 1)*100).toFixed(2)) );
+		formData.sections[sectionIndex].items.map((item, itemIndex) => {
+			setValue(`sections.${sectionIndex}.items.${itemIndex}.total_cost`, parseFloat((item.quantity * item.unit_cost).toFixed(2)));
+			setValue(`sections.${sectionIndex}.items.${itemIndex}.total_price`, parseFloat((item.quantity * item.unit_price).toFixed(2)));
+			setValue(`sections.${sectionIndex}.items.${itemIndex}.margin_percentage`, parseFloat(((item.unit_price / item.unit_cost - 1)*100).toFixed(2)) );
 		});
-	}, [JSON.stringify(formData.items.map(item => {return item.quantity+item.unit_cost}))]);
+	}, [JSON.stringify(formData.sections[sectionIndex].items.map(item => {return item.quantity+item.unit_cost}))]);
+
+
 
 
 	return (
@@ -76,12 +89,13 @@ const ManageItem = (props: ItemProps) => {
 							//TODO: decide 
 							<div className='col-xl-12'> 
 							<Accordion id='ItemAccordion' color='dark' activeItemId={'ItemAccordionItem_'+ itemIndex}>
-							<AccordionItem id={'ItemAccordionItem_'+ itemIndex} title={`Item ${itemIndex+1}.0`}>
-								<Card id={'#item_card_id#' + itemIndex} key={item.id}>
+							<AccordionItem id={'ItemAccordionItem_'+ itemIndex} title={props.sectionMode?`${sectionIndex+1}.${itemIndex+1} Item ${itemIndex+1}`:
+																							`${itemIndex+1}.0 Item ${itemIndex+1}`}>
+								<Card id={'#item_card_id#' + itemIndex} key={item.id} shadow='none' borderSize={1} borderColor='light' >
 									<CardHeader>
 										<CardLabel>
 											<CardTitle tag='div' className='h3'>
-												Item {itemIndex + 1}.0{' '}
+												Item {itemIndex + 1}
 												&nbsp;&nbsp;
 											</CardTitle>
 										</CardLabel>
@@ -109,18 +123,18 @@ const ManageItem = (props: ItemProps) => {
 														id='product_desc'
 														className={
 															'form-control ' +
-															(errors.items?.[itemIndex]?.product_description
+															(errors.sections?.[sectionIndex]?.items?.[itemIndex]?.product_description
 																? 'is-invalid'
 																: '')
 														}
-														{...register(`items.${itemIndex}.product_description`)}
+														{...register(`sections.${sectionIndex}.items.${itemIndex}.product_description`)}
 														type='text'
 														placeholder='product_desc'
 														disabled={props.isViewMode}
 													/>
 													<div className='invalid-feedback'>
 														{
-															errors.items?.[itemIndex]?.product_description
+															errors.sections?.[sectionIndex]?.items?.[itemIndex]?.product_description
 																?.message
 														}
 													</div>
@@ -132,17 +146,17 @@ const ManageItem = (props: ItemProps) => {
 														id='brand'
 														className={
 															'form-control ' +
-															(errors.items?.[itemIndex]?.brand
+															(errors.sections?.[sectionIndex]?.items?.[itemIndex]?.brand
 																? 'is-invalid'
 																: '')
 														}
-														{...register(`items.${itemIndex}.brand`)}
+														{...register(`sections.${sectionIndex}.items.${itemIndex}.brand`)}
 														type='text'
 														placeholder='brand'
 														disabled={props.isViewMode}
 													/>
 													<div className='invalid-feedback'>
-														{errors.items?.[itemIndex]?.brand?.message}
+														{errors.sections?.[sectionIndex]?.items?.[itemIndex]?.brand?.message}
 													</div>
 												</FormGroup>
 											</div>
@@ -152,17 +166,17 @@ const ManageItem = (props: ItemProps) => {
 														id='model'
 														className={
 															'form-control ' +
-															(errors.items?.[itemIndex]?.model
+															(errors.sections?.[sectionIndex]?.items?.[itemIndex]?.model
 																? 'is-invalid'
 																: '')
 														}
-														{...register(`items.${itemIndex}.model`)}
+														{...register(`sections.${sectionIndex}.items.${itemIndex}.model`)}
 														type='text'
 														placeholder='model'
 														disabled={props.isViewMode}
 													/>
 													<div className='invalid-feedback'>
-														{errors.items?.[itemIndex]?.model?.message}
+														{errors.sections?.[sectionIndex]?.items?.[itemIndex]?.model?.message}
 													</div>
 												</FormGroup>
 											</div>
@@ -172,17 +186,17 @@ const ManageItem = (props: ItemProps) => {
 														id='remarks'
 														className={
 															'form-control ' +
-															(errors.items?.[itemIndex]?.remarks
+															(errors.sections?.[sectionIndex]?.items?.[itemIndex]?.remarks
 																? 'is-invalid'
 																: '')
 														}
-														{...register(`items.${itemIndex}.remarks`)}
+														{...register(`sections.${sectionIndex}.items.${itemIndex}.remarks`)}
 														type='text'
 														placeholder='remarks'
 														disabled={props.isViewMode}
 													/>
 													<div className='invalid-feedback'>
-														{errors.items?.[itemIndex]?.remarks?.message}
+														{errors.sections?.[sectionIndex]?.items?.[itemIndex]?.remarks?.message}
 													</div>
 												</FormGroup>
 											</div>
@@ -197,12 +211,12 @@ const ManageItem = (props: ItemProps) => {
 																id='quantity'
 																className={
 																	'form-control ' +
-																	(errors.items?.[itemIndex]?.quantity
+																	(errors.sections?.[sectionIndex]?.items?.[itemIndex]?.quantity
 																		? 'is-invalid'
 																		: '')
 																}
 																{...register(
-																	`items.${itemIndex}.quantity`,
+																	`sections.${sectionIndex}.items.${itemIndex}.quantity`,
 																)}
 																type='text'												
 																placeholder='quantity'
@@ -210,7 +224,7 @@ const ManageItem = (props: ItemProps) => {
 															/>
 															<div className='invalid-feedback'>
 																{
-																	errors.items?.[itemIndex]?.quantity
+																	errors.sections?.[sectionIndex]?.items?.[itemIndex]?.quantity
 																		?.message
 																}
 															</div>
@@ -222,18 +236,18 @@ const ManageItem = (props: ItemProps) => {
 																id='unit'
 																className={
 																	'form-control ' +
-																	(errors.items?.[itemIndex]?.unit
+																	(errors.sections?.[sectionIndex]?.items?.[itemIndex]?.unit
 																		? 'is-invalid'
 																		: '')
 																}
-																{...register(`items.${itemIndex}.unit`)}
+																{...register(`sections.${sectionIndex}.items.${itemIndex}.unit`)}
 																type='text'
 																placeholder='unit'
 																disabled={props.isViewMode}
 															/>
 															<div className='invalid-feedback'>
 																{
-																	errors.items?.[itemIndex]?.unit
+																	errors.sections?.[sectionIndex]?.items?.[itemIndex]?.unit
 																		?.message
 																}
 															</div>
@@ -248,13 +262,13 @@ const ManageItem = (props: ItemProps) => {
 																id='unit_cost'
 																className={
 																	'form-control ' +
-																	(errors.items?.[itemIndex]
+																	(errors.sections?.[sectionIndex]?.items?.[itemIndex]
 																		?.unit_cost
 																		? 'is-invalid'
 																		: '')
 																}
 																{...register(
-																	`items.${itemIndex}.unit_cost`,
+																	`sections.${sectionIndex}.items.${itemIndex}.unit_cost`,
 																)}
 																type='text'
 																placeholder='unit_cost'
@@ -262,7 +276,7 @@ const ManageItem = (props: ItemProps) => {
 															/>
 															<div className='invalid-feedback'>
 																{
-																	errors.items?.[itemIndex]?.unit_cost
+																	errors.sections?.[sectionIndex]?.items?.[itemIndex]?.unit_cost
 																		?.message
 																}
 															</div>
@@ -281,7 +295,7 @@ const ManageItem = (props: ItemProps) => {
 																	'form-check-input'
 																}
 																{...register(
-																	`items.${itemIndex}.estimated_cost`,
+																	`sections.${sectionIndex}.items.${itemIndex}.estimated_cost`,
 																)}
 																type='checkbox'
 																placeholder='estimated_cost'
@@ -290,7 +304,7 @@ const ManageItem = (props: ItemProps) => {
 															{/* <label className='form-check label'>Estimated Cost</label> */}
 															<div className='invalid-feedback'>
 																{
-																	errors.items?.[itemIndex]?.estimated_cost
+																	errors.sections?.[sectionIndex]?.items?.[itemIndex]?.estimated_cost
 																		?.message
 																}
 															</div>
@@ -307,18 +321,18 @@ const ManageItem = (props: ItemProps) => {
 														id='total_cost'
 														className={
 															'form-control ' +
-															(errors.items?.[itemIndex]?.total_cost
+															(errors.sections?.[sectionIndex]?.items?.[itemIndex]?.total_cost
 																? 'is-invalid'
 																: '')
 														}
-														{...register(`items.${itemIndex}.total_cost`)}
+														{...register(`sections.${sectionIndex}.items.${itemIndex}.total_cost`)}
 														type='text'
 														placeholder='total_cost'
 														//disabled={props.isViewMode}
 														disabled
 													/>
 													<div className='invalid-feedback'>
-														{errors.items?.[itemIndex]?.total_cost?.message}
+														{errors.sections?.[sectionIndex]?.items?.[itemIndex]?.total_cost?.message}
 													</div>
 												</FormGroup>
 											</div>
@@ -330,11 +344,11 @@ const ManageItem = (props: ItemProps) => {
 														id='margin'
 														className={
 															'form-control ' +
-															(errors.items?.[itemIndex]?.margin
+															(errors.sections?.[sectionIndex]?.items?.[itemIndex]?.margin
 																? 'is-invalid'
 																: '')
 														}
-														{...register(`items.${itemIndex}.margin`)}
+														{...register(`sections.${sectionIndex}.items.${itemIndex}.margin`)}
 														type='text'
 														placeholder='margin'
 														disabled={props.isViewMode}
@@ -345,7 +359,7 @@ const ManageItem = (props: ItemProps) => {
 														// 	}
 													/>
 													<div className='invalid-feedback'>
-														{errors.items?.[itemIndex]?.margin?.message}
+														{errors.sections?.[sectionIndex]?.items?.[itemIndex]?.margin?.message}
 													</div>
 												</FormGroup>
 											</div>
@@ -355,22 +369,22 @@ const ManageItem = (props: ItemProps) => {
 														id='margin_percentage'
 														className={
 															'form-control ' +
-															(errors.items?.[itemIndex]?.margin_percentage
+															(errors.sections?.[sectionIndex]?.items?.[itemIndex]?.margin_percentage
 																? 'is-invalid'
 																: '')
 														}
-														{...register(`items.${itemIndex}.margin_percentage`)}
+														{...register(`sections.${sectionIndex}.items.${itemIndex}.margin_percentage`)}
 														type='text'
 														placeholder='margin_percentage'
 														disabled={props.isViewMode}
 														onChange={
 															(e) => {
-																setValue(`items.${itemIndex}.unit_price`, parseFloat((formData.items[itemIndex].unit_cost * (100+parseFloat(e.target.value)) / 100).toFixed(2)));
-																setValue(`items.${itemIndex}.total_price`, parseFloat((formData.items[itemIndex].quantity * formData.items[itemIndex].unit_price).toFixed(2)));	}
+																setValue(`sections.${sectionIndex}.items.${itemIndex}.unit_price`, parseFloat((formData.sections?.[sectionIndex]?.items[itemIndex].unit_cost * (100+parseFloat(e.target.value)) / 100).toFixed(2)));
+																setValue(`sections.${sectionIndex}.items.${itemIndex}.total_price`, parseFloat((formData.sections?.[sectionIndex]?.items[itemIndex].quantity * formData.sections?.[sectionIndex]?.items[itemIndex].unit_price).toFixed(2)));	}
 															}
 													/>
 													<div className='invalid-feedback'>
-														{errors.items?.[itemIndex]?.margin_percentage?.message}
+														{errors.sections?.[sectionIndex]?.items?.[itemIndex]?.margin_percentage?.message}
 													</div>
 												</FormGroup>
 											</div>
@@ -383,23 +397,23 @@ const ManageItem = (props: ItemProps) => {
 														id='unit_price'
 														className={
 															'form-control ' +
-															(errors.items?.[itemIndex]?.unit_price
+															(errors.sections?.[sectionIndex]?.items?.[itemIndex]?.unit_price
 																? 'is-invalid'
 																: '')
 														}
-														{...register(`items.${itemIndex}.unit_price`)}
+														{...register(`sections.${sectionIndex}.items.${itemIndex}.unit_price`)}
 														type='text'
 														placeholder='unit_price'
 														disabled={props.isViewMode}
 														onChange={
 																(e) => {
-																	setValue(`items.${itemIndex}.margin`, parseFloat(((parseFloat(e.target.value)/ formData.items[itemIndex].unit_cost - 1)*100).toFixed(2)));
-																	setValue(`items.${itemIndex}.total_price`, parseFloat((formData.items[itemIndex].quantity * parseFloat(e.target.value)).toFixed(2)));	}
+																	setValue(`sections.${sectionIndex}.items.${itemIndex}.margin`, parseFloat(((parseFloat(e.target.value)/ formData.sections?.[sectionIndex]?.items[itemIndex].unit_cost - 1)*100).toFixed(2)));
+																	setValue(`sections.${sectionIndex}.items.${itemIndex}.total_price`, parseFloat((formData.sections?.[sectionIndex]?.items[itemIndex].quantity * parseFloat(e.target.value)).toFixed(2)));	}
 																
 														}
 													/>
 													<div className='invalid-feedback'>
-														{errors.items?.[itemIndex]?.unit_price?.message}
+														{errors.sections?.[sectionIndex]?.items?.[itemIndex]?.unit_price?.message}
 													</div>
 												</FormGroup>
 											</div>
@@ -413,11 +427,11 @@ const ManageItem = (props: ItemProps) => {
 														id='total_price'
 														className={
 															'form-control ' +
-															(errors.items?.[itemIndex]?.total_price
+															(errors.sections?.[sectionIndex]?.items?.[itemIndex]?.total_price
 																? 'is-invalid'
 																: '')
 														}
-														{...register(`items.${itemIndex}.total_price`)}
+														{...register(`sections.${sectionIndex}.items.${itemIndex}.total_price`)}
 														type='text'
 														placeholder='total_price'
 														//disabled={props.isViewMode}
@@ -425,16 +439,13 @@ const ManageItem = (props: ItemProps) => {
 													/>
 													<div className='invalid-feedback'>
 														{
-															errors.items?.[itemIndex]?.total_price
+															errors.sections?.[sectionIndex]?.items?.[itemIndex]?.total_price
 																?.message
 														}
 													</div>
 												</FormGroup>
 											</div>
-											<div className='col-md-12'>
-												{/* sub_item here */}
-												<ManageSubItem itemIndex={itemIndex} isViewMode={props.isViewMode}/>
-											</div>
+											
 											{/* <div className='col-md-12'>
 												<Button
 													color='info'
@@ -450,22 +461,11 @@ const ManageItem = (props: ItemProps) => {
 											<div className='col-md-12'></div>
 										</div>
 									</CardBody>
-									{/* <CardFooter>
-										<></>
-									</CardFooter> */}
-									{/* <CardFooter>
-										<CardFooterRight>
-											<Button
-												color='info'
-												icon='Add'
-												tag='a'
-												hidden={false}
-												onClick={addItem}>
-												Add Item
-											</Button>
-										</CardFooterRight>
-									</CardFooter> */}
 								</Card>
+								<div className='col-md-12'>
+												{/* sub_item here */}
+												<ManageSubItem itemIndex={itemIndex} sectionIndex={sectionIndex} isViewMode={props.isViewMode} sectionMode={props.sectionMode}/>
+											</div>
 							</AccordionItem>
 							</Accordion>
 							</div>

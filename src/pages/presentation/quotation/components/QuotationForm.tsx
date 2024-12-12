@@ -18,6 +18,7 @@ const schemaSubItem = z.object({
 	estimated_cost: z.boolean(),
 	unit_price: z.coerce.number().min(0),
 	total_price: z.coerce.number().min(0),
+	order: z.number(),
 });
 
 const schemaItem = z.object({
@@ -34,8 +35,17 @@ const schemaItem = z.object({
 	estimated_cost: z.boolean(),
 	unit_price: z.coerce.number().min(0),
 	total_price: z.coerce.number().min(0),
+	order: z.number(),
 	sub_items: z.array(schemaSubItem)
 
+});
+
+
+const schemaSection = z.object({
+	section_name: z.string().min(3),
+	order: z.number(),
+	is_section_valid: z.boolean(),
+	items: z.array(schemaItem).min(1, { message: 'must contain at least one item.' }),
 });
 
 export const schemaQuotation = z.object({
@@ -57,9 +67,9 @@ export const schemaQuotation = z.object({
 	grand_total: z.coerce.number(),
 
 	//items: z.array(schemaItem)
-	items: z.array(schemaItem).min(1, { message: 'must contain at least one item.' }),
+	//items: z.array(schemaItem).min(1, { message: 'must contain at least one item.' }),
 	//attachment_list: z.string().array(),
-
+	sections: z.array(schemaSection).min(0),
 
 	//options
 	lead_time: z.string().min(1),
@@ -93,7 +103,7 @@ export const useFormQuotation = (props: QuotationFormProps) =>
 		status: props.data.status,
 
 
-		items: props.data.items, //check again
+		sections: props.data.sections, //check again
 		
 		
 		reference_status: props.data.reference_status,

@@ -42,6 +42,7 @@ import QUOTATION_STATUS from '../../../../common/data/enumQuotationStatus';
 import RevisionsView from './RevisionsView';
 import AttachmentsView from '../attachmentComponents/AttachmentsView';
 import fileDownload from 'js-file-download';
+import ManageSection from './ManageSection';
 
 type QuotationProps = {
 	mode: 'create' | 'view' | 'edit';
@@ -52,6 +53,7 @@ type QuotationProps = {
 	revision?: number;
 	variance?: number;
 	create_new_variance?: boolean;
+	section_mode?: boolean;
 };
 
 export const Quotation = (props: QuotationProps) => {
@@ -68,7 +70,6 @@ export const Quotation = (props: QuotationProps) => {
 	//console.log('formData', formData)
 	//console.log('errors', errors)
 
-
 	//save as new variation
 	const [isCreateVariation, setIsCreateVariation] = useState(
 		props.create_new_variance ? props.create_new_variance : false,
@@ -77,20 +78,21 @@ export const Quotation = (props: QuotationProps) => {
 	const isViewMode = props.mode.toLowerCase() == 'view' ? true : false;
 	const title =
 		props.mode.charAt(0).toUpperCase() + props.mode.slice(1).toLowerCase() + ' Quotation ';
-		
 
 	//hide status change button when status initially = awarded, completed, cancelled
-	const[allowStatusUpdate, setAllowStatusUpdate] = useState((props.status?.toLowerCase() == QUOTATION_STATUS.AWARDED.name.toLowerCase()  ||
-	props.status?.toLowerCase() == QUOTATION_STATUS.COMPLETED.name.toLowerCase()  || 
-	props.status?.toLowerCase() == QUOTATION_STATUS.REJECTED.name.toLowerCase() )? false:true);
-
+	const [allowStatusUpdate, setAllowStatusUpdate] = useState(
+		props.status?.toLowerCase() == QUOTATION_STATUS.AWARDED.name.toLowerCase() ||
+			props.status?.toLowerCase() == QUOTATION_STATUS.COMPLETED.name.toLowerCase() ||
+			props.status?.toLowerCase() == QUOTATION_STATUS.REJECTED.name.toLowerCase()
+			? false
+			: true,
+	);
 
 	useEffect(() => {
-		if(isCreateVariation){
+		if (isCreateVariation) {
 			setAllowStatusUpdate(true);
 		}
 	}, [isCreateVariation]);
-
 
 	//status
 	const key = props.status?.toUpperCase() as keyof typeof QUOTATION_STATUS;
@@ -138,11 +140,13 @@ export const Quotation = (props: QuotationProps) => {
 	};
 
 	const postCreateQuotation = async (payload: any) => {
-		axios.post(import.meta.env.VITE_BASE_URL + `/quotation/`, payload, config).then((response) => {
-			//console.log(response.data);
-			showSuccessNotification();
-			goToViewQuotationListPage();
-		});
+		axios
+			.post(import.meta.env.VITE_BASE_URL + `/quotation/`, payload, config)
+			.then((response) => {
+				//console.log(response.data);
+				showSuccessNotification();
+				goToViewQuotationListPage();
+			});
 	};
 
 	const postUpdateQuotation = async (quotation_id: string, payload: any) => {
@@ -189,46 +193,60 @@ export const Quotation = (props: QuotationProps) => {
 	const [activeTab, setActiveTab] = useState('Quotation');
 
 	//auto-calculation total and gtotal
-	useEffect(() => {
-		var total = 0;
-		var gtotal = 0;
+	//TODO:
+	// useEffect(() => {
+	// 	var total = 0;
+	// 	var gtotal = 0;
 
-		for (const item of formData.items) {
-			total += item.total_cost;
-			gtotal += item.total_price;
-			for (const sub_item of item.sub_items) {
-				total += sub_item.total_cost;
-				gtotal += sub_item.total_price;
-			}
-		}
+	// 	for (const section of formData.sections){
+	// 	for (const item of section.items) {
+	// 		total += item.total_cost;
+	// 		gtotal += item.total_price;
+	// 		for (const sub_item of item.sub_items) {
+	// 			total += sub_item.total_cost;
+	// 			gtotal += sub_item.total_price;
+	// 		}
+	// 	}
+	// }
 
-		// console.log("total: "+ total);
-		// console.log("gtotal: "+ gtotal);
-		setValue('total_cost', total);
-		setValue('grand_total', gtotal);
-	}, [
-		JSON.stringify(
-			formData.items.map((item) => {
-				return item.total_cost + item.total_price;
-			}),
-		) +
-			JSON.stringify(
-				formData.items.map((item) =>
-					item.sub_items.map((sub_item) => sub_item.total_cost + sub_item.total_price),
-				),
-			),
-	]);
+	// 	// console.log("total: "+ total);
+	// 	// console.log("gtotal: "+ gtotal);
+	// 	setValue('total_cost', total);
+	// 	setValue('grand_total', gtotal);
+	// }, [
+	// 	// JSON.stringify(
+	// 	// 	formData.sections.map((section) => {
+	// 	// 		return item.total_cost + item.total_price;
+	// 	// 	}),
+	// 	// ) +
+	// 	// 	JSON.stringify(
+	// 	// 		formData.items.map((item) =>
+	// 	// 			item.sub_items.map((sub_item) => sub_item.total_cost + sub_item.total_price),
+	// 	// 		),
+	// 	// 	),
+	// ]);
 
-	const handleDownloadPDF = async(quotation_id?: string, quotation_revision_id?: string, quotation_no?:string) => {
+	const handleDownloadPDF = async (
+		quotation_id?: string,
+		quotation_revision_id?: string,
+		quotation_no?: string,
+		with_watermark?: boolean
+	) => {
 		axios
-		.get(import.meta.env.VITE_BASE_URL + `/quotation/${quotation_id}/pdf/${quotation_revision_id}`, 
-			{responseType: 'blob', headers: { Authorization: `${localStorage.getItem('bts_token')}` }})
-		.then((response) => {
-			//console.log(response.data);
-			fileDownload(response.data, quotation_no+'.pdf');
-		});
-	}
-	
+			.get(
+				import.meta.env.VITE_BASE_URL +
+					`/quotation/${quotation_id}/pdf/${quotation_revision_id}`,
+				{
+					responseType: 'blob',
+					headers: { Authorization: `${localStorage.getItem('bts_token')}` },
+					params: {with_watermark: `${with_watermark}`},
+				},
+			)
+			.then((response) => {
+				//console.log(response.data);
+				fileDownload(response.data, quotation_no + '.pdf');
+			});
+	};
 
 	return (
 		<PageWrapper title={title}>
@@ -253,9 +271,7 @@ export const Quotation = (props: QuotationProps) => {
 									</span>
 								</div>
 								<div className='col-md-12'>
-									<span>
-										Revision: {props.revision}
-									</span>
+									<span>Revision: {props.revision}</span>
 								</div>
 							</div>
 						</>
@@ -271,16 +287,15 @@ export const Quotation = (props: QuotationProps) => {
 								// 	}
 								// 	}
 								// 	>
-								// 	<span className='text-muted'>Cancel save as new variation</span>								
+								// 	<span className='text-muted'>Cancel save as new variation</span>
 								// </div>
 								<></>
 							) : (
 								<Button
 									color='info'
-									onClick={() =>{
+									onClick={() => {
 										setIsCreateVariation(isCreateVariation ? false : true);
-									}
-									}
+									}}
 									isLight={isCreateVariation ? true : false}>
 									Create New Variation
 								</Button>
@@ -314,12 +329,12 @@ export const Quotation = (props: QuotationProps) => {
 							data,
 						);
 
-						if (props.quotation_id) {
-							//update only since quotation_id exists
-							postUpdateQuotation(props.quotation_id, payload);
-						} else {
-							postCreateQuotation(payload);
-						}
+						// if (props.quotation_id) {
+						// 	//update only since quotation_id exists
+						// 	postUpdateQuotation(props.quotation_id, payload);
+						// } else {
+						// 	postCreateQuotation(payload);
+						// }
 
 						console.log('Form submitted (attachment): ', JSON.stringify(payload));
 					})}>
@@ -578,7 +593,8 @@ export const Quotation = (props: QuotationProps) => {
 								</NavItem>
 								<NavItem
 									onClick={() => setActiveTab('Revisions')}
-									isActive={activeTab == 'Revisions' ? true : false}>
+									isActive={activeTab == 'Revisions' ? true : false}
+									hidden={props.mode == 'create'}>
 									<Button>Revisions</Button>
 								</NavItem>
 							</Nav>
@@ -587,7 +603,7 @@ export const Quotation = (props: QuotationProps) => {
 								<>
 									<div className='row gt-4'>
 										<div className='col-md-6 d-flex'>
-											<div className='row' hidden={props.mode=='create'}>
+											<div className='row' hidden={props.mode == 'create'}>
 												<div className='col-md-12'>
 													<span>
 														Quotation No: {props.quotation_no}{' '}
@@ -600,19 +616,50 @@ export const Quotation = (props: QuotationProps) => {
 													</Badge>
 													&nbsp;&nbsp;&nbsp;
 													<br />
-													<span>
-														Revision: {props.revision}
-													</span>
+													<span>Revision: {props.revision}</span>
 												</div>
 											</div>
-											<Button
-												color='info'
-												isLight
-												icon='Download'
-												hidden={!isViewMode}
-												onClick={() => handleDownloadPDF(props.quotation_id, props.quotation_rev_id, props.quotation_no)}>
-												PDF
-											</Button>
+
+											<Dropdown>
+												<DropdownToggle hasIcon={false}>
+													<Button
+														color='info'
+														isLight
+														icon='Download'
+														hidden={!isViewMode}
+														>
+														PDF
+													</Button>
+												</DropdownToggle>
+												<DropdownMenu>
+													<DropdownItem>
+														<span
+															onClick={() =>
+															handleDownloadPDF(
+																props.quotation_id,
+																props.quotation_rev_id,
+																props.quotation_no,
+																false
+															)
+														}
+															>
+															No Watermark
+														</span>
+													</DropdownItem>
+													<DropdownItem
+														onClick={() =>
+															handleDownloadPDF(
+																props.quotation_id,
+																props.quotation_rev_id,
+																props.quotation_no,
+																true
+															)
+														}
+														>
+														With Watermark
+													</DropdownItem>
+												</DropdownMenu>
+											</Dropdown>
 										</div>
 
 										<div className='col-md-6 d-flex justify-content-end'>
@@ -624,8 +671,7 @@ export const Quotation = (props: QuotationProps) => {
 														icon='Circle'
 														className='text-nowrap order-0 float-end'
 														isDisable={isViewMode}
-														hidden={!allowStatusUpdate}
-														>
+														hidden={!allowStatusUpdate}>
 														{status.name}
 													</Button>
 												</DropdownToggle>
@@ -665,24 +711,45 @@ export const Quotation = (props: QuotationProps) => {
 									</div>
 								</>
 								<br />
-								<ManageItem isViewMode={isViewMode} />
+								{/* <ManageItem isViewMode={isViewMode} /> */}
+								<ManageSection
+									isViewMode={isViewMode}
+									sectionMode={props.section_mode}
+								/>
+								<br />
+								{/* <div className='col-md-12' hidden={isViewMode ? true : false}>
+									<Button
+										color='info'
+										icon='Add'
+										tag='a'
+										//onClick={addSection}
+										className='float-end'>
+										Add Section
+									</Button>
+								</div> */}
 							</div>
 							<div hidden={activeTab != 'Attachments'}>
-								{isViewMode?
-								<AttachmentsView quotation_id={props.quotation_id} variance={props.variance}/>:
-								<Dropzone
-									setAttachmentIds={updateAttachmentID}
-									className={''}
-									quotation_rev_id={props.quotation_rev_id}
-									isViewMode={isViewMode}/>
-								}
-								
+								{isViewMode ? (
+									<AttachmentsView
+										quotation_id={props.quotation_id}
+										variance={props.variance}
+									/>
+								) : (
+									<Dropzone
+										setAttachmentIds={updateAttachmentID}
+										className={''}
+										quotation_rev_id={props.quotation_rev_id}
+										isViewMode={isViewMode}
+									/>
+								)}
 							</div>
 							<div hidden={activeTab != 'Revisions'}>
-								<RevisionsView
-									quotation_id={props.quotation_id}
-									variance={props.variance}
-								/>
+								{props.mode != 'create' && (
+									<RevisionsView
+										quotation_id={props.quotation_id}
+										variance={props.variance}
+									/>
+								)}
 							</div>
 						</CardBody>
 					</Card>
@@ -828,7 +895,8 @@ export const Quotation = (props: QuotationProps) => {
 										<input
 											id='total_cost'
 											className={
-												'form-control ' + (errors.total_cost ? 'is-invalid' : '')
+												'form-control ' +
+												(errors.total_cost ? 'is-invalid' : '')
 											}
 											{...register('total_cost')}
 											type='text'
@@ -923,7 +991,10 @@ export const Quotation = (props: QuotationProps) => {
 									) : //<span>Save</span>
 									isCreateVariation ? (
 										<span>
-											Save <small className='text-decoration-underline'>(as New Variation)</small>
+											Save{' '}
+											<small className='text-decoration-underline'>
+												(as New Variation)
+											</small>
 										</span>
 									) : (
 										<span>Save</span>

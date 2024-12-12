@@ -20,7 +20,7 @@ namespace QuotationDataType {
 		pic_email: string;
 		pic_contact_number: string;
 		project_reference: string;
-		items: Item[];
+		sections: Section[];
 		status: string;
 
 		//Summary fields
@@ -34,6 +34,13 @@ namespace QuotationDataType {
 		payment_terms: string;
 		validity: string;
 	};
+
+
+	export type Section = {
+		section_id: string;
+		section_name: string;
+		items: Item[];
+	}
 
 	export type Item = {
 		item_id: string; //PK
