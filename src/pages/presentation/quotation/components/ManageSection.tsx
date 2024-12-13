@@ -40,12 +40,11 @@ const ManageSection = (props: SectionProps) => {
 
 	const addSection = (isSectionValid: boolean) => {
 		append({
-			section_name: 'New Section ' + (fields.length + 1),
+			name: 'New Section ' + (fields.length + 1),
 			order: 0,
-			is_section_valid: isSectionValid,
 			items: [],
 		});
-
+		//setValue('is_section_valid', isSectionValid);
 		sectionNameInputVisible.push(true);
 	};
 
@@ -57,7 +56,7 @@ const ManageSection = (props: SectionProps) => {
 		setSectionNameInputVisible((x) => [...current]);
 	};
 
-	const [sectionMode, setSectionMode] = useState<any>(null);
+	const [sectionMode, setSectionMode] = useState<any>(props.sectionMode? props.sectionMode:null);
 
 	return (
 		<div className='pb-0'>
@@ -79,7 +78,7 @@ const ManageSection = (props: SectionProps) => {
 												id={'SectionAccordionItem_' + sectionIndex}
 												title={
 													`${sectionIndex + 1}.0  ` +
-													formData.sections[sectionIndex].section_name
+													formData.sections[sectionIndex].name
 												}>
 												<div className='row'>
 													<div
@@ -125,31 +124,31 @@ const ManageSection = (props: SectionProps) => {
 														>
 														<div className='col-md-3'>
 															<FormGroup
-																id='section_name'
+																id='name'
 																label='Section Name'
 																isFloating>
 																<input
-																	id='section_name'
+																	id='name'
 																	className={
 																		'form-control ' +
 																		(errors.sections?.[
 																			sectionIndex
-																		]?.section_name
+																		]?.name
 																			? 'is-invalid'
 																			: '')
 																	}
 																	{...register(
-																		`sections.${sectionIndex}.section_name`,
+																		`sections.${sectionIndex}.name`,
 																	)}
 																	type='text'
-																	placeholder='section_name'
+																	placeholder='name'
 																	disabled={props.isViewMode}
 																/>
 																<div className='invalid-feedback'>
 																	{
 																		errors.sections?.[
 																			sectionIndex
-																		]?.section_name?.message
+																		]?.name?.message
 																	}
 																</div>
 															</FormGroup>
@@ -159,7 +158,7 @@ const ManageSection = (props: SectionProps) => {
 																color='success'
 																icon='check'
 																rounded={1}
-																isDisable={(errors.sections?.[sectionIndex]?.section_name?.message != null)}
+																isDisable={(errors.sections?.[sectionIndex]?.name?.message != null)}
 																onClick={() =>
 																	setVisibilityOfSectionNameInput(
 																		sectionIndex,

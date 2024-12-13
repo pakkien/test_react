@@ -35,6 +35,7 @@ import RevisionsView from './RevisionsView';
 import axios from 'axios';
 import fileDownload from 'js-file-download';
 import TrackingDetailsForm from './TrackingDetailsForm';
+import ManageSection from './ManageSection';
 
 type QuotationViewProps = {
 	data: any;
@@ -60,7 +61,7 @@ const QuotationView = (qv_props: QuotationViewProps) => {
 			const curentQuotationRev = qv_props.data.filter(
 				(x: any) => x.variance == currentVariance,
 			)[0];
-			setProps(curentQuotationRev);
+			console.log(JSON.stringify(props));
 			setStatus(
 				QUOTATION_STATUS[
 					curentQuotationRev.status.toUpperCase() as keyof typeof QUOTATION_STATUS
@@ -353,7 +354,12 @@ const QuotationView = (qv_props: QuotationViewProps) => {
 									</div>
 								</div>
 								<br />
-								<ManageItem items={props.items} />
+								{/* <ManageItem items={props.items} /> */}
+								{/* <ManageSection
+									sections={props.sections}
+									sectionMode={props.is_section_valid}
+							
+								/> */}
 							</div>
 						</CardBody>
 					</Card>

@@ -14,6 +14,8 @@ import Card, {
 type SubItemProps = {
 	itemIndex: number;
 	sub_items: QuotationDataType.Sub_item[];
+	sectionMode: boolean;
+	sectionIndex: number;
 };
 
 const ManageSubItem = (props: SubItemProps) => {
@@ -24,20 +26,22 @@ const ManageSubItem = (props: SubItemProps) => {
 					id='SubItemAccordion'
 					color='dark'
 					activeItemId={'SubItemAccordionItem_' + props.itemIndex}>
-					<AccordionItem
-						id={'SubItemAccordionItem_' + props.itemIndex}
-						title='Sub Items'>
+					<AccordionItem id={'SubItemAccordionItem_' + props.itemIndex} title='Sub Items'>
 						{props.sub_items.map((sub_item, subItemIndex) => {
 							return (
 								<>
 									<Card
 										id={'#subItem_card_id#' + subItemIndex}
-										key={subItemIndex}>
+										key={subItemIndex}
+										shadow='none'
+										borderColor='light'
+										borderSize={1}>
 										<CardHeader>
 											<CardLabel>
 												<CardTitle tag='div' className='h3'>
-													Sub Item {props.itemIndex + 1}.{subItemIndex+1}{' '}
-													&nbsp;&nbsp;
+													{props.sectionMode == true
+														? `${props.sectionIndex + 1}.${props.itemIndex + 1}.${subItemIndex + 1}  Sub Item ${subItemIndex + 1}`
+														: `${props.itemIndex + 1}.${subItemIndex + 1}   Sub Item ${subItemIndex + 1}`}
 												</CardTitle>
 											</CardLabel>
 										</CardHeader>

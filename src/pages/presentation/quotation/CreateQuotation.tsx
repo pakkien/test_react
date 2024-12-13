@@ -21,6 +21,7 @@ const QuotationData: QuotationDataType.QuotationData = {
 	sections: [],
 	status: '',
 	variance: 0,
+	is_section_valid: true,
 
 	//Summary fields
 	reference_status: '',

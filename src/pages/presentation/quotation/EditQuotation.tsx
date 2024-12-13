@@ -283,6 +283,7 @@ const EditQuotation = () => {
 					revision={quotationRevData.revision}
 					create_new_variance={create_new_variance}
 					variance={quotationRevData.variance}
+					section_mode={quotationRevData.is_section_valid}
 					/>
 				</FormProviderQuotation>
 			) : (

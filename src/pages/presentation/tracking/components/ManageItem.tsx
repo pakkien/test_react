@@ -17,6 +17,8 @@ import Checks from '../../../../components/bootstrap/forms/Checks';
 
 type ItemProps = {
 	items: QuotationDataType.Item[];
+	sectionMode: boolean;
+	sectionIndex: number;
 };
 
 const ManageItem = (props: ItemProps) => {
@@ -32,8 +34,8 @@ const ManageItem = (props: ItemProps) => {
 								activeItemId={'ItemAccordionItem_' + itemIndex}>
 								<AccordionItem
 									id={'ItemAccordionItem_' + itemIndex}
-									title={`Item ${itemIndex + 1}.0`}>
-									<Card id={'#item_card_id#' + itemIndex} key={item.item_id}>
+									title={props.sectionMode? `${props.sectionIndex + 1}.${itemIndex + 1} Item ${itemIndex + 1}`:`${itemIndex + 1}.0 Item ${itemIndex + 1}`}>
+									<Card id={'#item_card_id#' + itemIndex} key={item.item_id} shadow='none' borderSize={1} borderColor='light'>
 										<CardHeader>
 											<CardLabel>
 												<CardTitle tag='div' className='h3'>
@@ -164,7 +166,7 @@ const ManageItem = (props: ItemProps) => {
 												</div>
 
 												<div className='col-md-12'>
-                                                    <ManageSubItem itemIndex={itemIndex} sub_items={item.sub_items}/>
+                                                    <ManageSubItem itemIndex={itemIndex} sub_items={item.sub_items} sectionMode={props.sectionMode} sectionIndex={props.sectionIndex}/>
                                                 </div>
 												<div className='col-md-12'></div>
 											</div>

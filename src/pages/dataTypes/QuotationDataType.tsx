@@ -22,6 +22,7 @@ namespace QuotationDataType {
 		project_reference: string;
 		sections: Section[];
 		status: string;
+		is_section_valid: boolean;
 
 		//Summary fields
 		reference_status: string;
@@ -37,8 +38,8 @@ namespace QuotationDataType {
 
 
 	export type Section = {
-		section_id: string;
-		section_name: string;
+		id: string;
+		name: string;
 		items: Item[];
 	}
 

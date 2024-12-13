@@ -194,37 +194,25 @@ export const Quotation = (props: QuotationProps) => {
 
 	//auto-calculation total and gtotal
 	//TODO:
-	// useEffect(() => {
-	// 	var total = 0;
-	// 	var gtotal = 0;
+	useEffect(() => {
+		var total = 0;
+		var gtotal = 0;
 
-	// 	for (const section of formData.sections){
-	// 	for (const item of section.items) {
-	// 		total += item.total_cost;
-	// 		gtotal += item.total_price;
-	// 		for (const sub_item of item.sub_items) {
-	// 			total += sub_item.total_cost;
-	// 			gtotal += sub_item.total_price;
-	// 		}
-	// 	}
-	// }
-
-	// 	// console.log("total: "+ total);
-	// 	// console.log("gtotal: "+ gtotal);
-	// 	setValue('total_cost', total);
-	// 	setValue('grand_total', gtotal);
-	// }, [
-	// 	// JSON.stringify(
-	// 	// 	formData.sections.map((section) => {
-	// 	// 		return item.total_cost + item.total_price;
-	// 	// 	}),
-	// 	// ) +
-	// 	// 	JSON.stringify(
-	// 	// 		formData.items.map((item) =>
-	// 	// 			item.sub_items.map((sub_item) => sub_item.total_cost + sub_item.total_price),
-	// 	// 		),
-	// 	// 	),
-	// ]);
+		for (const section of formData.sections){
+		for (const item of section.items) {
+			total += item.total_cost;
+			gtotal += item.total_price;
+			for (const sub_item of item.sub_items) {
+				total += sub_item.total_cost;
+				gtotal += sub_item.total_price;
+			}
+		}
+	}
+		setValue('total_cost', total);
+		setValue('grand_total', gtotal);
+	}, [
+		JSON.stringify(formData.sections)
+	]);
 
 	const handleDownloadPDF = async (
 		quotation_id?: string,
@@ -319,22 +307,35 @@ export const Quotation = (props: QuotationProps) => {
 
 						//await timeout(1000);
 
-						// console.log('Form submitted: ', data);
+						//console.log('Form submitted1: ', data);
+
+						//set order
+						for (var i = 0; i< data.sections.length; i++) {
+							data.sections[i].order = i;
+							for (var j = 0; j< data.sections[i].items.length; j++) {
+								data.sections[i].items[j].order = j;
+								for (var k = 0; k< data.sections[i].items[j].sub_items.length; k++) {
+									data.sections[i].items[j].sub_items[k].order = k;
+								}
+							}
+						}
 
 						const payload = Object.assign(
 							{
 								attachment_list: attachmentIDs,
 								variance: props.variance,
+								is_section_valid: props.section_mode,
 							},
 							data,
 						);
 
-						// if (props.quotation_id) {
-						// 	//update only since quotation_id exists
-						// 	postUpdateQuotation(props.quotation_id, payload);
-						// } else {
-						// 	postCreateQuotation(payload);
-						// }
+
+						if (props.quotation_id) {
+							//update only since quotation_id exists
+							postUpdateQuotation(props.quotation_id, payload);
+						} else {
+							postCreateQuotation(payload);
+						}
 
 						console.log('Form submitted (attachment): ', JSON.stringify(payload));
 					})}>
@@ -717,16 +718,6 @@ export const Quotation = (props: QuotationProps) => {
 									sectionMode={props.section_mode}
 								/>
 								<br />
-								{/* <div className='col-md-12' hidden={isViewMode ? true : false}>
-									<Button
-										color='info'
-										icon='Add'
-										tag='a'
-										//onClick={addSection}
-										className='float-end'>
-										Add Section
-									</Button>
-								</div> */}
 							</div>
 							<div hidden={activeTab != 'Attachments'}>
 								{isViewMode ? (
@@ -985,7 +976,9 @@ export const Quotation = (props: QuotationProps) => {
 									color='success'
 									icon={isCreateVariation ? 'null' : 'Save'}
 									hidden={isViewMode}
-									isDisable={isSubmitting}>
+									isDisable={isSubmitting}
+									//nClick={() => console.log("hihi")}
+									>
 									{isSubmitting ? (
 										<Spinner isSmall inButton='onlyIcon' />
 									) : //<span>Save</span>

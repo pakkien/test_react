@@ -280,7 +280,7 @@ const ViewQuotation = () => {
 					status={quotationRevData.status}
 					revision={quotationRevData.revision}
 					variance={quotationRevData.variance}
-					section_mode={true} //TODO:
+					section_mode={quotationRevData.is_section_valid} //TODO:
 					/>
 				</FormProviderQuotation>
 			) : (

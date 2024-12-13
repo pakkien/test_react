@@ -60,6 +60,7 @@ const RevisionsView = (props: RevisionViewProps) => {
                 //onClick={() => goToViewQuotationPage(item.quotation_revision_id)}
                 href={'/quotation/view/' + item.quotation_revision_id}
                 target='_blank'
+                key={item.quotation_revision_id}
                 >Revision {item.revision}</a> - Created at: {convertLocalTime(item.created_at)}<br/></>);
         })}
         </>
