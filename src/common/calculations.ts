@@ -29,7 +29,9 @@ export function calculateUnitPriceByMargin(unit_cost: number, margin: number) {
 
 export function calculateUnitPriceByMarginPercentage(unit_cost: number, margin_percentage: number) {
 
-    return parseFloat((unit_cost * (100+margin_percentage) / 100).toFixed(2))
+   // return parseFloat((unit_cost * (100+margin_percentage) / 100).toFixed(2))
+   return parseFloat(((100 * unit_cost) / (100 - margin_percentage)).toFixed(2))
+
 }
 
 
