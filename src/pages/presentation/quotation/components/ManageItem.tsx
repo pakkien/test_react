@@ -15,6 +15,7 @@ import FormGroup from '../../../../components/bootstrap/forms/FormGroup';
 import ManageSubItem from './ManageSubItem';
 import Accordion, { AccordionItem } from '../../../../components/bootstrap/Accordion';
 import Nav, { NavItem } from '../../../../components/bootstrap/Nav';
+import { calculateMargin, calculateMarginPercentage, calculateTotalCost, calculateTotalPrice, calculateUnitPriceByMargin, calculateUnitPriceByMarginPercentage } from '../../../../common/calculations';
 
 type ItemProps = {
 	sectionIndex: number;
@@ -62,17 +63,17 @@ const ManageItem = (props: ItemProps) => {
 		});
 	};
 
-	// if(props.sectionMode == false){
-	// 	//addItem();
-	// 	console.log("hihi");
-	// }
 
 	//auto calculation
 	useEffect(() => {
 		formData.sections[sectionIndex].items.map((item, itemIndex) => {
-			setValue(`sections.${sectionIndex}.items.${itemIndex}.total_cost`, parseFloat((item.quantity * item.unit_cost).toFixed(2)));
-			setValue(`sections.${sectionIndex}.items.${itemIndex}.total_price`, parseFloat((item.quantity * item.unit_price).toFixed(2)));
-			setValue(`sections.${sectionIndex}.items.${itemIndex}.margin_percentage`, parseFloat(((item.unit_price / item.unit_cost - 1)*100).toFixed(2)) );
+			// setValue(`sections.${sectionIndex}.items.${itemIndex}.total_cost`, parseFloat((item.quantity * item.unit_cost).toFixed(2)));
+			// setValue(`sections.${sectionIndex}.items.${itemIndex}.total_price`, parseFloat((item.quantity * item.unit_price).toFixed(2)));
+			// setValue(`sections.${sectionIndex}.items.${itemIndex}.margin_percentage`, parseFloat(((item.unit_price / item.unit_cost - 1)*100).toFixed(2)) );
+			setValue(`sections.${sectionIndex}.items.${itemIndex}.total_cost`, calculateTotalCost(item.unit_cost, item.quantity));
+			setValue(`sections.${sectionIndex}.items.${itemIndex}.total_price`, calculateTotalPrice(item.unit_price, item.quantity));
+			setValue(`sections.${sectionIndex}.items.${itemIndex}.margin`, calculateMargin(item.unit_cost, item.unit_price));
+			setValue(`sections.${sectionIndex}.items.${itemIndex}.margin_percentage`, calculateMarginPercentage(item.unit_cost, item.unit_price));
 		});
 	}, [JSON.stringify(formData.sections[sectionIndex].items.map(item => {return item.quantity+item.unit_cost}))]);
 
@@ -352,11 +353,13 @@ const ManageItem = (props: ItemProps) => {
 														type='text'
 														placeholder='margin'
 														disabled={props.isViewMode}
-														// onChange={
-														// 	(e) => {
-														// 		setValue(`items.${itemIndex}.unit_price`, parseFloat((formData.items[itemIndex].unit_cost * (100+parseFloat(e.target.value)) / 100).toFixed(2)));
-														// 		setValue(`items.${itemIndex}.total_price`, parseFloat((formData.items[itemIndex].quantity * formData.items[itemIndex].unit_price).toFixed(2)));	}
-														// 	}
+														onChange={
+															(e) => {
+																setValue(`sections.${sectionIndex}.items.${itemIndex}.unit_price`, calculateUnitPriceByMargin(formData.sections?.[sectionIndex]?.items[itemIndex].unit_cost, parseFloat(e.target.value)));
+																setValue(`sections.${sectionIndex}.items.${itemIndex}.total_price`, calculateTotalPrice(formData.sections?.[sectionIndex]?.items[itemIndex].unit_price, formData.sections?.[sectionIndex]?.items[itemIndex].quantity));
+																setValue(`sections.${sectionIndex}.items.${itemIndex}.margin_percentage`, calculateMarginPercentage(formData.sections?.[sectionIndex]?.items[itemIndex].unit_cost, formData.sections?.[sectionIndex]?.items[itemIndex].unit_price));
+															}
+														}
 													/>
 													<div className='invalid-feedback'>
 														{errors.sections?.[sectionIndex]?.items?.[itemIndex]?.margin?.message}
@@ -379,8 +382,12 @@ const ManageItem = (props: ItemProps) => {
 														disabled={props.isViewMode}
 														onChange={
 															(e) => {
-																setValue(`sections.${sectionIndex}.items.${itemIndex}.unit_price`, parseFloat((formData.sections?.[sectionIndex]?.items[itemIndex].unit_cost * (100+parseFloat(e.target.value)) / 100).toFixed(2)));
-																setValue(`sections.${sectionIndex}.items.${itemIndex}.total_price`, parseFloat((formData.sections?.[sectionIndex]?.items[itemIndex].quantity * formData.sections?.[sectionIndex]?.items[itemIndex].unit_price).toFixed(2)));	}
+																// setValue(`sections.${sectionIndex}.items.${itemIndex}.unit_price`, parseFloat((formData.sections?.[sectionIndex]?.items[itemIndex].unit_cost * (100+parseFloat(e.target.value)) / 100).toFixed(2)));
+																// setValue(`sections.${sectionIndex}.items.${itemIndex}.total_price`, parseFloat((formData.sections?.[sectionIndex]?.items[itemIndex].quantity * formData.sections?.[sectionIndex]?.items[itemIndex].unit_price).toFixed(2)));	
+																setValue(`sections.${sectionIndex}.items.${itemIndex}.unit_price`, calculateUnitPriceByMarginPercentage(formData.sections?.[sectionIndex]?.items[itemIndex].unit_cost, parseFloat(e.target.value)));
+																setValue(`sections.${sectionIndex}.items.${itemIndex}.total_price`, calculateTotalPrice(formData.sections?.[sectionIndex]?.items[itemIndex].unit_price, formData.sections?.[sectionIndex]?.items[itemIndex].quantity));
+																setValue(`sections.${sectionIndex}.items.${itemIndex}.margin`, calculateMargin(formData.sections?.[sectionIndex]?.items[itemIndex].unit_cost, formData.sections?.[sectionIndex]?.items[itemIndex].unit_price));
+															}
 															}
 													/>
 													<div className='invalid-feedback'>
@@ -407,8 +414,12 @@ const ManageItem = (props: ItemProps) => {
 														disabled={props.isViewMode}
 														onChange={
 																(e) => {
-																	setValue(`sections.${sectionIndex}.items.${itemIndex}.margin`, parseFloat(((parseFloat(e.target.value)/ formData.sections?.[sectionIndex]?.items[itemIndex].unit_cost - 1)*100).toFixed(2)));
-																	setValue(`sections.${sectionIndex}.items.${itemIndex}.total_price`, parseFloat((formData.sections?.[sectionIndex]?.items[itemIndex].quantity * parseFloat(e.target.value)).toFixed(2)));	}
+																	// setValue(`sections.${sectionIndex}.items.${itemIndex}.margin_percentage`, parseFloat(((parseFloat(e.target.value)/ formData.sections?.[sectionIndex]?.items[itemIndex].unit_cost - 1)*100).toFixed(2)));
+																	// setValue(`sections.${sectionIndex}.items.${itemIndex}.total_price`, parseFloat((formData.sections?.[sectionIndex]?.items[itemIndex].quantity * parseFloat(e.target.value)).toFixed(2)));	
+																	setValue(`sections.${sectionIndex}.items.${itemIndex}.margin`, calculateMargin(formData.sections?.[sectionIndex]?.items[itemIndex].unit_cost, parseFloat(e.target.value)));
+																	setValue(`sections.${sectionIndex}.items.${itemIndex}.margin_percentage`, calculateMarginPercentage(formData.sections?.[sectionIndex]?.items[itemIndex].unit_cost, parseFloat(e.target.value)));
+																	setValue(`sections.${sectionIndex}.items.${itemIndex}.total_price`, calculateTotalPrice(parseFloat(e.target.value), formData.sections?.[sectionIndex]?.items[itemIndex].quantity));
+																}
 																
 														}
 													/>

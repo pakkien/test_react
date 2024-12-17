@@ -13,6 +13,7 @@ import Card, {
 } from '../../../../components/bootstrap/Card';
 import Button from '../../../../components/bootstrap/Button';
 import FormGroup from '../../../../components/bootstrap/forms/FormGroup';
+import { calculateTotalCost, calculateTotalPrice, calculateMargin, calculateMarginPercentage, calculateUnitPriceByMargin, calculateUnitPriceByMarginPercentage } from '../../../../common/calculations';
 
 type SubItemProps = {
 	sectionIndex: number;
@@ -59,18 +60,22 @@ const ManageSubItem = (props: SubItemProps) => {
 
 	useEffect(() => {
 		formData.sections[sectionIndex].items[itemIndex].sub_items.map((sub_item, subItemIndex) => {
-			setValue(
-				`sections.${sectionIndex}.items.${itemIndex}.sub_items.${subItemIndex}.total_cost`,
-				parseFloat((sub_item.quantity * sub_item.unit_cost).toFixed(2)),
-			);
-			setValue(
-				`sections.${sectionIndex}.items.${itemIndex}.sub_items.${subItemIndex}.total_price`,
-				parseFloat((sub_item.quantity * sub_item.unit_price).toFixed(2)),
-			);
-			setValue(
-				`sections.${sectionIndex}.items.${itemIndex}.sub_items.${subItemIndex}.margin_percentage`,
-				parseFloat(((sub_item.unit_price / sub_item.unit_cost - 1) * 100).toFixed(2)),
-			);
+			// setValue(
+			// 	`sections.${sectionIndex}.items.${itemIndex}.sub_items.${subItemIndex}.total_cost`,
+			// 	parseFloat((sub_item.quantity * sub_item.unit_cost).toFixed(2)),
+			// );
+			// setValue(
+			// 	`sections.${sectionIndex}.items.${itemIndex}.sub_items.${subItemIndex}.total_price`,
+			// 	parseFloat((sub_item.quantity * sub_item.unit_price).toFixed(2)),
+			// );
+			// setValue(
+			// 	`sections.${sectionIndex}.items.${itemIndex}.sub_items.${subItemIndex}.margin_percentage`,
+			// 	parseFloat(((sub_item.unit_price / sub_item.unit_cost - 1) * 100).toFixed(2)),
+			// );
+			setValue(`sections.${sectionIndex}.items.${itemIndex}.sub_items.${subItemIndex}.total_cost`, calculateTotalCost(sub_item.unit_cost, sub_item.quantity));
+			setValue(`sections.${sectionIndex}.items.${itemIndex}.sub_items.${subItemIndex}.total_price`, calculateTotalPrice(sub_item.unit_price, sub_item.quantity));
+			setValue(`sections.${sectionIndex}.items.${itemIndex}.sub_items.${subItemIndex}.margin`, calculateMargin(sub_item.unit_cost, sub_item.unit_price));
+			setValue(`sections.${sectionIndex}.items.${itemIndex}.sub_items.${subItemIndex}.margin_percentage`, calculateMarginPercentage(sub_item.unit_cost, sub_item.unit_price));
 		});
 	}, [
 		JSON.stringify(
@@ -428,11 +433,15 @@ const ManageSubItem = (props: SubItemProps) => {
 																type='text'
 																placeholder='margin'
 																disabled={props.isViewMode}
-																// onChange={
-																// 	(e) => {
-																// 		setValue(`items.${itemIndex}.sub_items.${subItemIndex}.unit_price`, parseFloat((formData.items[itemIndex].sub_items[subItemIndex].unit_cost * (100+parseFloat(e.target.value)) / 100).toFixed(2)));
-																// 		setValue(`items.${itemIndex}.sub_items.${subItemIndex}.total_price`, parseFloat((formData.items[itemIndex].sub_items[subItemIndex].quantity * formData.items[itemIndex].sub_items[subItemIndex].unit_price).toFixed(2)));	}
-																// 	}
+																onChange={
+																	(e) => {
+																		//setValue(`items.${itemIndex}.sub_items.${subItemIndex}.unit_price`, parseFloat((formData.items[itemIndex].sub_items[subItemIndex].unit_cost * (100+parseFloat(e.target.value)) / 100).toFixed(2)));
+																		//setValue(`items.${itemIndex}.sub_items.${subItemIndex}.total_price`, parseFloat((formData.items[itemIndex].sub_items[subItemIndex].quantity * formData.items[itemIndex].sub_items[subItemIndex].unit_price).toFixed(2)));	
+																		setValue(`sections.${sectionIndex}.items.${itemIndex}.sub_items.${subItemIndex}.unit_price`, calculateUnitPriceByMargin(formData.sections?.[sectionIndex]?.items[itemIndex].sub_items[subItemIndex].unit_cost, parseFloat(e.target.value)));
+																		setValue(`sections.${sectionIndex}.items.${itemIndex}.sub_items.${subItemIndex}.total_price`, calculateTotalPrice(formData.sections?.[sectionIndex]?.items[itemIndex].sub_items[subItemIndex].unit_price, formData.sections?.[sectionIndex]?.items[itemIndex].sub_items[subItemIndex].quantity));
+																		setValue(`sections.${sectionIndex}.items.${itemIndex}.sub_items.${subItemIndex}.margin_percentage`, calculateMarginPercentage(formData.sections?.[sectionIndex]?.items[itemIndex].sub_items[subItemIndex].unit_cost, formData.sections?.[sectionIndex]?.items[itemIndex].sub_items[subItemIndex].unit_price));
+																	}
+																	}
 															/>
 															<div className='invalid-feedback'>
 																{
@@ -465,41 +474,9 @@ const ManageSubItem = (props: SubItemProps) => {
 																placeholder='margin_percentage'
 																disabled={props.isViewMode}
 																onChange={(e) => {
-																	setValue(
-																		`sections.${sectionIndex}.items.${itemIndex}.sub_items.${subItemIndex}.unit_price`,
-																		parseFloat(
-																			(
-																				(formData.sections?.[sectionIndex]?.items[
-																					itemIndex
-																				].sub_items[
-																					subItemIndex
-																				].unit_cost *
-																					(100 +
-																						parseFloat(
-																							e.target
-																								.value,
-																						))) /
-																				100
-																			).toFixed(2),
-																		),
-																	);
-																	setValue(
-																		`sections.${sectionIndex}.items.${itemIndex}.sub_items.${subItemIndex}.total_price`,
-																		parseFloat(
-																			(
-																				formData.sections?.[sectionIndex]?.items[
-																					itemIndex
-																				].sub_items[
-																					subItemIndex
-																				].quantity *
-																				formData.sections?.[sectionIndex]?.items[
-																					itemIndex
-																				].sub_items[
-																					subItemIndex
-																				].unit_price
-																			).toFixed(2),
-																		),
-																	);
+																	setValue(`sections.${sectionIndex}.items.${itemIndex}.sub_items.${subItemIndex}.unit_price`, calculateUnitPriceByMarginPercentage(formData.sections?.[sectionIndex]?.items[itemIndex].sub_items[subItemIndex].unit_cost, parseFloat(e.target.value)));
+																	setValue(`sections.${sectionIndex}.items.${itemIndex}.sub_items.${subItemIndex}.total_price`, calculateTotalPrice(formData.sections?.[sectionIndex]?.items[itemIndex].sub_items[subItemIndex].unit_price, formData.sections?.[sectionIndex]?.items[itemIndex].sub_items[subItemIndex].quantity));
+																	setValue(`sections.${sectionIndex}.items.${itemIndex}.sub_items.${subItemIndex}.margin`, calculateMargin(formData.sections?.[sectionIndex]?.items[itemIndex].sub_items[subItemIndex].unit_cost, formData.sections?.[sectionIndex]?.items[itemIndex].sub_items[subItemIndex].unit_price));
 																}}
 															/>
 															<div className='invalid-feedback'>
@@ -533,38 +510,9 @@ const ManageSubItem = (props: SubItemProps) => {
 																placeholder='unit_price'
 																disabled={props.isViewMode}
 																onChange={(e) => {
-																	setValue(
-																		`sections.${sectionIndex}.items.${itemIndex}.sub_items.${subItemIndex}.margin`,
-																		parseFloat(
-																			(
-																				(parseFloat(
-																					e.target.value,
-																				) /
-																					formData.sections?.[sectionIndex]?.items[
-																						itemIndex
-																					].sub_items[
-																						subItemIndex
-																					].unit_cost -
-																					1) *
-																				100
-																			).toFixed(2),
-																		),
-																	);
-																	setValue(
-																		`sections.${sectionIndex}.items.${itemIndex}.sub_items.${subItemIndex}.total_price`,
-																		parseFloat(
-																			(
-																				formData.sections?.[sectionIndex]?.items[
-																					itemIndex
-																				].sub_items[
-																					subItemIndex
-																				].quantity *
-																				parseFloat(
-																					e.target.value,
-																				)
-																			).toFixed(2),
-																		),
-																	);
+																	setValue(`sections.${sectionIndex}.items.${itemIndex}.sub_items.${subItemIndex}.margin`, calculateMargin(formData.sections?.[sectionIndex]?.items[itemIndex].sub_items[subItemIndex].unit_cost, parseFloat(e.target.value)));
+																	setValue(`sections.${sectionIndex}.items.${itemIndex}.sub_items.${subItemIndex}.margin_percentage`, calculateMarginPercentage(formData.sections?.[sectionIndex]?.items[itemIndex].sub_items[subItemIndex].unit_cost, parseFloat(e.target.value)));
+																	setValue(`sections.${sectionIndex}.items.${itemIndex}.sub_items.${subItemIndex}.total_price`, calculateTotalPrice(parseFloat(e.target.value), formData.sections?.[sectionIndex]?.items[itemIndex].sub_items[subItemIndex].quantity));
 																}}
 															/>
 															<div className='invalid-feedback'>

@@ -28,30 +28,38 @@ import { debounce } from '../../../helpers/helpers';
 import { InputGroupText } from '../../../components/bootstrap/forms/InputGroup';
 import FormGroup from '../../../components/bootstrap/forms/FormGroup';
 import Alert from '../../../components/bootstrap/Alert';
-import OffCanvas, { OffCanvasBody, OffCanvasHeader, OffCanvasTitle } from '../../../components/bootstrap/OffCanvas';
+import OffCanvas, {
+	OffCanvasBody,
+	OffCanvasHeader,
+	OffCanvasTitle,
+} from '../../../components/bootstrap/OffCanvas';
 import PlaceholderImage from '../../../components/extras/PlaceholderImage';
 //import AdditionalInfoForm from './components/AdditionalInfoForm';
 import { TModalFullScreen, TModalSize } from '../../../type/modal-type';
-import Modal, { ModalBody, ModalFooter, ModalHeader, ModalTitle } from '../../../components/bootstrap/Modal';
+import Modal, {
+	ModalBody,
+	ModalFooter,
+	ModalHeader,
+	ModalTitle,
+} from '../../../components/bootstrap/Modal';
 import axios from 'axios';
 import QUOTATION_STATUS from '../../../common/data/enumQuotationStatus';
 
 import utc from 'dayjs/plugin/utc';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import timezone from 'dayjs/plugin/timezone'
+import timezone from 'dayjs/plugin/timezone';
+import { calculateMargin, calculateMarginPercentage } from '../../../common/calculations';
 
 dayjs.extend(utc);
 dayjs.extend(localizedFormat);
 dayjs.extend(customParseFormat);
 dayjs.extend(timezone);
 
-
-
 function ReturnBatchColor(state: string) {
 	const key = state?.toUpperCase() as keyof typeof QUOTATION_STATUS;
 	var enum_val = QUOTATION_STATUS[key];
-	if (enum_val == null){
+	if (enum_val == null) {
 		enum_val = QUOTATION_STATUS.NONE;
 	}
 	return enum_val.color;
@@ -230,7 +238,7 @@ interface IValues {
 
 const TrackingList = () => {
 	const navigate = useNavigate();
-	
+
 	const [state, setState] = useState(false);
 	const [staticBackdropStatus, setStaticBackdropStatus] = useState(false);
 	const [scrollableStatus, setScrollableStatus] = useState(false);
@@ -257,18 +265,18 @@ const TrackingList = () => {
 	const formik = useFormik({
 		initialValues: {
 			po_no: '',
-            po_date: '',
-            po_amount: '',
-            po_attach_file: '',
-            so_no: '',
-            so_attach_file: '',
-            invoice_no: '',
-            invoice_date: '',
-            payment_terms: '',
-            invoice_amount: '',
-            invoice_attach_file: '',
-            remarks: '',
-            status_overwrite: ''
+			po_date: '',
+			po_amount: '',
+			po_attach_file: '',
+			so_no: '',
+			so_attach_file: '',
+			invoice_no: '',
+			invoice_date: '',
+			payment_terms: '',
+			invoice_amount: '',
+			invoice_attach_file: '',
+			remarks: '',
+			status_overwrite: '',
 		},
 
 		//validate,
@@ -299,7 +307,6 @@ const TrackingList = () => {
 	useEffect(() => {
 		fetchData();
 	}, []);
-
 
 	const [currentPage, setCurrentPage] = useState(1);
 	const [perPage, setPerPage] = useState(PER_COUNT['5']);
@@ -347,8 +354,6 @@ const TrackingList = () => {
 	const goToViewQuotationPage = (quotation_id: string, variance: number) => {
 		navigate(`view/${quotation_id}/${variance}`);
 	};
-
-
 
 	return (
 		<PageWrapper title='Tracking List'>
@@ -415,7 +420,7 @@ const TrackingList = () => {
 							<div className='col-md-12'>
 								<table className='table table-modern'>
 									<thead>
-									<tr>
+										<tr>
 											<th>No.</th>
 											<th
 												onClick={() => requestSort('created_by')}
@@ -508,6 +513,16 @@ const TrackingList = () => {
 												/>
 											</th>
 											<th
+												onClick={() => requestSort('margin_percent')}
+												className='cursor-pointer text-decoration-underline'>
+												%
+												<Icon
+													size='lg'
+													className={getClassNamesFor('margin_percent')}
+													icon='FilterList'
+												/>
+											</th>
+											<th
 												onClick={() => requestSort('status')}
 												className='cursor-pointer text-decoration-underline'>
 												Status
@@ -548,17 +563,38 @@ const TrackingList = () => {
 													<td>{item.prepared_by}</td>
 													<td>{item.client}</td>
 													<td>
-													{dayjs.utc(`${item.quotation_date}`).local().format(
-															'DD-MM-YYYY HH:mm:ss',
-														)}
+														{dayjs
+															.utc(`${item.quotation_date}`)
+															.local()
+															.format('DD-MM-YYYY HH:mm:ss')}
 													</td>
 													<td>{item.quotation_no}</td>
 													<td>{item.end_user}</td>
 													<td>{item.revision}</td>
-													<td>{item.quotation_amount.toFixed(2)}</td>
-													<td>{item.cost.toFixed(2)}</td>
-													<td>{item.margin.toFixed(2)}</td>
-													{/* <td>{item.percent.toFixed(2)}%</td> */}
+													<td>
+														{item.quotation_amount
+															? item.quotation_amount.toFixed(2)
+															: null}
+													</td>
+													<td>
+														{item.cost ? item.cost.toFixed(2) : null}
+													</td>
+													<td>
+														{item.quotation_amount && item.cost
+															? calculateMargin(
+																	item.cost,
+																	item.quotation_amount,
+																)
+															: null}
+													</td>
+													<td>
+														{item.quotation_amount && item.cost
+															? calculateMarginPercentage(
+																	item.cost,
+																	item.quotation_amount,
+																)
+															: null}
+													</td>
 													<td>
 														<Badge
 															className='statusBadge'
@@ -578,7 +614,10 @@ const TrackingList = () => {
 																	hoverShadow='lg'
 																	tag='a'
 																	onClick={() =>
-																		goToViewQuotationPage(item.quotation_id, item.variance)
+																		goToViewQuotationPage(
+																			item.quotation_id,
+																			item.variance,
+																		)
 																	}></Button>
 															</div>
 															<div className='col-auto'>
@@ -589,15 +628,12 @@ const TrackingList = () => {
 																	hoverShadow='lg'
 																	tag='a'
 																	hidden={true}
-																	onClick={() =>{
+																	onClick={() => {
 																		//goToViewQuotationPage()
 																		//console.log('hihi')
 																		setState(true);
 																		initialStatus();
-																	}
-																	}
-																		>
-																	</Button>
+																	}}></Button>
 															</div>
 														</div>
 													</td>
@@ -770,33 +806,30 @@ const TrackingList = () => {
 				</div>
 			</OffCanvas> */}
 
-	        <Modal
-			isOpen={state}
-			setIsOpen={setState}
-			titleId='subItemEditModal'
-			isStaticBackdrop={staticBackdropStatus}
-			isScrollable={scrollableStatus}
-			isCentered={centeredStatus}
-			size={sizeStatus}
-			fullScreen={fullScreenStatus}
-			isAnimation={animationStatus}>
-			<ModalHeader setIsOpen={headerCloseStatus ? setState : undefined}>
-				<ModalTitle id='editAdditionalInfoModal'>Edit Additional Info</ModalTitle>
-			</ModalHeader>
-			<ModalBody>
-                <></>
-				{/* <AdditionalInfoForm state={state} id='1' formik={formik}/> */}
-			</ModalBody>
-			<ModalFooter>
-				<Button color='info' icon='Save' onClick={formik.handleSubmit}>
-					Save
-				</Button>
-			</ModalFooter>
-		</Modal>
-
-			
+			<Modal
+				isOpen={state}
+				setIsOpen={setState}
+				titleId='subItemEditModal'
+				isStaticBackdrop={staticBackdropStatus}
+				isScrollable={scrollableStatus}
+				isCentered={centeredStatus}
+				size={sizeStatus}
+				fullScreen={fullScreenStatus}
+				isAnimation={animationStatus}>
+				<ModalHeader setIsOpen={headerCloseStatus ? setState : undefined}>
+					<ModalTitle id='editAdditionalInfoModal'>Edit Additional Info</ModalTitle>
+				</ModalHeader>
+				<ModalBody>
+					<></>
+					{/* <AdditionalInfoForm state={state} id='1' formik={formik}/> */}
+				</ModalBody>
+				<ModalFooter>
+					<Button color='info' icon='Save' onClick={formik.handleSubmit}>
+						Save
+					</Button>
+				</ModalFooter>
+			</Modal>
 		</PageWrapper>
-		
 	);
 };
 

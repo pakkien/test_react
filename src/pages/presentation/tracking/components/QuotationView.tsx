@@ -355,11 +355,11 @@ const QuotationView = (qv_props: QuotationViewProps) => {
 								</div>
 								<br />
 								{/* <ManageItem items={props.items} /> */}
-								{/* <ManageSection
+								<ManageSection
 									sections={props.sections}
 									sectionMode={props.is_section_valid}
 							
-								/> */}
+								/>
 							</div>
 						</CardBody>
 					</Card>

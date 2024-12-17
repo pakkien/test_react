@@ -38,6 +38,7 @@ import utc from 'dayjs/plugin/utc';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import timezone from 'dayjs/plugin/timezone'
+import { calculateMargin, calculateMarginPercentage } from '../../../common/calculations';
 
 dayjs.extend(utc);
 dayjs.extend(localizedFormat);
@@ -54,6 +55,7 @@ function ReturnBatchColor(state: string) {
 	}
 	return enum_val.color;
 }
+
 
 const QuotationList = () => {
 	const navigate = useNavigate();
@@ -325,6 +327,16 @@ const QuotationList = () => {
 												/>
 											</th>
 											<th
+												onClick={() => requestSort('margin_percent')}
+												className='cursor-pointer text-decoration-underline'>
+												%
+												<Icon
+													size='lg'
+													className={getClassNamesFor('margin_percent')}
+													icon='FilterList'
+												/>
+											</th>
+											<th
 												onClick={() => requestSort('status')}
 												className='cursor-pointer text-decoration-underline'>
 												Status
@@ -372,9 +384,12 @@ const QuotationList = () => {
 													<td>{item.quotation_no}</td>
 													<td>{item.end_user}</td>
 													<td>{item.revision}</td>
-													<td>{item.quotation_amount.toFixed(2)}</td>
-													<td>{item.cost.toFixed(2)}</td>
-													<td>{item.margin.toFixed(2)}</td>
+													<td>{item.quotation_amount? item.quotation_amount.toFixed(2): null}</td>
+													<td>{item.cost? item.cost.toFixed(2): null}</td>
+													<td>{(item.quotation_amount && item.cost)?
+													calculateMargin(item.cost, item.quotation_amount): null}</td>
+													<td>{(item.quotation_amount && item.cost)?
+													calculateMarginPercentage(item.cost, item.quotation_amount): null}</td>
 													{/* <td>{item.percent.toFixed(2)}%</td> */}
 													<td>
 														<Badge
