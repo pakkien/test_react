@@ -265,11 +265,28 @@ export const Quotation = (props: QuotationProps) => {
 			});
 	};
 
-	//Get Quotation table data
+	//Get client and pic dropdown
 	useEffect(() => {
 		fetchClientData();
 		fetchPicData();
 	}, []);
+
+
+	// useEffect(() => {
+	// 	setValue('client', total);
+	// 	setValue('client_code', gtotal);
+	// }, [
+	// 	JSON.stringify(formData.client+formData.client_code)
+	// ]);
+
+
+	// useEffect(() => {
+	// 	setValue('pic', total);
+	// 	setValue('pic_email', gtotal);
+	// 	setValue('pic_contact_number', gtotal);
+	// }, [
+	// 	JSON.stringify(formData.pic+formData.pic_email+formData.pic_contact_number)
+	// ]);
 
 	return (
 		<PageWrapper title={title}>
