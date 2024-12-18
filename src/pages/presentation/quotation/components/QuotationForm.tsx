@@ -71,9 +71,9 @@ export const schemaQuotation = z.object({
 	sections: z.array(schemaSection).min(0),
 
 	//options
-	lead_time: z.string().min(1),
-	payment_terms: z.string().min(1),
-	validity: z.string().min(1)
+	lead_time: z.string().min(0),
+	payment_terms: z.string().min(0),
+	validity: z.string().min(0)
 });
 
 export type FormTypeQuotation = z.infer<typeof schemaQuotation>

@@ -236,6 +236,41 @@ export const Quotation = (props: QuotationProps) => {
 			});
 	};
 
+
+	//drop down for client and pic
+	const [clientData, setClientData] = useState([]);
+	const [picData, setPicData] = useState([]);
+
+	const fetchClientData = async () => {
+		const config = {
+			headers: { Authorization: `${localStorage.getItem('bts_token')}` },
+		};
+
+		axios
+			.get(import.meta.env.VITE_BASE_URL + '/quotation/clients', config)
+			.then((response) => {
+				setClientData(response.data.clients);
+			});
+	};
+
+	const fetchPicData = async () => {
+		const config = {
+			headers: { Authorization: `${localStorage.getItem('bts_token')}` },
+		};
+
+		axios
+			.get(import.meta.env.VITE_BASE_URL + '/quotation/pic', config)
+			.then((response) => {
+				setPicData(response.data.pics);
+			});
+	};
+
+	//Get Quotation table data
+	useEffect(() => {
+		fetchClientData();
+		fetchPicData();
+	}, []);
+
 	return (
 		<PageWrapper title={title}>
 			<SubHeader>
@@ -361,8 +396,13 @@ export const Quotation = (props: QuotationProps) => {
 											type='text'
 											placeholder='client_code'
 											disabled={isViewMode}
-											//list={['list']}
+											list="client_code_list"
 										/>
+										<datalist id="client_code_list">
+											{clientData.map((client: any) => {return(
+												<option value={client.client_code}/>
+											)}) }
+										</datalist>
 										<>
 											{errors.client_code ? (
 												<div className='invalid-feedback'>
@@ -386,8 +426,13 @@ export const Quotation = (props: QuotationProps) => {
 											type='text'
 											placeholder='client'
 											disabled={isViewMode}
-											//list={['list']}
+											list='client_list'
 										/>
+										<datalist id="client_list">
+											{clientData.map((client: any) => {return(
+												<option value={client.client}/>
+											)}) }
+										</datalist>
 										<>
 											{errors.client ? (
 												<div className='invalid-feedback'>
@@ -482,7 +527,13 @@ export const Quotation = (props: QuotationProps) => {
 											type='text'
 											placeholder='pic'
 											disabled={isViewMode}
+											list="pic_list"
 										/>
+										<datalist id="pic_list">
+											{picData.map((pic: any) => {return(
+												<option value={pic.pic}/>
+											)}) }
+										</datalist>
 										<>
 											{errors.pic ? (
 												<div className='invalid-feedback'>
@@ -497,7 +548,7 @@ export const Quotation = (props: QuotationProps) => {
 								<div className='col-md-8'>
 									<FormGroup id='pic_email' label='PIC Email' isFloating>
 										<input
-											id='email'
+											id='pic_email'
 											className={
 												'form-control ' +
 												(errors.pic_email ? 'is-invalid' : '')
@@ -506,7 +557,13 @@ export const Quotation = (props: QuotationProps) => {
 											type='text'
 											placeholder='pic_email'
 											disabled={isViewMode}
+											list='pic_email_list'
 										/>
+										<datalist id="pic_email_list">
+											{picData.map((pic: any) => {return(
+												<option value={pic.email}/>
+											)}) }
+										</datalist>
 										<>
 											{errors.pic_email ? (
 												<div className='invalid-feedback'>
@@ -533,7 +590,13 @@ export const Quotation = (props: QuotationProps) => {
 											type='text'
 											placeholder='pic_contact_number'
 											disabled={isViewMode}
+											list='pic_contact_number_list'
 										/>
+										<datalist id="pic_contact_number_list">
+											{picData.map((pic: any) => {return(
+												<option value={pic.pic_contact_number}/>
+											)}) }
+										</datalist>
 										<>
 											{errors.pic_contact_number ? (
 												<div className='invalid-feedback'>
