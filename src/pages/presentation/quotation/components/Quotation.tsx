@@ -53,7 +53,7 @@ type QuotationProps = {
 	revision?: number;
 	variance?: number;
 	create_new_variance?: boolean;
-	section_mode?: boolean;
+	//section_mode?: boolean;
 };
 
 export const Quotation = (props: QuotationProps) => {
@@ -365,7 +365,12 @@ export const Quotation = (props: QuotationProps) => {
 						for (var i = 0; i< data.sections.length; i++) {
 							data.sections[i].order = i;
 							for (var j = 0; j< data.sections[i].items.length; j++) {
-								data.sections[i].items[j].order = j;
+								
+								if(data.sections[i].is_section_valid){
+									data.sections[i].items[j].order = j;
+								}else{
+									data.sections[i].items[j].order = i; //same as section
+								}
 								for (var k = 0; k< data.sections[i].items[j].sub_items.length; k++) {
 									data.sections[i].items[j].sub_items[k].order = k;
 								}
@@ -376,7 +381,6 @@ export const Quotation = (props: QuotationProps) => {
 							{
 								attachment_list: attachmentIDs,
 								variance: props.variance,
-								is_section_valid: props.section_mode,
 							},
 							data,
 						);
@@ -795,7 +799,6 @@ export const Quotation = (props: QuotationProps) => {
 								{/* <ManageItem isViewMode={isViewMode} /> */}
 								<ManageSection
 									isViewMode={isViewMode}
-									sectionMode={props.section_mode}
 								/>
 								<br />
 							</div>

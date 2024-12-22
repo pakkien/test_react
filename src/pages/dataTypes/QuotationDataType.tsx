@@ -22,7 +22,6 @@ namespace QuotationDataType {
 		project_reference: string;
 		sections: Section[];
 		status: string;
-		is_section_valid: boolean;
 
 		//Summary fields
 		reference_status: string;
@@ -41,6 +40,8 @@ namespace QuotationDataType {
 		id: string;
 		name: string;
 		items: Item[];
+		is_section_valid: boolean;
+		order: number;
 	}
 
 	export type Item = {
@@ -60,6 +61,7 @@ namespace QuotationDataType {
 		unit_price: number;
 		total_price: number;
 		sub_items: Sub_item[];
+		order: number;
 	};
 
 	export type Sub_item = {
@@ -78,6 +80,7 @@ namespace QuotationDataType {
 		estimated_cost: boolean;
 		unit_price: number;
 		total_price: number;
+		order: number;
 	};
 
 }

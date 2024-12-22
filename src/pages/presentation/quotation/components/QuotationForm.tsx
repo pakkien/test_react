@@ -45,6 +45,7 @@ const schemaSection = z.object({
 	name: z.string().min(3),
 	order: z.number(),	
 	items: z.array(schemaItem).min(1, { message: 'must contain at least one item.' }),
+	is_section_valid: z.boolean()
 });
 
 export const schemaQuotation = z.object({

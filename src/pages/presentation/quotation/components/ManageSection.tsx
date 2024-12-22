@@ -17,10 +17,11 @@ import Dropdown, {
 	DropdownToggle,
 } from '../../../../components/bootstrap/Dropdown';
 import FormGroup from '../../../../components/bootstrap/forms/FormGroup';
+import QuotationDataType from '../../../dataTypes/QuotationDataType';
+
 
 type SectionProps = {
 	isViewMode: boolean;
-	sectionMode?: boolean;
 };
 
 const ManageSection = (props: SectionProps) => {
@@ -39,10 +40,29 @@ const ManageSection = (props: SectionProps) => {
 	});
 
 	const addSection = (isSectionValid: boolean) => {
+		let item = {
+			product_description: '',
+			brand: '',
+			model: '',
+			remarks: '',
+			quantity: 0,
+			unit: '',
+			unit_cost: 0,
+			total_cost: 0,
+			margin: 0,
+			margin_percentage: 0,
+			estimated_cost: false,
+			unit_price: 0,
+			total_price: 0,
+			order: 0,
+			sub_items: [],
+		};
+
 		append({
 			name: 'New Section ' + (fields.length + 1),
 			order: 0,
-			items: [],
+			items: isSectionValid? [] : [item],
+			is_section_valid: isSectionValid,
 		});
 		//setValue('is_section_valid', isSectionValid);
 		sectionNameInputVisible.push(true);
@@ -56,23 +76,18 @@ const ManageSection = (props: SectionProps) => {
 		setSectionNameInputVisible((x) => [...current]);
 	};
 
-	const [sectionMode, setSectionMode] = useState<any>(props.sectionMode? props.sectionMode:null);
-
 	return (
 		<div className='pb-0'>
 			<div className='row g-4'>
 				<div className='col-md-12'>
 					<div className='row g-4'>
-
-
-						{sectionMode? (
-							fields.map((section, sectionIndex) => {
+						{fields.map((section, sectionIndex) => {
+							if (section.is_section_valid) {
 								return (
-									//TODO: decide
 									<div className='col-xl-12'>
 										<Accordion
 											id='SectionAccordion'
-											color='dark'															
+											color='dark'
 											activeItemId={'SectionAccordionItem_' + sectionIndex}>
 											<AccordionItem
 												id={'SectionAccordionItem_' + sectionIndex}
@@ -120,8 +135,7 @@ const ManageSection = (props: SectionProps) => {
 														className='row'
 														hidden={
 															!sectionNameInputVisible[sectionIndex]
-														}
-														>
+														}>
 														<div className='col-md-3'>
 															<FormGroup
 																id='name'
@@ -158,7 +172,10 @@ const ManageSection = (props: SectionProps) => {
 																color='success'
 																icon='check'
 																rounded={1}
-																isDisable={(errors.sections?.[sectionIndex]?.name?.message != null)}
+																isDisable={
+																	errors.sections?.[sectionIndex]
+																		?.name?.message != null
+																}
 																onClick={() =>
 																	setVisibilityOfSectionNameInput(
 																		sectionIndex,
@@ -183,20 +200,17 @@ const ManageSection = (props: SectionProps) => {
 										</Accordion>
 									</div>
 								);
-							})
-							):(
-								fields.map((section, sectionIndex) => {
-									return (
-										<ManageItem
-											sectionIndex={sectionIndex}
-											isViewMode={props.isViewMode}
-											sectionMode={false}
-										/>
-									);
-								})	
-							)
-							
+							} else {
+								return (
+									<ManageItem
+										sectionIndex={sectionIndex}
+										isViewMode={props.isViewMode}
+										sectionMode={false}
+									/>
+								);
 							}
+						})}
+
 						<div></div>
 					</div>
 				</div>
@@ -205,30 +219,10 @@ const ManageSection = (props: SectionProps) => {
 						color='info'
 						icon='Add'
 						tag='a'
-						onClick={() => 
-							{
-								setSectionMode(false);
-								addSection(false);
-								console.log(sectionMode);
-							}
-						}
-						className='float-end'
-						hidden={props.isViewMode || sectionMode != null}>
-						Add Item Only
-					</Button>
-				</div>
-				<div className='col-md-12' hidden={props.isViewMode ? true : false}>
-					<Button
-						color='info'
-						icon='Add'
-						tag='a'
 						onClick={() => {
-							if(sectionMode != true){
-							setSectionMode(true);
 							addSection(true);
-							}
 						}}
-						hidden={props.isViewMode || sectionMode != null}
+						hidden={props.isViewMode}
 						className='float-end'>
 						Add Section
 					</Button>
@@ -237,27 +231,26 @@ const ManageSection = (props: SectionProps) => {
 						icon='Add'
 						tag='a'
 						onClick={() => {
-			
-								addSection(true);
-							
+							//setSectionMode(false);
+							addSection(false);
+							//console.log(sectionMode);
 						}}
-						hidden={props.isViewMode || sectionMode != true}
-						className='float-end'>
-						Add Section
+						className='float-end'
+						hidden={props.isViewMode}>
+						Add Item
 					</Button>
 				</div>
+
 				<div className='col-md-12' hidden={props.isViewMode ? true : false}>
-				<Button
+					<Button
 						color='danger'
-						//icon='Add'
 						tag='a'
 						onClick={() => {
 							setValue(`sections`, []);
-							setSectionMode(null);
+							//setSectionMode(null);
 						}}
 						hidden={props.isViewMode}
-						isLight
-						>
+						isLight>
 						Reset
 					</Button>
 				</div>

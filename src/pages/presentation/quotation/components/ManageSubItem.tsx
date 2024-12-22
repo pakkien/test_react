@@ -116,7 +116,8 @@ const ManageSubItem = (props: SubItemProps) => {
 											    {/* {sectionIndex+1}.{itemIndex+1}.{subItemIndex+1}  Sub Item {subItemIndex + 1}{' '}
 												&nbsp;&nbsp; */}
 												{props.sectionMode==true? `${sectionIndex+1}.${itemIndex+1}.${subItemIndex+1}  Sub Item ${subItemIndex + 1}`
-												: `${itemIndex+1}.${subItemIndex+1}   Sub Item ${subItemIndex + 1}`}
+												// : `${itemIndex+1}.${subItemIndex+1}   Sub Item ${subItemIndex + 1}`}
+												: `${sectionIndex+1}.${subItemIndex+1}   Sub Item ${subItemIndex + 1}`}
 												&nbsp;&nbsp;
 											</CardTitle>
 										</CardLabel>

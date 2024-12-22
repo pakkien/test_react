@@ -7,242 +7,79 @@ import axios from 'axios';
 import QuotationDataType from '../../dataTypes/QuotationDataType';
 
 const QuotationData = {
-	quotation_id: 'ad399d47-a038-4fb4-9f31-2f142c143611',
-	quotation_data: [
-		{
-			quotation_no: '24001S1-TGH',
-			quotation_id: 'ad399d47-a038-4fb4-9f31-2f142c143611',
-			quotation_rev_id: 'c33d08b9-8ec3-41a1-8b0a-66033a3c7214',
-			rev: '0',
-			quotation_date: '31/01/2024',
-			client: 'client_name',
-			end_user: 'someEndUserName',
-			site_location: 'Penang',
-			building: 'PG1',
-			pic: '123',
-			email: 'sometester@gmail.com',
-			project_ref: 'abcProject',
-			state: 'awarded',
-			items: [
-				{
-					item_id: '09ee02e9-8115-42ad-8648-74c901b96940',
-					quotation_rev_id: 'c33d08b9-8ec3-41a1-8b0a-66033a3c7214',
-					product_desc: 'item1',
-					brand: 'prodtBrand',
-					model: 'ModelX',
-					remarks: 'dummyRemarks',
-					quantity: '300',
-					unit: 'Unit',
-					unit_cost: '300.0',
-					total_cost: '3000.0',
-					margin: '0.8',
-					unit_price: '375',
-					total_price: '3750',
-					sub_items: [
-						{
-							sub_item_id: '60c07ea8-f677-4e0c-b232-8756842ee174',
-							item_id: '09ee02e9-8115-42ad-8648-74c901b96940',
-							product_desc: 'item1_subItem1',
-							brand: 'prodtBrand',
-							model: 'ModelX44',
-							remarks: 'dummyRemarks',
-							quantity: '222',
-							unit: 'Unit',
-							unit_cost: '300.0',
-							total_cost: '3000.0',
-							margin: '0.8',
-							unit_price: '375',
-							total_price: '3750',
-						},
-						{
-							sub_item_id: 'd23c57b7-38c1-45c4-a253-f8f7affe0447',
-							item_id: '09ee02e9-8115-42ad-8648-74c901b96940',
-							product_desc: 'item1_subItem2',
-							brand: 'prodtBrand',
-							model: 'ModelX55',
-							remarks: 'dummyRemarks',
-							quantity: '444',
-							unit: 'Unit',
-							unit_cost: '300.0',
-							total_cost: '3000.0',
-							margin: '0.8',
-							unit_price: '375',
-							total_price: '3750',
-						},
-					],
-				},
-				{
-					item_id: '7043ac52-22c1-474c-898c-ae4a3d8d44aa',
-					quotation_rev_id: 'c33d08b9-8ec3-41a1-8b0a-66033a3c7214',
-					product_desc: 'item2',
-					brand: 'prodtBrand2',
-					model: 'ModelX2',
-					remarks: 'dummyRemarks2',
-					quantity: '3',
-					unit: 'Unit2',
-					unit_cost: '300.0',
-					total_cost: '3000.0',
-					margin: '0.8',
-					unit_price: '375',
-					total_price: '3750',
-					sub_items: [
-						{
-							sub_item_id: '24e651fe-720e-4aa3-bd25-95398b39e440',
-							item_id: '7043ac52-22c1-474c-898c-ae4a3d8d44aa',
-							product_desc: 'item2_subItem1',
-							brand: 'prodtBrand',
-							model: 'ModelX444',
-							remarks: 'dummyRemarks',
-							quantity: '3',
-							unit: 'Unit',
-							unit_cost: '300.0',
-							total_cost: '3000.0',
-							margin: '0.8',
-							unit_price: '375',
-							total_price: '3750',
-						},
-					],
-				},
-				{
-					item_id: 'fca38a36-659a-4e68-84f5-3c95eea6e9cb',
-					quotation_rev_id: 'c33d08b9-8ec3-41a1-8b0a-66033a3c7214',
-					product_desc: 'item3',
-					brand: 'prodtBrand2',
-					model: 'ModelX2',
-					remarks: 'dummyRemarks2',
-					quantity: '3',
-					unit: 'Unit2',
-					unit_cost: '300.0',
-					total_cost: '3000.0',
-					margin: '0.8',
-					unit_price: '375',
-					total_price: '3750',
-					sub_items: [],
-				},
-			],
-			reference_status: '-',
-			note: '-',
-			total: '12400.0',
-			g_total: '12400.0',
-		},
-		{
-			quotation_no: '24001S1-TGH-Variation-01',
-			quotation_id: 'ad399d47-a038-4fb4-9f31-2f142c143611',
-			quotation_rev_id: '998bf269-5741-4445-83ca-f251cb608c5e',
-			quotation_date: '31/01/2024',
-			rev: '1',
-			client: 'client_name1',
-			end_user: 'someEndUserName1',
-			site_location: 'Penang1',
-			building: 'PG11',
-			pic: '1231',
-			email: 'sometester@gmail.com1',
-			project_ref: 'abcProject1',
-			state: 'closed',
-			items: [
-				{
-					item_id: '09ee02e9-8115-42ad-8648-74c901b96940',
-					quotation_rev_id: '998bf269-5741-4445-83ca-f251cb608c5e',
-					product_desc: 'item1',
-					brand: 'prodtBrand',
-					model: 'ModelX',
-					remarks: 'dummyRemarks',
-					quantity: '300',
-					unit: 'Unit',
-					unit_cost: '300.0',
-					total_cost: '3000.0',
-					margin: '0.8',
-					unit_price: '375',
-					total_price: '3750',
-					sub_items: [
-						{
-							sub_item_id: '60c07ea8-f677-4e0c-b232-8756842ee174',
-							item_id: '09ee02e9-8115-42ad-8648-74c901b96940',
-							product_desc: 'item1_subItem1',
-							brand: 'prodtBrand',
-							model: 'ModelX44',
-							remarks: 'dummyRemarks',
-							quantity: '222',
-							unit: 'Unit',
-							unit_cost: '300.0',
-							total_cost: '3000.0',
-							margin: '0.8',
-							unit_price: '375',
-							total_price: '3750',
-						},
-						{
-							sub_item_id: 'd23c57b7-38c1-45c4-a253-f8f7affe0447',
-							item_id: '09ee02e9-8115-42ad-8648-74c901b96940',
-							product_desc: 'item1_subItem2',
-							brand: 'prodtBrand',
-							model: 'ModelX55',
-							remarks: 'dummyRemarks',
-							quantity: '444',
-							unit: 'Unit',
-							unit_cost: '300.0',
-							total_cost: '3000.0',
-							margin: '0.8',
-							unit_price: '375',
-							total_price: '3750',
-						},
-					],
-				},
-				{
-					item_id: '7043ac52-22c1-474c-898c-ae4a3d8d44aa',
-					quotation_rev_id: '998bf269-5741-4445-83ca-f251cb608c5e',
-					product_desc: 'item2',
-					brand: 'prodtBrand2',
-					model: 'ModelX2',
-					remarks: 'dummyRemarks2',
-					quantity: '3',
-					unit: 'Unit2',
-					unit_cost: '300.0',
-					total_cost: '3000.0',
-					margin: '0.8',
-					unit_price: '375',
-					total_price: '3750',
-					sub_items: [
-						{
-							sub_item_id: '24e651fe-720e-4aa3-bd25-95398b39e440',
-							item_id: '7043ac52-22c1-474c-898c-ae4a3d8d44aa',
-							product_desc: 'item2_subItem1',
-							brand: 'prodtBrand',
-							model: 'ModelX444',
-							remarks: 'dummyRemarks',
-							quantity: '3',
-							unit: 'Unit',
-							unit_cost: '300.0',
-							total_cost: '3000.0',
-							margin: '0.8',
-							unit_price: '375',
-							total_price: '3750',
-						},
-					],
-				},
-				{
-					item_id: 'fca38a36-659a-4e68-84f5-3c95eea6e9cb',
-					quotation_rev_id: '998bf269-5741-4445-83ca-f251cb608c5e',
-					product_desc: 'item3',
-					brand: 'prodtBrand2',
-					model: 'ModelX2',
-					remarks: 'dummyRemarks2',
-					quantity: '3',
-					unit: 'Unit2',
-					unit_cost: '300.0',
-					total_cost: '3000.0',
-					margin: '0.8',
-					unit_price: '375',
-					total_price: '3750',
-					sub_items: [],
-				},
-			],
-			reference_status: '-',
-			note: '-',
-			total: '12400.0',
-			g_total: '12400.0',
-		},
+	"attachment_list": [
+	  "5802e900-b09a-488e-94fe-f04c991527b2"
 	],
-};
+	"building": "password1212",
+	"client": "password112",
+	"client_code": "test_client_code",
+	"created_at": "Sun, 22 Dec 2024 04:03:11 GMT",
+	"created_by": "tester1",
+	"end_user": "Ade1234412",
+	"grand_total": null,
+  
+	"lead_time": null,
+	"message": "Quotation 71d73a1c-16dc-45a7-8b04-4dbb06065f65 created.",
+	"note": "12312",
+	"payment_terms": null,
+	"pic": "Ade1234212",
+	"pic_contact_number": "1234567",
+	"pic_email": "picEmail@email.com",
+	"project_reference": "Emeka123412",
+	"quotation_id": "a121d2fd-9e22-4f44-b91a-2bc73f08538f",
+	"quotation_no": "Quotation-20240001-password112_V0_R1",
+	"quotation_revision_id": "71d73a1c-16dc-45a7-8b04-4dbb06065f65",
+	"reference_status": "34234",
+	"revision": 1,
+	"sections": [
+	  {
+		"items": [
+		  {
+			"brand": "Emeka123412",
+			"estimated_cost": false,
+			"margin": 0.8,
+			"margin_percentage": 20.0,
+			"model": "Ade1234412",
+			"order": 0,
+			"product_description": "12345",
+			"quantity": 1,
+			"remarks": "Quotation retrieved.",
+			"sub_items": [
+			  {
+				"brand": "Emeka123412",
+				"estimated_cost": false,
+				"margin": 0.8,
+				"margin_percentage": 20.0,
+				"model": "Ade1234412",
+				"order": 0,
+				"product_description": "12345",
+				"quantity": 1,
+				"remarks": "Quotation retrieved.",
+				"total_cost": 1.2,
+				"total_price": 1.2,
+				"unit": "1",
+				"unit_cost": 1.2,
+				"unit_price": 1.2
+			  }
+			],
+			"total_cost": 1.2,
+			"total_price": 1.2,
+			"unit": "1",
+			"unit_cost": 1.2,
+			"unit_price": 1.2
+		  }
+		],
+		"name": "new section name",
+		"order": 0,
+		"is_section_valid": true
+	  }
+	],
+	"site_location": "Emeka1234512",
+	"status": "submitted",
+	"total_cost": null,
+	"validity": null,
+	"variance": 0
+  };
 
 const EditQuotation = () => {
 	const {state} = useLocation();
@@ -266,11 +103,19 @@ const EditQuotation = () => {
 	};
 
 	useEffect(() => {
-		setQuotationRevData(null);
-		if (quotation_rev_id) {
-			fetchQuotationRevData(quotation_rev_id);
-		}
+		// setQuotationRevData(null);
+		// if (quotation_rev_id) {
+		// 	fetchQuotationRevData(quotation_rev_id);
+		// }
+
+		//Debug:
+		setQuotationRevData(QuotationData);
+
+
 	}, [quotation_rev_id]);
+
+
+	
 
 	return (
 		<>
@@ -283,7 +128,6 @@ const EditQuotation = () => {
 					revision={quotationRevData.revision}
 					create_new_variance={create_new_variance}
 					variance={quotationRevData.variance}
-					section_mode={quotationRevData.is_section_valid}
 					/>
 				</FormProviderQuotation>
 			) : (

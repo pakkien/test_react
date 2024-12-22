@@ -21,6 +21,7 @@ type ItemProps = {
 	sectionIndex: number;
 	isViewMode: boolean;
 	sectionMode: boolean;
+	//addItem: () => void;
 };
 
 
@@ -91,7 +92,8 @@ const ManageItem = (props: ItemProps) => {
 							<div className='col-xl-12'> 
 							<Accordion id='ItemAccordion' color='dark' activeItemId={'ItemAccordionItem_'+ itemIndex}>
 							<AccordionItem id={'ItemAccordionItem_'+ itemIndex} title={props.sectionMode?`${sectionIndex+1}.${itemIndex+1} Item ${itemIndex+1}`:
-																							`${itemIndex+1}.0 Item ${itemIndex+1}`}>
+																							// `${itemIndex+1}.0 Item ${itemIndex+1}`}>
+																							`${sectionIndex+1}.0 Item ${itemIndex+1}`}>
 								<Card id={'#item_card_id#' + itemIndex} key={item.id} shadow='none' borderSize={1} borderColor='light' >
 									<CardHeader>
 										<CardLabel>
@@ -482,10 +484,9 @@ const ManageItem = (props: ItemProps) => {
 							</div>
 						);
 					})}
-					<div></div>
 					</div>
 				</div>
-				<div className='col-md-12' hidden={props.isViewMode? true:false}>
+				<div className='col-md-12' hidden={props.isViewMode||!props.sectionMode}>
 					<Button color='info' icon='Add' tag='a' onClick={addItem} className='float-end'>
 						Add Item
 					</Button>
