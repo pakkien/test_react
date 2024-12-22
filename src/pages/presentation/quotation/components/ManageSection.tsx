@@ -211,10 +211,11 @@ const ManageSection = (props: SectionProps) => {
 							}
 						})}
 
-						<div></div>
+						{/* <div></div> */}
 					</div>
 				</div>
 				<div className='col-md-12' hidden={props.isViewMode ? true : false}>
+					
 					<Button
 						color='info'
 						icon='Add'
@@ -223,9 +224,10 @@ const ManageSection = (props: SectionProps) => {
 							addSection(true);
 						}}
 						hidden={props.isViewMode}
-						className='float-end'>
+						className='float-end order-2'>
 						Add Section
 					</Button>
+					<div className='order-1 float-end'>&nbsp;&nbsp;</div>
 					<Button
 						color='info'
 						icon='Add'
@@ -235,7 +237,7 @@ const ManageSection = (props: SectionProps) => {
 							addSection(false);
 							//console.log(sectionMode);
 						}}
-						className='float-end'
+						className='float-end order-0'
 						hidden={props.isViewMode}>
 						Add Item
 					</Button>

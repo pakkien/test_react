@@ -103,7 +103,7 @@ export const useFormQuotation = (props: QuotationFormProps) =>
 		status: props.data.status,
 
 
-		sections: props.data.sections, //check again
+		sections: props.data.sections.sort((a,b) => a.order < b.order ? -1 : a.order > b.order ? 1 : 0), //check again
 		
 		
 		reference_status: props.data.reference_status,

@@ -8,6 +8,7 @@ import {
 	quotationMenu,
 } from '../menu';
 import Login from '../pages/presentation/auth/Login';
+import ProtectedRoute from './protectedRoute';
 
 
 
@@ -51,7 +52,7 @@ const presentation = [
 	 */
 	{
 		path: 'test_react/',
-		element: <LANDING.DASHBOARD />,
+		element: <ProtectedRoute><LANDING.DASHBOARD /></ProtectedRoute>,
 	},
 	{
 		path: dashboardPagesMenu.dashboard.path,

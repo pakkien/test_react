@@ -103,13 +103,13 @@ const EditQuotation = () => {
 	};
 
 	useEffect(() => {
-		// setQuotationRevData(null);
-		// if (quotation_rev_id) {
-		// 	fetchQuotationRevData(quotation_rev_id);
-		// }
+		setQuotationRevData(null);
+		if (quotation_rev_id) {
+			fetchQuotationRevData(quotation_rev_id);
+		}
 
 		//Debug:
-		setQuotationRevData(QuotationData);
+		//setQuotationRevData(QuotationData);
 
 
 	}, [quotation_rev_id]);

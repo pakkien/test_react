@@ -46,6 +46,7 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import timezone from 'dayjs/plugin/timezone';
 import Select from '../../../../components/bootstrap/forms/Select';
 import EditOptionModal from './EditOptionModal';
+import { List } from '../../../../components/icon/material-icons';
 dayjs.extend(utc);
 dayjs.extend(localizedFormat);
 dayjs.extend(customParseFormat);
@@ -283,14 +284,20 @@ const ManageOption = () => {
 	//distinct option_name only
 	const option_names = optionData.map((item) => item.option_name);
 	const distinctOptions = [...new Set(option_names)];
-	const dropdown_optionNames_add = distinctOptions.map((op) => {
-		return { value: op, text: op };
-	});
+	// const dropdown_optionNames_add = distinctOptions.map((op) => {
+	// 	return { value: op, text: op };
+	// });
 	const dropdown_optionNames_view = distinctOptions.map((op) => {
 		return { value: op, text: op };
 	});
-	dropdown_optionNames_add.splice(0, 0, { value: '', text: 'Create New Option' });
+	//dropdown_optionNames_add.splice(0, 0, { value: '', text: 'Create New Option' });
+
 	dropdown_optionNames_view.splice(0, 0, { value: '', text: 'All Option' });
+
+	var dropdown_optionNames_add = [
+		{ value: 'PaymentTerms', text: 'PaymentTerms' },
+		{ value: 'Validity', text: 'Validity' },
+	];
 
 	//Edit Option
 	const handleSubmit_EditOption = async (
@@ -318,7 +325,6 @@ const ManageOption = () => {
 					'Option updated successfully',
 				);
 				fetchData();
-				
 			})
 			.catch((errors) => {
 				showNotification(
@@ -358,9 +364,10 @@ const ManageOption = () => {
 					<div className='row g-4'>
 						<div
 							className={
-								formikAddOption.values.option_name_dropdown == ''
-									? 'col-md-2'
-									: 'col-md-4'
+								// formikAddOption.values.option_name_dropdown == ''
+								// 	? 'col-md-2'
+								// 	: 'col-md-4'
+								'col-md-2'
 							}>
 							<FormGroup
 								id='option_name_dropdown'
@@ -396,7 +403,7 @@ const ManageOption = () => {
 								/>
 							</FormGroup>
 						</div>
-						<div
+						{/* <div
 							className='col-md-3'
 							hidden={formikAddOption.values.option_name_dropdown != ''}>
 							<FormGroup id='option_name' label='Option Name' isFloating>
@@ -412,7 +419,7 @@ const ManageOption = () => {
 									validFeedback='Valid Option Name'
 								/>
 							</FormGroup>
-						</div>
+						</div> */}
 						<div className='col-md-3'>
 							<FormGroup id='option_value' label='Option Value' isFloating>
 								<Input
@@ -433,9 +440,20 @@ const ManageOption = () => {
 				</CardBody>
 				<CardFooter>
 					<CardFooterRight>
+						{/* <Button
+							color='dark'
+							tag='a'
+							icon='Close'
+							isLight
+							onClick={() => {
+								formikAddOption.resetForm();
+								setIsCreateMode(false);
+								formik.resetForm();
+							}}>
+							Cancel
+						</Button> */}
 						<Button
 							color='success'
-							className='float-end'
 							icon='Add'
 							tag='a'
 							onClick={formikAddOption.handleSubmit}>

@@ -50,48 +50,10 @@ const EditOptionModal = (props: EditQuotationProps) => {
 			return errors;
 		},
 		onSubmit: async (values) => {
-			// const option_name = values.option_name_dropdown
-			// 	? values.option_name_dropdown
-			// 	: values.option_name;
-			//await handleSubmitAddOption(option_name, values.option_value);
 			await props.handleSubmit_EditOption(props.option_id, values.option_name, values.option_value);
 		},
 	});
 
-
-	// const handleSubmit = async (option_id: number, option_name: string, option_value:string) => {
-	// 	const config = {
-	// 		headers: { Authorization: `${localStorage.getItem('bts_token')}` },
-	// 	};
-
-	// 	const payload = {
-	// 		option_name: option_name,
-	// 		option_value: option_value
-	// 	};
-
-	// 	axios
-	// 		.put(`http://127.0.0.1:5000/option/${option_id}`, payload, config)
-	// 		.then((response) => {
-	// 			showNotification(
-	// 				<span className='d-flex align-items-center'>
-	// 					<Icon icon='Info' size='lg' className='me-1' />
-	// 					<span>Option Deleted</span>
-	// 				</span>,
-	// 				'Option updated successfully',
-	// 			);
-	// 			//alert('done');
-
-	// 		})
-	// 		.catch((errors) => 
-	// 			showNotification(
-	// 				<span className='d-flex align-items-center'>
-	// 					<Icon icon='Info' size='lg' className='me-1' />
-	// 					<span>Error update option</span>
-	// 				</span>,
-	// 				errors,
-	// 			)
-	// 		)
-	// }
 
 	return (
 		
