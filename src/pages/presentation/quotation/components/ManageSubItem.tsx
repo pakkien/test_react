@@ -13,7 +13,7 @@ import Card, {
 } from '../../../../components/bootstrap/Card';
 import Button from '../../../../components/bootstrap/Button';
 import FormGroup from '../../../../components/bootstrap/forms/FormGroup';
-import { calculateTotalCost, calculateTotalPrice, calculateMarginPercentage, calculateUnitPriceByMarginPercentage } from '../../../../common/calculations';
+import { calculateTotalCost, calculateTotalPrice, calculateMarginPercentage, calculateUnitPriceByMarginPercentage, calculateMargin, calculateUnitPriceByMargin } from '../../../../common/calculations';
 
 type SubItemProps = {
 	sectionIndex: number;
@@ -49,7 +49,7 @@ const ManageSubItem = (props: SubItemProps) => {
 			unit: '',
 			unit_cost: 0,
 			total_cost: 0,
-			//margin: 0,
+			margin: 0,
 			margin_percentage: 0,
 			estimated_cost: false,
 			unit_price: 0,
@@ -62,7 +62,7 @@ const ManageSubItem = (props: SubItemProps) => {
 		formData.sections[sectionIndex].items[itemIndex].sub_items.map((sub_item, subItemIndex) => {
 			setValue(`sections.${sectionIndex}.items.${itemIndex}.sub_items.${subItemIndex}.total_cost`, calculateTotalCost(sub_item.unit_cost, sub_item.quantity));
 			setValue(`sections.${sectionIndex}.items.${itemIndex}.sub_items.${subItemIndex}.total_price`, calculateTotalPrice(sub_item.unit_price, sub_item.quantity));
-			//setValue(`sections.${sectionIndex}.items.${itemIndex}.sub_items.${subItemIndex}.margin`, calculateMargin(sub_item.unit_cost, sub_item.unit_price));
+			setValue(`sections.${sectionIndex}.items.${itemIndex}.sub_items.${subItemIndex}.margin`, calculateMargin(sub_item.unit_cost, sub_item.unit_price));
 			setValue(`sections.${sectionIndex}.items.${itemIndex}.sub_items.${subItemIndex}.margin_percentage`, calculateMarginPercentage(sub_item.unit_cost, sub_item.unit_price));
 		});
 	}, [
@@ -401,7 +401,7 @@ const ManageSubItem = (props: SubItemProps) => {
 											</div>
 											<div className='col-md-8'>
 												<div className='row'>
-													{/* <div className='col-md-4'>
+													<div className='col-md-4'>
 														<FormGroup
 															id='margin'
 															label='Margin'
@@ -424,8 +424,6 @@ const ManageSubItem = (props: SubItemProps) => {
 																disabled={props.isViewMode}
 																onChange={
 																	(e) => {
-																		//setValue(`items.${itemIndex}.sub_items.${subItemIndex}.unit_price`, parseFloat((formData.items[itemIndex].sub_items[subItemIndex].unit_cost * (100+parseFloat(e.target.value)) / 100).toFixed(2)));
-																		//setValue(`items.${itemIndex}.sub_items.${subItemIndex}.total_price`, parseFloat((formData.items[itemIndex].sub_items[subItemIndex].quantity * formData.items[itemIndex].sub_items[subItemIndex].unit_price).toFixed(2)));	
 																		setValue(`sections.${sectionIndex}.items.${itemIndex}.sub_items.${subItemIndex}.unit_price`, calculateUnitPriceByMargin(formData.sections?.[sectionIndex]?.items[itemIndex].sub_items[subItemIndex].unit_cost, parseFloat(e.target.value)));
 																		setValue(`sections.${sectionIndex}.items.${itemIndex}.sub_items.${subItemIndex}.total_price`, calculateTotalPrice(formData.sections?.[sectionIndex]?.items[itemIndex].sub_items[subItemIndex].unit_price, formData.sections?.[sectionIndex]?.items[itemIndex].sub_items[subItemIndex].quantity));
 																		setValue(`sections.${sectionIndex}.items.${itemIndex}.sub_items.${subItemIndex}.margin_percentage`, calculateMarginPercentage(formData.sections?.[sectionIndex]?.items[itemIndex].sub_items[subItemIndex].unit_cost, formData.sections?.[sectionIndex]?.items[itemIndex].sub_items[subItemIndex].unit_price));
@@ -440,7 +438,7 @@ const ManageSubItem = (props: SubItemProps) => {
 																}
 															</div>
 														</FormGroup>
-													</div> */}
+													</div>
 													<div className='col-md-4'>
 														<FormGroup
 															id='margin_percentage'
@@ -465,7 +463,7 @@ const ManageSubItem = (props: SubItemProps) => {
 																onChange={(e) => {
 																	setValue(`sections.${sectionIndex}.items.${itemIndex}.sub_items.${subItemIndex}.unit_price`, calculateUnitPriceByMarginPercentage(formData.sections?.[sectionIndex]?.items[itemIndex].sub_items[subItemIndex].unit_cost, parseFloat(e.target.value)));
 																	setValue(`sections.${sectionIndex}.items.${itemIndex}.sub_items.${subItemIndex}.total_price`, calculateTotalPrice(formData.sections?.[sectionIndex]?.items[itemIndex].sub_items[subItemIndex].unit_price, formData.sections?.[sectionIndex]?.items[itemIndex].sub_items[subItemIndex].quantity));
-																	//setValue(`sections.${sectionIndex}.items.${itemIndex}.sub_items.${subItemIndex}.margin`, calculateMargin(formData.sections?.[sectionIndex]?.items[itemIndex].sub_items[subItemIndex].unit_cost, formData.sections?.[sectionIndex]?.items[itemIndex].sub_items[subItemIndex].unit_price));
+																	setValue(`sections.${sectionIndex}.items.${itemIndex}.sub_items.${subItemIndex}.margin`, calculateMargin(formData.sections?.[sectionIndex]?.items[itemIndex].sub_items[subItemIndex].unit_cost, formData.sections?.[sectionIndex]?.items[itemIndex].sub_items[subItemIndex].unit_price));
 																}}
 															/>
 															<div className='invalid-feedback'>
@@ -499,7 +497,7 @@ const ManageSubItem = (props: SubItemProps) => {
 																placeholder='unit_price'
 																disabled={props.isViewMode}
 																onChange={(e) => {
-																	//setValue(`sections.${sectionIndex}.items.${itemIndex}.sub_items.${subItemIndex}.margin`, calculateMargin(formData.sections?.[sectionIndex]?.items[itemIndex].sub_items[subItemIndex].unit_cost, parseFloat(e.target.value)));
+																	setValue(`sections.${sectionIndex}.items.${itemIndex}.sub_items.${subItemIndex}.margin`, calculateMargin(formData.sections?.[sectionIndex]?.items[itemIndex].sub_items[subItemIndex].unit_cost, parseFloat(e.target.value)));
 																	setValue(`sections.${sectionIndex}.items.${itemIndex}.sub_items.${subItemIndex}.margin_percentage`, calculateMarginPercentage(formData.sections?.[sectionIndex]?.items[itemIndex].sub_items[subItemIndex].unit_cost, parseFloat(e.target.value)));
 																	setValue(`sections.${sectionIndex}.items.${itemIndex}.sub_items.${subItemIndex}.total_price`, calculateTotalPrice(parseFloat(e.target.value), formData.sections?.[sectionIndex]?.items[itemIndex].sub_items[subItemIndex].quantity));
 																}}

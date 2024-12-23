@@ -1,7 +1,7 @@
-// export function calculateMargin(cost: number, price: number) {
+export function calculateMargin(cost: number, price: number) {
 
-//     return parseFloat((price - cost).toFixed(2))  //TODO: DOUBLE CONFIRM
-// }
+    return parseFloat((price - cost).toFixed(2))  //TODO: DOUBLE CONFIRM
+}
 
 
 export function calculateMarginPercentage(cost: number, price: number) {
@@ -22,11 +22,11 @@ export function calculateTotalPrice(price: number, quantity: number) {
 }
 
 
-// export function calculateUnitPriceByMargin(unit_cost: number, margin: number) {
+export function calculateUnitPriceByMargin(unit_cost: number, margin: number) {
 
-//     var res = +unit_cost + +margin;
-//     return parseFloat(res.toFixed(2));  //TODO: DOUBLE CONFIRM
-// }
+    var res = +unit_cost + +margin;
+    return parseFloat(res.toFixed(2));  //TODO: DOUBLE CONFIRM
+}
 
 export function calculateUnitPriceByMarginPercentage(unit_cost: number, margin_percentage: number) {
 

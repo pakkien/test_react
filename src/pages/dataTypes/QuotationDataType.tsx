@@ -57,7 +57,7 @@ namespace QuotationDataType {
 		unit: string;
 		unit_cost: number;
 		total_cost: number;
-		//margin: number;
+		margin: number;
 		margin_percentage: number;
 		estimated_cost: boolean;
 		unit_price: number;
@@ -77,7 +77,7 @@ namespace QuotationDataType {
 		unit: string;
 		unit_cost: number;
 		total_cost: number;
-		//margin: number;
+		margin: number;
 		margin_percentage: number;
 		estimated_cost: boolean;
 		unit_price: number;
