@@ -6,14 +6,14 @@ import QuotationDataType from '../../../dataTypes/QuotationDataType';
 
 const schemaSubItem = z.object({
 	product_description: z.string().min(3),
-	brand: z.string().min(3),
-	model: z.string().min(3),
-	remarks: z.string().min(3),
+	brand: z.string(),
+	model: z.string(),
+	remarks: z.string(),
 	quantity: z.coerce.number().int().min(0),
 	unit: z.string(),
 	unit_cost: z.coerce.number().min(0),
 	total_cost: z.coerce.number().min(0),
-	margin: z.coerce.number(),
+	//margin: z.coerce.number(),
 	margin_percentage: z.coerce.number(),
 	estimated_cost: z.boolean(),
 	unit_price: z.coerce.number().min(0),
@@ -23,14 +23,14 @@ const schemaSubItem = z.object({
 
 const schemaItem = z.object({
 	product_description: z.string().min(3),
-	brand: z.string().min(3),
-	model: z.string().min(3),
-	remarks: z.string().min(3),
+	brand: z.string(),
+	model: z.string(),
+	remarks: z.string(),
 	quantity: z.coerce.number().int().min(0),
 	unit: z.string(),
 	unit_cost: z.coerce.number().min(0),
 	total_cost: z.coerce.number().min(0),
-	margin: z.coerce.number(),
+	//margin: z.coerce.number(),
 	margin_percentage: z.coerce.number(),
 	estimated_cost: z.boolean(),
 	unit_price: z.coerce.number().min(0),
@@ -63,8 +63,10 @@ export const schemaQuotation = z.object({
 	//Summary
 	reference_status: z.string(),
 	note: z.string(),
-	total_cost: z.coerce.number(),
-	grand_total: z.coerce.number(),
+	total_cost: z.coerce.number().min(0),
+	grand_total: z.coerce.number().min(0),
+	sst: z.coerce.number().min(0).max(100),
+	discount: z.coerce.number().min(0),
 
 	//items: z.array(schemaItem)
 	//items: z.array(schemaItem).min(1, { message: 'must contain at least one item.' }),
@@ -111,8 +113,10 @@ export const useFormQuotation = (props: QuotationFormProps) =>
 		
 		// total: props.data.total,
 		// g_total: props.data.g_total,
-		total_cost: 0,
-		grand_total: 0,
+		total_cost: props.data.total_cost,
+		grand_total: props.data.grand_total,
+		sst: props.data.sst,
+		discount: props.data.discount,
 		
 		//options:
 		lead_time: props.data.lead_time,

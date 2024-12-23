@@ -49,7 +49,7 @@ import utc from 'dayjs/plugin/utc';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import timezone from 'dayjs/plugin/timezone';
-import { calculateMargin, calculateMarginPercentage } from '../../../common/calculations';
+import {calculateMarginPercentage} from '../../../common/calculations';
 
 dayjs.extend(utc);
 dayjs.extend(localizedFormat);
@@ -503,22 +503,12 @@ const TrackingList = () => {
 												/>
 											</th>
 											<th
-												onClick={() => requestSort('margin')}
-												className='cursor-pointer text-decoration-underline'>
-												Margin
-												<Icon
-													size='lg'
-													className={getClassNamesFor('margin')}
-													icon='FilterList'
-												/>
-											</th>
-											<th
-												onClick={() => requestSort('margin_percent')}
+												onClick={() => requestSort('margin_percentage')}
 												className='cursor-pointer text-decoration-underline'>
 												%
 												<Icon
 													size='lg'
-													className={getClassNamesFor('margin_percent')}
+													className={getClassNamesFor('margin_percentage')}
 													icon='FilterList'
 												/>
 											</th>
@@ -578,14 +568,6 @@ const TrackingList = () => {
 													</td>
 													<td>
 														{item.cost ? item.cost.toFixed(2) : null}
-													</td>
-													<td>
-														{item.quotation_amount && item.cost
-															? calculateMargin(
-																	item.cost,
-																	item.quotation_amount,
-																)
-															: null}
 													</td>
 													<td>
 														{item.quotation_amount && item.cost

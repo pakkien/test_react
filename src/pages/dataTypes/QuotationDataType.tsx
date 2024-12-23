@@ -26,8 +26,10 @@ namespace QuotationDataType {
 		//Summary fields
 		reference_status: string;
 		note: string;
-		total: number;
-		g_total: number;
+		total_cost: number;
+		grand_total: number;
+		discount: number;
+		sst: number;
 
 		//options fields
 		lead_time: string;
@@ -55,7 +57,7 @@ namespace QuotationDataType {
 		unit: string;
 		unit_cost: number;
 		total_cost: number;
-		margin: number;
+		//margin: number;
 		margin_percentage: number;
 		estimated_cost: boolean;
 		unit_price: number;
@@ -75,7 +77,7 @@ namespace QuotationDataType {
 		unit: string;
 		unit_cost: number;
 		total_cost: number;
-		margin: number;
+		//margin: number;
 		margin_percentage: number;
 		estimated_cost: boolean;
 		unit_price: number;

@@ -43,6 +43,7 @@ import RevisionsView from './RevisionsView';
 import AttachmentsView from '../attachmentComponents/AttachmentsView';
 import fileDownload from 'js-file-download';
 import ManageSection from './ManageSection';
+import { calculateGrandTotalAfterDiscountAndSST } from '../../../../common/calculations';
 
 type QuotationProps = {
 	mode: 'create' | 'view' | 'edit';
@@ -198,27 +199,29 @@ export const Quotation = (props: QuotationProps) => {
 		var total = 0;
 		var gtotal = 0;
 
-		for (const section of formData.sections){
-		for (const item of section.items) {
-			total += item.total_cost;
-			gtotal += item.total_price;
-			for (const sub_item of item.sub_items) {
-				total += sub_item.total_cost;
-				gtotal += sub_item.total_price;
+		for (const section of formData.sections) {
+			for (const item of section.items) {
+				total += item.total_cost;
+				gtotal += item.total_price;
+				for (const sub_item of item.sub_items) {
+					total += sub_item.total_cost;
+					gtotal += sub_item.total_price;
+				}
 			}
 		}
-	}
+
+
 		setValue('total_cost', total);
+
+		gtotal = calculateGrandTotalAfterDiscountAndSST(gtotal, formData.discount, formData.sst);
 		setValue('grand_total', gtotal);
-	}, [
-		JSON.stringify(formData.sections)
-	]);
+	}, [JSON.stringify(formData.sections), formData.discount, formData.sst]);
 
 	const handleDownloadPDF = async (
 		quotation_id?: string,
 		quotation_revision_id?: string,
 		quotation_no?: string,
-		with_watermark?: boolean
+		with_watermark?: boolean,
 	) => {
 		axios
 			.get(
@@ -227,7 +230,7 @@ export const Quotation = (props: QuotationProps) => {
 				{
 					responseType: 'blob',
 					headers: { Authorization: `${localStorage.getItem('bts_token')}` },
-					params: {with_watermark: `${with_watermark}`},
+					params: { with_watermark: `${with_watermark}` },
 				},
 			)
 			.then((response) => {
@@ -235,7 +238,6 @@ export const Quotation = (props: QuotationProps) => {
 				fileDownload(response.data, quotation_no + '.pdf');
 			});
 	};
-
 
 	//drop down for client and pic
 	const [clientData, setClientData] = useState([]);
@@ -246,11 +248,9 @@ export const Quotation = (props: QuotationProps) => {
 			headers: { Authorization: `${localStorage.getItem('bts_token')}` },
 		};
 
-		axios
-			.get(import.meta.env.VITE_BASE_URL + '/quotation/clients', config)
-			.then((response) => {
-				setClientData(response.data.clients);
-			});
+		axios.get(import.meta.env.VITE_BASE_URL + '/quotation/clients', config).then((response) => {
+			setClientData(response.data.clients);
+		});
 	};
 
 	const fetchPicData = async () => {
@@ -258,11 +258,9 @@ export const Quotation = (props: QuotationProps) => {
 			headers: { Authorization: `${localStorage.getItem('bts_token')}` },
 		};
 
-		axios
-			.get(import.meta.env.VITE_BASE_URL + '/quotation/pic', config)
-			.then((response) => {
-				setPicData(response.data.pics);
-			});
+		axios.get(import.meta.env.VITE_BASE_URL + '/quotation/pic', config).then((response) => {
+			setPicData(response.data.pics);
+		});
 	};
 
 	//Get client and pic dropdown
@@ -271,14 +269,12 @@ export const Quotation = (props: QuotationProps) => {
 		fetchPicData();
 	}, []);
 
-
 	// useEffect(() => {
 	// 	setValue('client', total);
 	// 	setValue('client_code', gtotal);
 	// }, [
 	// 	JSON.stringify(formData.client+formData.client_code)
 	// ]);
-
 
 	// useEffect(() => {
 	// 	setValue('pic', total);
@@ -362,17 +358,20 @@ export const Quotation = (props: QuotationProps) => {
 						//console.log('Form submitted1: ', data);
 
 						//set order
-						for (var i = 0; i< data.sections.length; i++) {
-							data.sections[i].order = i+1;
-							for (var j = 0; j< data.sections[i].items.length; j++) {
-								
-								if(data.sections[i].is_section_valid){
-									data.sections[i].items[j].order = j+1;
-								}else{
-									data.sections[i].items[j].order = i+1; //same as section
+						for (var i = 0; i < data.sections.length; i++) {
+							data.sections[i].order = i + 1;
+							for (var j = 0; j < data.sections[i].items.length; j++) {
+								if (data.sections[i].is_section_valid) {
+									data.sections[i].items[j].order = j + 1;
+								} else {
+									data.sections[i].items[j].order = i + 1; //same as section
 								}
-								for (var k = 0; k< data.sections[i].items[j].sub_items.length; k++) {
-									data.sections[i].items[j].sub_items[k].order = k+1;
+								for (
+									var k = 0;
+									k < data.sections[i].items[j].sub_items.length;
+									k++
+								) {
+									data.sections[i].items[j].sub_items[k].order = k + 1;
 								}
 							}
 						}
@@ -384,7 +383,6 @@ export const Quotation = (props: QuotationProps) => {
 							},
 							data,
 						);
-
 
 						if (props.quotation_id) {
 							//update only since quotation_id exists
@@ -417,12 +415,12 @@ export const Quotation = (props: QuotationProps) => {
 											type='text'
 											placeholder='client_code'
 											disabled={isViewMode}
-											list="client_code_list"
+											list='client_code_list'
 										/>
-										<datalist id="client_code_list">
-											{clientData.map((client: any) => {return(
-												<option value={client.client_code}/>
-											)}) }
+										<datalist id='client_code_list'>
+											{clientData.map((client: any) => {
+												return <option value={client.client_code} />;
+											})}
 										</datalist>
 										<>
 											{errors.client_code ? (
@@ -449,10 +447,10 @@ export const Quotation = (props: QuotationProps) => {
 											disabled={isViewMode}
 											list='client_list'
 										/>
-										<datalist id="client_list">
-											{clientData.map((client: any) => {return(
-												<option value={client.client}/>
-											)}) }
+										<datalist id='client_list'>
+											{clientData.map((client: any) => {
+												return <option value={client.client} />;
+											})}
 										</datalist>
 										<>
 											{errors.client ? (
@@ -548,12 +546,12 @@ export const Quotation = (props: QuotationProps) => {
 											type='text'
 											placeholder='pic'
 											disabled={isViewMode}
-											list="pic_list"
+											list='pic_list'
 										/>
-										<datalist id="pic_list">
-											{picData.map((pic: any) => {return(
-												<option value={pic.pic}/>
-											)}) }
+										<datalist id='pic_list'>
+											{picData.map((pic: any) => {
+												return <option value={pic.pic} />;
+											})}
 										</datalist>
 										<>
 											{errors.pic ? (
@@ -580,10 +578,10 @@ export const Quotation = (props: QuotationProps) => {
 											disabled={isViewMode}
 											list='pic_email_list'
 										/>
-										<datalist id="pic_email_list">
-											{picData.map((pic: any) => {return(
-												<option value={pic.email}/>
-											)}) }
+										<datalist id='pic_email_list'>
+											{picData.map((pic: any) => {
+												return <option value={pic.email} />;
+											})}
 										</datalist>
 										<>
 											{errors.pic_email ? (
@@ -613,10 +611,10 @@ export const Quotation = (props: QuotationProps) => {
 											disabled={isViewMode}
 											list='pic_contact_number_list'
 										/>
-										<datalist id="pic_contact_number_list">
-											{picData.map((pic: any) => {return(
-												<option value={pic.pic_contact_number}/>
-											)}) }
+										<datalist id='pic_contact_number_list'>
+											{picData.map((pic: any) => {
+												return <option value={pic.pic_contact_number} />;
+											})}
 										</datalist>
 										<>
 											{errors.pic_contact_number ? (
@@ -711,8 +709,7 @@ export const Quotation = (props: QuotationProps) => {
 														color='info'
 														isLight
 														icon='Download'
-														hidden={!isViewMode}
-														>
+														hidden={!isViewMode}>
 														PDF
 													</Button>
 												</DropdownToggle>
@@ -720,14 +717,13 @@ export const Quotation = (props: QuotationProps) => {
 													<DropdownItem>
 														<span
 															onClick={() =>
-															handleDownloadPDF(
-																props.quotation_id,
-																props.quotation_rev_id,
-																props.quotation_no,
-																false
-															)
-														}
-															>
+																handleDownloadPDF(
+																	props.quotation_id,
+																	props.quotation_rev_id,
+																	props.quotation_no,
+																	false,
+																)
+															}>
 															Customer View
 														</span>
 													</DropdownItem>
@@ -737,10 +733,9 @@ export const Quotation = (props: QuotationProps) => {
 																props.quotation_id,
 																props.quotation_rev_id,
 																props.quotation_no,
-																true
+																true,
 															)
-														}
-														>
+														}>
 														Internal View
 													</DropdownItem>
 												</DropdownMenu>
@@ -797,9 +792,7 @@ export const Quotation = (props: QuotationProps) => {
 								</>
 								<br />
 								{/* <ManageItem isViewMode={isViewMode} /> */}
-								<ManageSection
-									isViewMode={isViewMode}
-								/>
+								<ManageSection isViewMode={isViewMode} />
 								<br />
 							</div>
 							<div hidden={activeTab != 'Attachments'}>
@@ -1012,6 +1005,56 @@ export const Quotation = (props: QuotationProps) => {
 									</FormGroup>
 								</div>
 								<div className='col-md-4'>
+									<FormGroup id='discount' label='Discount' isFloating>
+										<input
+											id='discount'
+											className={
+												'form-control ' +
+												(errors.discount ? 'is-invalid' : '')
+											}
+											{...register('discount')}
+											type='text'
+											placeholder='grand_tdiscountotal'
+											disabled={isViewMode}
+										/>
+										<>
+											{errors.discount ? (
+												<div className='invalid-feedback'>
+													{errors.discount.message}
+												</div>
+											) : (
+												''
+											)}
+										</>
+									</FormGroup>
+								</div>
+								<div className='col-md-8'></div>
+								<div className='col-md-4'>
+								<FormGroup id='sst' label='SST' isFloating>
+										<input
+											id='sst'
+											className={
+												'form-control ' +
+												(errors.sst ? 'is-invalid' : '')
+											}
+											{...register('sst')}
+											type='text'
+											placeholder='sst'
+											disabled={isViewMode}
+										/>
+										<>
+											{errors.sst ? (
+												<div className='invalid-feedback'>
+													{errors.sst.message}
+												</div>
+											) : (
+												''
+											)}
+										</>
+									</FormGroup>
+								</div>
+								<div className='col-md-8'></div>
+								<div className='col-md-4'>
 									<FormGroup id='grand_total' label='G/Total (RM)' isFloating>
 										<input
 											id='grand_total'
@@ -1061,7 +1104,7 @@ export const Quotation = (props: QuotationProps) => {
 									hidden={isViewMode}
 									isDisable={isSubmitting}
 									//nClick={() => console.log("hihi")}
-									>
+								>
 									{isSubmitting ? (
 										<Spinner isSmall inButton='onlyIcon' />
 									) : //<span>Save</span>
