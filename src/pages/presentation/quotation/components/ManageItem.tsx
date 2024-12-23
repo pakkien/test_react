@@ -79,7 +79,7 @@ const ManageItem = (props: ItemProps) => {
 	}, [JSON.stringify(formData.sections[sectionIndex].items.map(item => {return item.quantity+item.unit_cost}))]);
 
 
-
+	fields.sort((a,b) => a.order < b.order ? -1 : a.order > b.order ? 1 : 0);
 
 	return (
 		<div className='pb-0'>

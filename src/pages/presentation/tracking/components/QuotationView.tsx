@@ -334,12 +334,12 @@ const QuotationView = (qv_props: QuotationViewProps) => {
 												<DropdownItem>
 													<span
 														onClick={() => handleDownloadPDF(qv_props.quotation_id, props.quotation_revision_id, props.quotation_no, false)}>
-														No Watermark
+														Customer View
 													</span>
 												</DropdownItem>
 												<DropdownItem
 													onClick={() => handleDownloadPDF(qv_props.quotation_id, props.quotation_revision_id, props.quotation_no, true)}>
-													With Watermark
+													Internal View
 												</DropdownItem>
 											</DropdownMenu>
 										</Dropdown>

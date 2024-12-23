@@ -1,43 +1,49 @@
 import React, { createContext, FC, ReactNode, useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
-import { getUserDataWithUsername, IUserProps } from '../common/data/userDummyData';
+
 
 export interface IAuthContextProps {
-	user: string;
-	setUser?(...args: unknown[]): unknown;
-	userData: Partial<IUserProps>;
+	userData: UserDataType | undefined;
+	setUserData: React.Dispatch<React.SetStateAction<UserDataType | undefined>>;
+
 }
+
+type UserDataType = {
+	refresh_token: string;
+	token: string;
+	email: string;
+	id: number;
+	mobile: string;
+	name: string;
+	role: string;
+	view_mccr: boolean;
+	view_quotation: boolean;
+	write_mccr: boolean,
+	write_quotation: boolean;
+}
+
 const AuthContext = createContext<IAuthContextProps>({} as IAuthContextProps);
 
 interface IAuthContextProviderProps {
 	children: ReactNode;
 }
 export const AuthContextProvider: FC<IAuthContextProviderProps> = ({ children }) => {
-	const [user, setUser] = useState<string>(localStorage.getItem('bts_authUserEmail') || '');
-	const [userData, setUserData] = useState<Partial<IUserProps>>({});
+	const [userData, setUserData] = useState<UserDataType>();
 
-	useEffect(() => {
-		localStorage.setItem('bts_authUserEmail', user);
-	}, [user]);
 
-	useEffect(() => {
-		if (user !== '') {
-			setUserData(getUserDataWithUsername(user));
-			//console.log("userdata:" + JSON.stringify(userData));
-		} else {
-			setUserData({});
-		}
-	}, [user]);
+	// useEffect(() => {
+	// 	const interval = setInterval(() => {
+	// 	  console.log('This will be called every 2 seconds');
 
-	const value = useMemo(
-		() => ({
-			user,
-			setUser,
-			userData,
-		}),
-		[user, userData],
-	);
-	return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+	// 	  //refresh token
+	// 	  console.log(JSON.stringify(userData));
+	// 	}, 2000);
+	  
+	// 	return () => clearInterval(interval);
+	// }, []);
+
+	//TODO: add refresh token
+	return <AuthContext.Provider value={{userData, setUserData}}>{children}</AuthContext.Provider>;
 };
 AuthContextProvider.propTypes = {
 	children: PropTypes.node.isRequired,

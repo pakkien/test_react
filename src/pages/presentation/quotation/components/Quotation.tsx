@@ -363,16 +363,16 @@ export const Quotation = (props: QuotationProps) => {
 
 						//set order
 						for (var i = 0; i< data.sections.length; i++) {
-							data.sections[i].order = i;
+							data.sections[i].order = i+1;
 							for (var j = 0; j< data.sections[i].items.length; j++) {
 								
 								if(data.sections[i].is_section_valid){
-									data.sections[i].items[j].order = j;
+									data.sections[i].items[j].order = j+1;
 								}else{
-									data.sections[i].items[j].order = i; //same as section
+									data.sections[i].items[j].order = i+1; //same as section
 								}
 								for (var k = 0; k< data.sections[i].items[j].sub_items.length; k++) {
-									data.sections[i].items[j].sub_items[k].order = k;
+									data.sections[i].items[j].sub_items[k].order = k+1;
 								}
 							}
 						}
@@ -728,7 +728,7 @@ export const Quotation = (props: QuotationProps) => {
 															)
 														}
 															>
-															No Watermark
+															Customer View
 														</span>
 													</DropdownItem>
 													<DropdownItem
@@ -741,7 +741,7 @@ export const Quotation = (props: QuotationProps) => {
 															)
 														}
 														>
-														With Watermark
+														Internal View
 													</DropdownItem>
 												</DropdownMenu>
 											</Dropdown>

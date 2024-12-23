@@ -47,7 +47,7 @@ interface ILoginProps {
 	isSignUp?: boolean;
 }
 const Login: FC<ILoginProps> = ({ isSignUp }) => {
-	const { setUser } = useContext(AuthContext);
+	const { setUserData } = useContext(AuthContext);
 
 	const { darkModeStatus } = useDarkMode();
 
@@ -64,12 +64,26 @@ const Login: FC<ILoginProps> = ({ isSignUp }) => {
 			.post(import.meta.env.VITE_BASE_URL + `/auth/login`, payload)
 			.then((response) => {
 				//console.log(response.data);
-				if (setUser) {
-					setUser(email);
-				}
+				// if (setUser) {
+				// 	setUser(email);
+				// }
 
 				handleOnClick();
+				localStorage.setItem('bts_UserEmail', response.data.user.email);
 				localStorage.setItem('bts_token', response.data.token);
+				setUserData({
+					refresh_token: response.data.refresh_token,
+					token: response.data.token,
+					email: response.data.user.email,
+					id: response.data.user.id,
+					mobile: response.data.user.mobile,
+					name: response.data.user.name,
+					role: response.data.user.role,
+					view_mccr: response.data.user.view_mccr,
+					view_quotation: response.data.user.view_quotation,
+					write_mccr: response.data.user.write_mccr,
+					write_quotation: response.data.user.write_quotation,
+				});
 
 				//cache token
 				//return true;
