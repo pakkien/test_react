@@ -589,7 +589,7 @@ const ManageOption = () => {
 										<th
 											onClick={() => requestSort('created_at')}
 											className='cursor-pointer text-decoration-underline'>
-											Created Datetime
+											Created At
 											<Icon
 												size='lg'
 												className={getClassNamesFor('created_at')}
@@ -610,7 +610,7 @@ const ManageOption = () => {
 										<th
 											onClick={() => requestSort('updated_at')}
 											className='cursor-pointer text-decoration-underline'>
-											Updated Datetime
+											Updated At
 											<Icon
 												size='lg'
 												className={getClassNamesFor('updated_at')}
