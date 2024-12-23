@@ -1,1 +1,0 @@
-function r(a,t){return parseFloat((t/a).toFixed(10))}function n(a,t){return parseFloat((a*t).toFixed(2))}function o(a,t){return parseFloat((a*t).toFixed(2))}function c(a,t){return parseFloat((t-a/(100-t)).toFixed(2))}function l(a,t,e){return parseFloat(((a-t)*(+e+100)/100).toFixed(2))}export{n as a,o as b,r as c,c as d,l as e};
