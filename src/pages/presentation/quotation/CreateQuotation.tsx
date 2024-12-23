@@ -25,8 +25,10 @@ const QuotationData: QuotationDataType.QuotationData = {
 	//Summary fields
 	reference_status: '',
 	note: '',
-	total: 0,
-	g_total: 0,
+	total_cost: 0,
+	grand_total: 0,
+	discount: 0,
+	sst: 0,
 
 	//options
 	lead_time: '',

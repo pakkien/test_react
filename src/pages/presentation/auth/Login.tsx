@@ -54,6 +54,11 @@ const Login: FC<ILoginProps> = ({ isSignUp }) => {
 	const navigate = useNavigate();
 	const handleOnClick = useCallback(() => navigate('/'), [navigate]);
 
+	//remove 
+	localStorage.removeItem('bts_UserEmail');
+	localStorage.removeItem('bts_token');
+	localStorage.removeItem('bts_refreshtoken');
+
 	const loginApiCall = async (email: string, password: string) => {
 		const payload = {
 			email: email,
@@ -71,6 +76,7 @@ const Login: FC<ILoginProps> = ({ isSignUp }) => {
 				handleOnClick();
 				localStorage.setItem('bts_UserEmail', response.data.user.email);
 				localStorage.setItem('bts_token', response.data.token);
+				localStorage.setItem('bts_refreshtoken', response.data.refresh_token);
 				setUserData({
 					refresh_token: response.data.refresh_token,
 					token: response.data.token,

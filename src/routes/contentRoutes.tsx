@@ -8,7 +8,7 @@ import {
 	quotationMenu,
 } from '../menu';
 import Login from '../pages/presentation/auth/Login';
-import ProtectedRoute from './protectedRoute';
+import {ProtectedRouteAdmin, ProtectedRouteUser} from './protectedRoute';
 
 
 
@@ -51,44 +51,40 @@ const presentation = [
 	 * Landing
 	 */
 	{
-		path: 'test_react/',
-		element: <ProtectedRoute><LANDING.DASHBOARD /></ProtectedRoute>,
-	},
-	{
 		path: dashboardPagesMenu.dashboard.path,
-		element: <LANDING.DASHBOARD />,
+		element: <ProtectedRouteUser><LANDING.DASHBOARD /></ProtectedRouteUser>,
 	},
 	{
 		path: trackingListMenu.trackingList.path,
-		element: <TRACKING_LIST.TRACKING_LIST_PAGE />,
+		element: <ProtectedRouteUser><TRACKING_LIST.TRACKING_LIST_PAGE /></ProtectedRouteUser>,
 	},
 	{
 		path: 'tracking/view/:quotation_id/:variance',
-		element: <TRACKING_LIST.VIEW_QUOTATION_PAGE />,
+		element: <ProtectedRouteUser view_quotation={true}><TRACKING_LIST.VIEW_QUOTATION_PAGE /></ProtectedRouteUser>,
 	},
 	{
 		path: quotationMenu.quotation.path,
-		element: <QUOTATION.QUOTATION_LIST_PAGE />,
+		element: <ProtectedRouteUser><QUOTATION.QUOTATION_LIST_PAGE /></ProtectedRouteUser>,
 	},
 	{
 		path: 'quotation/view/:quotation_rev_id',
-		element: <QUOTATION.VIEW_QUOTATION_PAGE />,
+		element: <ProtectedRouteUser view_quotation={true}><QUOTATION.VIEW_QUOTATION_PAGE /></ProtectedRouteUser>,
 	},
 	{
 		path: 'quotation/edit/:quotation_rev_id',
-		element: <QUOTATION.EDIT_QUOTATION_PAGE/>,
+		element: <ProtectedRouteUser write_quotation={true}><QUOTATION.EDIT_QUOTATION_PAGE/></ProtectedRouteUser>,
 	},
 	{
 		path: 'quotation/create',
-		element: <QUOTATION.CREATE_QUOTATION_PAGE />,
+		element: <ProtectedRouteUser write_quotation={true}><QUOTATION.CREATE_QUOTATION_PAGE /></ProtectedRouteUser>,
 	},
 	{
 		path: adminPagesMenu.admin.path,
-		element: <ADMIN.ADMIN_PAGE />,
+		element: <ProtectedRouteAdmin><ADMIN.ADMIN_PAGE /></ProtectedRouteAdmin>,
 	},
 	{
 		path: 'admin/manage-user/:user_id',
-		element: <ADMIN.MANAGE_USER />,
+		element: <ProtectedRouteAdmin><ADMIN.MANAGE_USER /></ProtectedRouteAdmin>,
 	},
 	// {
 	// 	path: demoPagesMenu.page404.path,
