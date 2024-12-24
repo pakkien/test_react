@@ -20,11 +20,11 @@ type SubItemProps = {
 
 const ManageSubItem = (props: SubItemProps) => {
 	props.sub_items.sort((a,b) => a.order < b.order ? -1 : a.order > b.order ? 1 : 0);
-	
+
 	return (
 		<div className='pb-0'>
 			<div className='col-xl-12' key={props.itemIndex}>
-				<Accordion
+				{props.sub_items.length > 0 && (<Accordion
 					id='SubItemAccordion'
 					color='dark'
 					activeItemId={'SubItemAccordionItem_' + props.itemIndex}>
@@ -197,7 +197,7 @@ const ManageSubItem = (props: SubItemProps) => {
 							);
 						})}
 					</AccordionItem>
-				</Accordion>
+				</Accordion>)}
 			</div>
 		</div>
 	);

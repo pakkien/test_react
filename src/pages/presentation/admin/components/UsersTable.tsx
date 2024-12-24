@@ -107,7 +107,7 @@ const UsersTable = () => {
 	const navigate = useNavigate();
 
 	const goToEditPage = (id: number) => {
-		navigate(`manage-user/${id}`);
+		navigate(`edit-user/${id}`);
 	};
 
 	const [userToDelete, setUserToDelete] = useState({ name: '', id: -99 });
@@ -226,7 +226,10 @@ const UsersTable = () => {
 								className='float-end'
 								icon='Create'
 								tag='a'
-								isDisable>
+								onClick={() => {
+									navigate(`create-user`);
+								}}
+								>
 								Create
 							</Button>
 						</div>
@@ -262,6 +265,16 @@ const UsersTable = () => {
 											<Icon
 												size='lg'
 												className={getClassNamesFor('email')}
+												icon='FilterList'
+											/>
+										</th>
+										<th
+											onClick={() => requestSort('mobile')}
+											className='cursor-pointer text-decoration-underline'>
+											Mobile
+											<Icon
+												size='lg'
+												className={getClassNamesFor('mobile')}
 												icon='FilterList'
 											/>
 										</th>
@@ -315,6 +328,7 @@ const UsersTable = () => {
 											<td>{item.role}</td>
 											<td>{item.name}</td>
 											<td>{item.email}</td>
+											<td>{item.mobile}</td>
 											<td>
 												{returnTrueFalseIconisTrue(item.view_quotation)}
 											</td>

@@ -17,7 +17,8 @@ const LANDING = {
 };
 const ADMIN = {
 	ADMIN_PAGE: lazy(() => import('../pages/presentation/admin/AdminPage')),
-	MANAGE_USER: lazy(() => import('../pages/presentation/admin/ManageUser')),
+	EDIT_USER: lazy(() => import('../pages/presentation/admin/EditUser')),
+	CREATE_USER: lazy(() => import('../pages/presentation/admin/CreateUser')),
 };
 
 const TRACKING_LIST = {
@@ -84,8 +85,12 @@ const presentation = [
 		element: <ProtectedRouteAdmin><ADMIN.ADMIN_PAGE /></ProtectedRouteAdmin>,
 	},
 	{
-		path: 'admin/manage-user/:user_id',
-		element: <ProtectedRouteAdmin><ADMIN.MANAGE_USER /></ProtectedRouteAdmin>,
+		path: 'admin/edit-user/:user_id',
+		element: <ProtectedRouteAdmin><ADMIN.EDIT_USER /></ProtectedRouteAdmin>,
+	},
+	{
+		path: 'admin/create-user',
+		element: <ProtectedRouteAdmin><ADMIN.CREATE_USER /></ProtectedRouteAdmin>,
 	},
 	{
 		path: 'auth-pages/page404',

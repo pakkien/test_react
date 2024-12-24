@@ -104,7 +104,13 @@ export const Quotation = (props: QuotationProps) => {
 	const [status, setStatus] = useState<any>(enum_val);
 
 	useEffect(() => {
-		setValue('status', status.name);
+		
+		if(props.mode == 'create'){
+			setValue('status', 'Submitted');
+			setAllowStatusUpdate(false);
+		}else{
+			setValue('status', status.name);
+		}
 	}, [status]);
 
 	// upload file

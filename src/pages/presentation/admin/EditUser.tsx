@@ -38,6 +38,7 @@ type UserDataType = {
 	id: number;
 	email: string;
 	name: string;
+	mobile: string;
 	role: string;
 	view_mccr: boolean;
 	view_quotation: boolean;
@@ -45,7 +46,7 @@ type UserDataType = {
 	write_quotation: boolean;
 };
 
-const ManageUser = () => {
+const EditUser = () => {
 	const navigate = useNavigate();
 	const { user_id } = useParams();
 	const [userData, setUserData] = useState<UserDataType>();
@@ -70,6 +71,7 @@ const ManageUser = () => {
 			name: userData?.name ? userData.name : '',
 			role: userData?.role ? userData.role : '',
 			email: userData?.email ? userData.email : '',
+			mobile: userData?.mobile ? userData.mobile : '',
 			view_quotation: userData?.view_quotation ? userData.view_quotation : '',
 			write_quotation: userData?.write_quotation ? userData.write_quotation : '',
 			view_mccr: userData?.view_mccr ? userData.view_mccr : '',
@@ -81,6 +83,7 @@ const ManageUser = () => {
 				name?: string;
 				role?: string;
 				email?: string;
+				mobile?: string;
 			} = {};
 
 
@@ -92,6 +95,9 @@ const ManageUser = () => {
 			}
 			if (!values.email) {
 				errors.email = 'Required';
+			}
+			if (!values.mobile) {
+				errors.mobile = 'Required';
 			}
 
 			return errors;
@@ -114,10 +120,11 @@ const ManageUser = () => {
 			name: values.name,
 			role: values.role,
 			email: values.email,
-			view_quotation: values.view_quotation,
-			write_quotation: values.write_quotation,
-			view_mccr: values.view_mccr,
-			write_mccr: values.write_mccr,
+			mobile: values.mobile,
+			view_quotation: values.view_quotation? true: false,
+			write_quotation: values.write_quotation? true: false,
+			view_mccr: values.view_mccr? true: false,
+			write_mccr: values.write_mccr? true: false,
 		};
 
 		axios
@@ -130,6 +137,8 @@ const ManageUser = () => {
 					</span>,
 					'User Updated.',
 				);
+				navigate(`../admin`, {replace: true});
+
 
 			})
 			.catch((errors) => 
@@ -199,7 +208,7 @@ const ManageUser = () => {
 											/>
 										</FormGroup>
 									</div>
-									<div className='col-md-12'>
+									<div className='col-md-6'>
 										<FormGroup id='email' label='Email' isFloating>
 											<Input
 												placeholder='Email'
@@ -210,6 +219,20 @@ const ManageUser = () => {
 												isTouched={formik.touched.email}
 												invalidFeedback={formik.errors.email}
 												validFeedback='Valid Email'
+											/>
+										</FormGroup>
+									</div>
+									<div className='col-md-6'>
+										<FormGroup id='mobile' label='Mobile' isFloating>
+											<Input
+												placeholder='Mobile'
+												onChange={formik.handleChange}
+												onBlur={formik.handleBlur}
+												value={formik.values.mobile}
+												isValid={formik.isValid}
+												isTouched={formik.touched.mobile}
+												invalidFeedback={formik.errors.mobile}
+												validFeedback='Valid Mobile'
 											/>
 										</FormGroup>
 									</div>
@@ -293,4 +316,4 @@ const ManageUser = () => {
 	);
 };
 
-export default ManageUser;
+export default EditUser;
