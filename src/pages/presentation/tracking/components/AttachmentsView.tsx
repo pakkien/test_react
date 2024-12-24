@@ -105,7 +105,7 @@ const AttachmentsView = (props: AttachmentsViewProps) => {
 
 						{item.attachment_list &&
 							item.attachment_list.map((x) => (
-								<li>
+								<li key={x.id}>
 									<span
 										// className='fw-bold text-truncate'
 										// style={{

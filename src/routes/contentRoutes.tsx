@@ -35,6 +35,7 @@ const QUOTATION = {
 
 const AUTH = {
 	PAGE_404: lazy(() => import('../pages/presentation/auth/Page404')),
+	PAGE_403: lazy(() => import('../pages/presentation/auth/Page403')),
 };
 const PAGE_LAYOUTS = {
 	HEADER_SUBHEADER: lazy(() => import('../pages/presentation/page-layouts/HeaderAndSubheader')),
@@ -86,13 +87,17 @@ const presentation = [
 		path: 'admin/manage-user/:user_id',
 		element: <ProtectedRouteAdmin><ADMIN.MANAGE_USER /></ProtectedRouteAdmin>,
 	},
-	// {
-	// 	path: demoPagesMenu.page404.path,
-	// 	element: <AUTH.PAGE_404 />,
-	// },
+	{
+		path: 'auth-pages/page404',
+		element: <AUTH.PAGE_404 />,
+	},
 	{
 		path: demoPagesMenu.login.path,
 		element: <Login />,
+	},
+	{
+		path: 'auth-pages/page403',
+		element: <AUTH.PAGE_403 />,
 	},
 	// {
 	// 	path: demoPagesMenu.signUp.path,

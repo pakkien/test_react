@@ -17,7 +17,7 @@ type SectionProps = {
 };
 
 const ManageSection = (props: SectionProps) => {
-  console.log(props.sections);
+  //console.log(props.sections);
 
 	return (
 		<div className='pb-0'>

@@ -36,6 +36,8 @@ import axios from 'axios';
 import fileDownload from 'js-file-download';
 import TrackingDetailsForm from './TrackingDetailsForm';
 import ManageSection from './ManageSection';
+import TrackingDetails from '../trackingDetails/TrackingDetails';
+import TrackingDetailsView from './TrackingDetailsView';
 
 type QuotationViewProps = {
 	data: any;
@@ -61,7 +63,7 @@ const QuotationView = (qv_props: QuotationViewProps) => {
 			const curentQuotationRev = qv_props.data.filter(
 				(x: any) => x.variance == currentVariance,
 			)[0];
-			console.log(JSON.stringify(props));
+			//console.log(JSON.stringify(props));
 			setStatus(
 				QUOTATION_STATUS[
 					curentQuotationRev.status.toUpperCase() as keyof typeof QUOTATION_STATUS
@@ -300,7 +302,8 @@ const QuotationView = (qv_props: QuotationViewProps) => {
 								/>
 							</div>
 							<div hidden={activeTab != 'TrackingDetails'} key={'trackingDetailsTab'}>
-								<TrackingDetailsForm quotation_id={qv_props.quotation_id} />
+								{/* <TrackingDetailsForm quotation_id={qv_props.quotation_id} /> */}
+								<TrackingDetailsView quotation_id={qv_props.quotation_id}/>
 							</div>
 
 							<div hidden={activeTab != 'Quotation'}>

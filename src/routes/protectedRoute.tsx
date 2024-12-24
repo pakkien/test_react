@@ -27,19 +27,19 @@ export function ProtectedRouteUser(props: UserAccessProps) {
         }
 
         if(!userData?.view_quotation && props.view_quotation){
-            navigate('/auth-pages/login', {replace: true});
+            navigate('/auth-pages/page403', {replace: true});
         }
 
         if(!userData?.write_quotation && props.write_quotation){
-            navigate('/auth-pages/login', {replace: true});
+            navigate('/auth-pages/page403', {replace: true});
         }
 
         if(!userData?.view_mccr && props.view_mccr){
-            navigate('/auth-pages/login', {replace: true});
+            navigate('/auth-pages/page403', {replace: true});
         }
 
         if(!userData?.write_mccr && props.write_mccr){
-            navigate('/auth-pages/login', {replace: true});
+            navigate('/auth-pages/page403', {replace: true});
         }
 
     }, [navigate, userData])
@@ -58,11 +58,11 @@ export function ProtectedRouteAdmin({children}: ProtectedRouteProps) {
         var token = localStorage.getItem('bts_token') || '';
 
         if(!userData || !refresh_token || !token){
-            navigate('/auth-pages/login', {replace: true});
+            navigate('/auth-pages/page403', {replace: true});
         }
 
         if(userData?.role.toLowerCase() != 'admin'){
-            navigate('/auth-pages/login', {replace: true});
+            navigate('/auth-pages/page403', {replace: true});
         }
 
 

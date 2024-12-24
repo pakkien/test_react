@@ -9,12 +9,15 @@ import Card, { CardHeader, CardLabel, CardTitle, CardBody, CardFooter } from '..
 import Progress from '../../../../components/bootstrap/Progress';
 import Tooltips from '../../../../components/bootstrap/Tooltips';
 import Icon from '../../../../components/icon/Icon';
+import { UseFormSetValue } from 'react-hook-form';
 
 type DropzoneProps = {
     //quotation_id: string;
     attachment_list: AttachmentFileType[];
     attachment_type: string;
-    setAttachmentIds: (ids: string[], type: string) => void;
+    //setAttachmentIds: (ids: string[], type: string) => void;
+	index: number;
+	updateIdsFunc: (index: number, ids: string[]) => void;
     className?: string;
 }
 
@@ -34,7 +37,7 @@ const Dropzone = (props: DropzoneProps) => {
 	useEffect(() => {
 		//console.log("props:" + JSON.stringify(props));
 		setPrevFiles(props.attachment_list);
-	}, [(props.attachment_list).length > 0]);
+	}, [(props.attachment_list).length]);
 
 	const handleDownload = async (attachment_type: string, attachment_id: string, file_name: string) => {
 		axios
@@ -163,7 +166,25 @@ useEffect(() => {
     let prev_ids = prevFiles.map((file) => file.id);
     // let all_ids = [...new_ids, ...prev_ids];
     // console.log(all_ids);
-    props.setAttachmentIds([...new_ids, ...prev_ids], props.attachment_type);	
+    //props.setAttachmentIds([...new_ids, ...prev_ids], props.attachment_type);	
+	switch (props.attachment_type) {
+		case 'purchase_order': {
+			props.updateIdsFunc(props.index, [...new_ids, ...prev_ids]);
+			break;
+		}
+		case 'sale_order': {
+			props.updateIdsFunc(props.index, [...new_ids, ...prev_ids]);
+			break;
+		}
+		case 'invoice': {
+			props.updateIdsFunc(props.index, [...new_ids, ...prev_ids]);
+			break;
+		}
+		default: {
+			break;
+		}
+	}
+
 }, [files, prevFiles]);
 
 useEffect(() => {

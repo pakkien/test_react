@@ -106,7 +106,7 @@ const TrackingDetailsForm = (props: TrackingDetailsProps) => {
 		axios
 			.get(import.meta.env.VITE_BASE_URL + `/tracking_list/quotation/${quotation_id}`, config)
 			.then((response) => {
-				console.log(response.data);
+				//console.log(response.data);
 				setTrackingData(response.data);
 			});
 	};
@@ -190,7 +190,7 @@ const TrackingDetailsForm = (props: TrackingDetailsProps) => {
 				},
 			);
 
-			console.log(JSON.stringify(payload));
+			//console.log(JSON.stringify(payload));
 			handleSubmit(payload);
 		},
 	});

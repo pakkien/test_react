@@ -97,6 +97,12 @@ export const demoPagesMenu = {
 	// 	path: 'auth-pages/404',
 	// 	icon: 'ReportGmailerrorred',		
 	// },
+	// page403: {
+	// 	id: 'Page403',
+	// 	text: '403 Page',
+	// 	path: 'auth-pages/403',
+	// 	icon: 'ReportGmailerrorred',		
+	// },
 };
 
 export const pageLayoutTypesPagesMenu = {
