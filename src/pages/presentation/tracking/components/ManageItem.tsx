@@ -22,6 +22,8 @@ type ItemProps = {
 };
 
 const ManageItem = (props: ItemProps) => {
+	props.items.sort((a,b) => a.order < b.order ? -1 : a.order > b.order ? 1 : 0);
+
 	return (
 		<div className='pb-0'>
 			{props.items.map((item, itemIndex) => {
@@ -39,7 +41,7 @@ const ManageItem = (props: ItemProps) => {
 										<CardHeader>
 											<CardLabel>
 												<CardTitle tag='div' className='h3'>
-													Item {itemIndex + 1}.0 &nbsp;&nbsp;
+													Item {itemIndex + 1} &nbsp;&nbsp;
 												</CardTitle>
 											</CardLabel>
 										</CardHeader>
@@ -175,6 +177,7 @@ const ManageItem = (props: ItemProps) => {
 								</AccordionItem>
 							</Accordion>
 						</div>
+						<div className='col-md-12'></div>
 					</>
 				);
 			})}

@@ -34,9 +34,7 @@ import AttachmentsView from './AttachmentsView';
 import RevisionsView from './RevisionsView';
 import axios from 'axios';
 import fileDownload from 'js-file-download';
-import TrackingDetailsForm from './TrackingDetailsForm';
 import ManageSection from './ManageSection';
-import TrackingDetails from '../trackingDetails/TrackingDetails';
 import TrackingDetailsView from './TrackingDetailsView';
 
 type QuotationViewProps = {
@@ -360,7 +358,7 @@ const QuotationView = (qv_props: QuotationViewProps) => {
 								{/* <ManageItem items={props.items} /> */}
 								<ManageSection
 									sections={props.sections}
-									sectionMode={props.is_section_valid}
+									//sectionMode={props.is_section_valid}
 							
 								/>
 							</div>

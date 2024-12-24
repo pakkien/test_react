@@ -12,20 +12,23 @@ import ManageItem from './ManageItem';
 import QuotationDataType from '../../../dataTypes/QuotationDataType';
 
 type SectionProps = {
-	sectionMode: boolean;
+	//sectionMode: boolean;
 	sections: QuotationDataType.Section[];
 };
 
 const ManageSection = (props: SectionProps) => {
   //console.log(props.sections);
 
+   props.sections.sort((a,b) => a.order < b.order ? -1 : a.order > b.order ? 1 : 0);
+
 	return (
 		<div className='pb-0'>
-			{props.sectionMode
-				? props.sections.map((section, sectionIndex) => {
+			{props.sections.map((section, sectionIndex) => {
+				{
+					if(section.is_section_valid){
 						return (
 							<>
-								<div className='col-xl-12'>
+								<div className='col-md-12'>
 									<Accordion
 										id='SectionAccordion'
 										color='dark'
@@ -35,25 +38,32 @@ const ManageSection = (props: SectionProps) => {
 											title={`${sectionIndex + 1}.0  ` + section.name}>
 											<ManageItem
 												items={section.items}
-												sectionMode={props.sectionMode}
+												sectionMode={true}
 												sectionIndex={sectionIndex}
 											/>
 										</AccordionItem>
 									</Accordion>
 								</div>
+								<div className='col-md-12'>&nbsp;</div>
 							</>
 						);
-					})
-				: props.sections.map((section, sectionIndex) => {
+					}
+					else{
 						return (
-								<ManageItem
-									items={section.items}
-									sectionMode={props.sectionMode}
-									sectionIndex={sectionIndex}
-								/>
+							<>
+							<ManageItem
+								items={section.items}
+								sectionMode={false}
+								sectionIndex={sectionIndex}
+							/>
+							<div className='col-md-12'>&nbsp;</div>
+							</>
 
-						);
-					})}
+					);
+					}
+				}
+				
+			})}
 		</div>
 	);
 };
