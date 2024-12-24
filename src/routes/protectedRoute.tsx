@@ -12,31 +12,13 @@ type UserAccessProps = {
 	write_quotation?: boolean;
 };
 
-// export function ProtectedRoute({children}: ProtectedRouteProps) {
-//     const { userData } = useContext(AuthContext);
-//     const navigate = useNavigate();
-
-//     useEffect(() => {
-//         console.log("userData:" + JSON.stringify(userData));
-//         var refresh_token = localStorage.getItem('bts_refreshtoken') || '';
-//         var token = localStorage.getItem('bts_token') || '';
-
-//         if(!userData || !refresh_token || !token){
-//             navigate('/auth-pages/login', {replace: true});
-//         }
-
-//     }, [navigate, userData])
-    
-
-//     return children;
-// }
 
 export function ProtectedRouteUser(props: UserAccessProps) {
     const { userData } = useContext(AuthContext);
     const navigate = useNavigate();
 
     useEffect(() => {
-        console.log("userData:" + JSON.stringify(userData));
+        //console.log("userData:" + JSON.stringify(userData));
         var refresh_token = localStorage.getItem('bts_refreshtoken') || '';
         var token = localStorage.getItem('bts_token') || '';
 
@@ -71,7 +53,7 @@ export function ProtectedRouteAdmin({children}: ProtectedRouteProps) {
     const navigate = useNavigate();
 
     useEffect(() => {
-        console.log("userData:" + JSON.stringify(userData));
+        //console.log("userData:" + JSON.stringify(userData));
         var refresh_token = localStorage.getItem('bts_refreshtoken') || '';
         var token = localStorage.getItem('bts_token') || '';
 
