@@ -44,14 +44,16 @@ const ManageInvoice = () => {
 		setValue(`invoice.${index}.temp_attachment_ids`, ids);
 	};
 
+	fields.sort((a,b) => a.order < b.order ? -1 : a.order > b.order ? 1 : 0);
+
 	return (
 		<div className='pb-0'>
 			<div className='row g-4'>
 				<div className='col-md-12'>
 					<div className='row g-4'>
-						{fields.map((invoice, invoiceIndex) => {
+						{fields.map((invoice, invoiceIndex) => { 
 							return (
-								<div className='col-xl-12'>
+								<div className='col-xl-12'  key={invoiceIndex}>
 									<Accordion
 										id='invoiceAccordion'
 										color='dark'

@@ -42,6 +42,8 @@ const ManageSO = () => {
 		setValue(`sale_order.${index}.temp_attachment_ids`, ids);
 	};
 
+	fields.sort((a,b) => a.order < b.order ? -1 : a.order > b.order ? 1 : 0);
+
 	return (
 		<div className='pb-0'>
 			<div className='row g-4'>
@@ -49,7 +51,7 @@ const ManageSO = () => {
 					<div className='row g-4'>
 						{fields.map((so, soIndex) => {
 							return (
-								<div className='col-xl-12'>
+								<div className='col-xl-12'  key={soIndex}>
 									<Accordion
 										id='soAccordion'
 										color='dark'

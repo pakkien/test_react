@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { ReactNode, useState } from 'react';
 import { FormProvider, SubmitHandler, useForm, useFormContext } from 'react-hook-form';
 import { z } from 'zod';
-import QuotationDataType from '../../../dataTypes/QuotationDataType';
+
 
 
 export const schemaAttachment = z.object({
@@ -14,7 +14,8 @@ export const schemaAttachment = z.object({
 });
 
 export const schemaPurchaseOrder = z.object({
-    po_no: z.string(),
+    //id: z.string(),
+    po_no: z.string().min(3),
     po_date: z.string(),
     po_amount: z.coerce.number(),
     po_attachments: z.array(schemaAttachment),
@@ -45,14 +46,11 @@ export const schemaInvoice= z.object({
 
 
 export const schemaTrackingDetails = z.object({
-    //quotation_id: z.string(),
     remarks: z.string(),
     purchase_order: z.array(schemaPurchaseOrder),
     sale_order: z.array(schemaSaleOrder),
     invoice: z.array(schemaInvoice),
-    // revision: z.number(),
-    // created_by: z.string(),
-    // created_at: z.string(),
+
 
 });
 
@@ -68,6 +66,7 @@ type TrackingDetailsFormProps = {
 
 
 export const useFormTrackingDetails = (props: TrackingDetailsFormProps) =>
+
   useForm<FormTypeTrackingDetails>({
     mode: "onChange",
     resolver: zodResolver(schemaTrackingDetails),
@@ -75,7 +74,7 @@ export const useFormTrackingDetails = (props: TrackingDetailsFormProps) =>
         remarks: props.data.remarks,
         purchase_order: props.data.purchase_order,
         sale_order: props.data.sale_order,
-        invoice: props.data.invoice
+        invoice: props.data.invoice,
     }
 
   })

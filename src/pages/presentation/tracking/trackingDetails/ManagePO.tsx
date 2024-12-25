@@ -30,6 +30,7 @@ const ManagePO = () => {
 
 	const addPO = () => {
 		append({
+			//id: '',
 			po_no: '',
 			po_date: '',
 			po_amount: 0,
@@ -43,6 +44,8 @@ const ManagePO = () => {
 		setValue(`purchase_order.${index}.temp_attachment_ids`, ids);
 	};
 
+	fields.sort((a,b) => a.order < b.order ? -1 : a.order > b.order ? 1 : 0);
+
 	return (
 		<div className='pb-0'>
 			<div className='row g-4'>
@@ -50,7 +53,7 @@ const ManagePO = () => {
 					<div className='row g-4'>
 						{fields.map((po, poIndex) => {
 							return (
-								<div className='col-xl-12'>
+								<div className='col-xl-12' key={poIndex}>
 									<Accordion
 										id='poAccordion'
 										color='dark'

@@ -2,15 +2,26 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { FormProviderTrackingDetails } from '../trackingDetails/TrackingDetailsForm';
 import TrackingDetails from '../trackingDetails/TrackingDetails';
+import dayjs, { Dayjs } from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+import timezone from 'dayjs/plugin/timezone'
+import { dayjsLocalizer } from 'react-big-calendar';
+
+dayjs.extend(utc);
+dayjs.extend(localizedFormat);
+dayjs.extend(customParseFormat);
+dayjs.extend(timezone);
 
 type TrackingDetailsProps = {
 	quotation_id?: string;
 };
 
+
 const dummyData = {
 	quotation_id: 'ec3f4de1-4807-4927-9bef-b087a65c7d37',
 	remarks: 'This is a remark for the tracking list.',
-	status_overwrite: 'Pending',
 	purchase_order: [
 		{
 			po_no: 'PO12345',
@@ -68,6 +79,14 @@ const dummyData = {
 };
 
 const TrackingDetailsView = (props: TrackingDetailsProps) => {
+	const newTrackingData = {
+		quotation_id: props.quotation_id,
+		remarks: '',
+		purchase_order: [],
+		sale_order: [],
+		invoice: []
+	};
+
 	const [trackingData, setTrackingData] = useState<any>();
 
 	const fetchTrackingData = async (quotation_id?: string) => {
@@ -78,26 +97,55 @@ const TrackingDetailsView = (props: TrackingDetailsProps) => {
 			.get(import.meta.env.VITE_BASE_URL + `/tracking_list/quotation/${quotation_id}`, config)
 			.then((response) => {
 				//console.log(response.data);
-				setTrackingData(response.data);
+
+				//post process po_date, so_date, invoice_date to local time
+				var tracking_data = response.data;
+				for(var i=0; i<tracking_data.purchase_order.length; i++){
+					tracking_data.purchase_order[i].po_date = dayjs.utc(`${tracking_data.purchase_order[i].po_date}`).local().format('YYYY-MM-DD');
+				}
+				for(var i=0; i<tracking_data.sale_order.length; i++){
+					tracking_data.sale_order[i].so_date = dayjs.utc(`${tracking_data.sale_order[i].so_date}`).local().format('YYYY-MM-DD');
+				}
+				for(var i=0; i<tracking_data.invoice.length; i++){
+					tracking_data.invoice[i].invoice_date = dayjs.utc(`${tracking_data.invoice[i].invoice_date}`).local().format('YYYY-MM-DD');
+				}
+
+				setTrackingData(tracking_data);
+			})
+			.catch((error) => {
+
+				console.log(JSON.stringify(error));
+				if(error.status==404){
+				setTrackingData(newTrackingData);
+				}
 			});
 	};
 
 	useEffect(() => {
-		// if (props.quotation_id) {
-		// 	fetchTrackingData(props.quotation_id);
-		// }
+		if (props.quotation_id) {
+			fetchTrackingData(props.quotation_id);		
+		}
 
 		//debug
-		setTrackingData(dummyData);
+		//setTrackingData(dummyData);
 	}, []);
+
+
+	const refreshTrackingData = async() => {
+		fetchTrackingData(props.quotation_id);	
+	}
 
 	return (
 		<>
 			{trackingData ? (
 				<FormProviderTrackingDetails data={trackingData}>
 					<TrackingDetails
-					//mode={'view'}
-					//quotation_id={quotationRevData.quotation_id}
+					tracking_list_id={trackingData.tracking_list_id}
+					quotation_id={trackingData.quotation_id}
+					revision={trackingData.revision}
+					created_by={trackingData.created_by}
+					created_at={trackingData.created_at}
+					refresh_func={refreshTrackingData}
 					/>
 				</FormProviderTrackingDetails>
 			) : (
