@@ -974,7 +974,7 @@ export const Quotation = (props: QuotationProps) => {
 											{...register('total_cost')}
 											type='text'
 											placeholder='total_cost'
-											disabled={isViewMode}
+											disabled
 										/>
 										<>
 											{errors.total_cost ? (
@@ -1071,7 +1071,7 @@ export const Quotation = (props: QuotationProps) => {
 											{...register('grand_total')}
 											type='text'
 											placeholder='grand_total'
-											disabled={isViewMode}
+											disabled
 										/>
 										<>
 											{errors.grand_total ? (
