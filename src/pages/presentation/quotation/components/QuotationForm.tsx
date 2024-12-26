@@ -71,12 +71,12 @@ export const schemaQuotation = z.object({
 	//items: z.array(schemaItem)
 	//items: z.array(schemaItem).min(1, { message: 'must contain at least one item.' }),
 	//attachment_list: z.string().array(),
-	sections: z.array(schemaSection).min(0),
+	sections: z.array(schemaSection),
 
 	//options
-	lead_time: z.string().min(0),
-	payment_terms: z.string().min(0),
-	validity: z.string().min(0)
+	lead_time: z.string(),
+	payment_terms: z.string(),
+	validity: z.string()
 });
 
 export type FormTypeQuotation = z.infer<typeof schemaQuotation>
