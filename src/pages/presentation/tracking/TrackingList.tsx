@@ -342,7 +342,7 @@ const TrackingList = () => {
 				item.revision.toString().toLowerCase().includes(search_string) ||
 				item.quotation_amount.toFixed(2).toString().toLowerCase().includes(search_string) ||
 				item.cost.toFixed(2).toString().toLowerCase().includes(search_string) ||
-				item.margin.toFixed(2).toString().toLowerCase().includes(search_string) ||
+				//item.margin.toFixed(2).toString().toLowerCase().includes(search_string) ||
 				//item.percent.toFixed(2).toString().toLowerCase().includes(search_string) ||
 				item.status.toLowerCase().includes(search_string) ||
 				item.site_location.toLowerCase().includes(search_string) ||
