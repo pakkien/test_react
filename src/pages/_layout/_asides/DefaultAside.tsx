@@ -17,9 +17,11 @@ import ThemeContext from '../../../contexts/themeContext';
 import Icon from '../../../components/icon/Icon';
 import Aside, { AsideBody, AsideFoot, AsideHead } from '../../../layout/Aside/Aside';
 import Popovers from '../../../components/bootstrap/Popovers';
+import AuthContext from '../../../contexts/authContext';
 
 const DefaultAside = () => {
 	const { asideStatus, setAsideStatus } = useContext(ThemeContext);
+	const { userData } = useContext(AuthContext);
 
 	const [doc, setDoc] = useState(
 		localStorage.getItem('facit_asideDocStatus') === 'true' || false,
@@ -115,7 +117,7 @@ const DefaultAside = () => {
 				<User />
 			</AsideFoot> */}
 			<AsideFoot>
-			<Navigation menu={adminPagesMenu} id='aside-admin' />
+			{userData?.role=='admin' && (<Navigation menu={adminPagesMenu} id='aside-admin' />)}
 			<NavigationLine />
 			<Navigation menu={demoPagesMenu} id='aside-demo-pages' />
 			</AsideFoot>

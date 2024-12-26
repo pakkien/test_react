@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import PageWrapper from '../../../layout/PageWrapper/PageWrapper';
 import Button from '../../../components/bootstrap/Button';
 import Page from '../../../layout/Page/Page';
@@ -44,6 +44,7 @@ import Modal, {
 } from '../../../components/bootstrap/Modal';
 import axios from 'axios';
 import QUOTATION_STATUS from '../../../common/data/enumQuotationStatus';
+import AuthContext from '../../../contexts/authContext';
 
 import utc from 'dayjs/plugin/utc';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
@@ -237,30 +238,8 @@ interface IValues {
 // ];
 
 const TrackingList = () => {
+	const { userData } = useContext(AuthContext);
 	const navigate = useNavigate();
-
-	const [state, setState] = useState(false);
-	const [staticBackdropStatus, setStaticBackdropStatus] = useState(false);
-	const [scrollableStatus, setScrollableStatus] = useState(false);
-	const [centeredStatus, setCenteredStatus] = useState(true);
-	const [sizeStatus, setSizeStatus] = useState<TModalSize>(null);
-	const [fullScreenStatus, setFullScreenStatus] = useState<TModalFullScreen | undefined>(
-		undefined,
-	);
-	const [animationStatus, setAnimationStatus] = useState(true);
-	const [longContentStatus, setLongContentStatus] = useState(false);
-	const [headerCloseStatus, setHeaderCloseStatus] = useState(true);
-
-	const initialStatus = () => {
-		setStaticBackdropStatus(false);
-		setScrollableStatus(false);
-		setCenteredStatus(true);
-		setSizeStatus('xl');
-		setFullScreenStatus(undefined);
-		setAnimationStatus(true);
-		setLongContentStatus(false);
-		setHeaderCloseStatus(true);
-	};
 
 	const formik = useFormik({
 		initialValues: {
@@ -613,27 +592,13 @@ const TrackingList = () => {
 																	shadow='none'
 																	hoverShadow='lg'
 																	tag='a'
+																	hidden={!userData?.view_quotation}
 																	onClick={() =>
 																		goToViewQuotationPage(
 																			item.quotation_id,
 																			item.variance,
 																		)
 																	}></Button>
-															</div>
-															<div className='col-auto'>
-																<Button
-																	color='primary'
-																	icon='Add'
-																	shadow='none'
-																	hoverShadow='lg'
-																	tag='a'
-																	hidden={true}
-																	onClick={() => {
-																		//goToViewQuotationPage()
-																		//console.log('hihi')
-																		setState(true);
-																		initialStatus();
-																	}}></Button>
 															</div>
 														</div>
 													</td>
@@ -656,179 +621,6 @@ const TrackingList = () => {
 				</Card>
 			</Page>
 
-			{/* <OffCanvas
-				setOpen={setEditPanel}
-				isOpen={editPanel}
-				tag='form'
-				noValidate
-				onSubmit={formik.handleSubmit}>
-				<OffCanvasHeader setOpen={setEditPanel}>
-					<OffCanvasTitle id='edit-panel'>
-						{editItem?.name || 'New Quotation'}{' : Add. Info'}
-						{editItem?.name ? (
-							<Badge color='primary' isLight>
-								Edit
-							</Badge>
-						) : (
-							<Badge color='success' isLight>
-								New
-							</Badge>
-						)}
-					</OffCanvasTitle>
-				</OffCanvasHeader>
-				<OffCanvasBody>
-					<Card>
-						<CardHeader>
-							<CardLabel icon='Photo' iconColor='info'>
-								<CardTitle>Product Image</CardTitle>
-							</CardLabel>
-						</CardHeader>
-						<CardBody>
-							<div className='row'>
-								<div className='col-12'>
-									{editItem?.image ? (
-										<img
-											src={editItem.image}
-											alt=''
-											width={128}
-											height={128}
-											className='mx-auto d-block img-fluid mb-3'
-										/>
-									) : (
-										<PlaceholderImage
-											width={128}
-											height={128}
-											className='mx-auto d-block img-fluid mb-3 rounded'
-										/>
-									)}
-								</div>
-								<div className='col-12'>
-									<div className='row g-4'>
-										<div className='col-12'>
-											<Input type='file' autoComplete='photo' />
-										</div>
-										<div className='col-12'>
-											{editItem && (
-												<Button
-													color='dark'
-													isLight
-													icon='Delete'
-													className='w-100'
-													onClick={() => {
-														setEditItem({ ...editItem, image: null });
-													}}>
-													Delete Image
-												</Button>
-											)}
-										</div>
-									</div>
-								</div>
-							</div>
-						</CardBody>
-					</Card>
-
-					<Card>
-						<CardHeader>
-							<CardLabel icon='Description' iconColor='success'>
-								<CardTitle>Product Details</CardTitle>
-							</CardLabel>
-						</CardHeader>
-						<CardBody>
-							<div className='row g-4'>
-								<div className='col-12'>
-									<FormGroup id='name' label='Name' isFloating>
-										<Input
-											placeholder='Name'
-											onChange={formik.handleChange}
-											onBlur={formik.handleBlur}
-											value={formik.values.name}
-											isValid={formik.isValid}
-											isTouched={formik.touched.name}
-											invalidFeedback={formik.errors.name}
-											validFeedback='Looks good!'
-										/>
-									</FormGroup>
-								</div>
-								<div className='col-12'>
-									<FormGroup id='price' label='Price' isFloating>
-										<Input
-											placeholder='Price'
-											onChange={formik.handleChange}
-											onBlur={formik.handleBlur}
-											value={formik.values.price}
-											isValid={formik.isValid}
-											isTouched={formik.touched.price}
-											invalidFeedback={formik.errors.price}
-											validFeedback='Looks good!'
-										/>
-									</FormGroup>
-								</div>
-								<div className='col-12'>
-									<FormGroup id='stock' label='Stock' isFloating>
-										<Input
-											placeholder='Stock'
-											onChange={formik.handleChange}
-											onBlur={formik.handleBlur}
-											value={formik.values.stock}
-											isValid={formik.isValid}
-											isTouched={formik.touched.stock}
-											invalidFeedback={formik.errors.stock}
-											validFeedback='Looks good!'
-										/>
-									</FormGroup>
-								</div>
-								<div className='col-12'>
-									<FormGroup id='category' label='Category' isFloating>
-										<Input
-											placeholder='Category'
-											onChange={formik.handleChange}
-											onBlur={formik.handleBlur}
-											value={formik.values.category}
-											isValid={formik.isValid}
-											isTouched={formik.touched.category}
-											invalidFeedback={formik.errors.category}
-											validFeedback='Looks good!'
-										/>
-									</FormGroup>
-								</div>
-							</div>
-						</CardBody>
-					</Card>
-				</OffCanvasBody>
-				<div className='p-3'>
-					<Button
-						color='info'
-						icon='Save'
-						type='submit'
-						isDisable={!formik.isValid && !!formik.submitCount}>
-						Save
-					</Button>
-				</div>
-			</OffCanvas> */}
-
-			<Modal
-				isOpen={state}
-				setIsOpen={setState}
-				titleId='subItemEditModal'
-				isStaticBackdrop={staticBackdropStatus}
-				isScrollable={scrollableStatus}
-				isCentered={centeredStatus}
-				size={sizeStatus}
-				fullScreen={fullScreenStatus}
-				isAnimation={animationStatus}>
-				<ModalHeader setIsOpen={headerCloseStatus ? setState : undefined}>
-					<ModalTitle id='editAdditionalInfoModal'>Edit Additional Info</ModalTitle>
-				</ModalHeader>
-				<ModalBody>
-					<></>
-					{/* <AdditionalInfoForm state={state} id='1' formik={formik}/> */}
-				</ModalBody>
-				<ModalFooter>
-					<Button color='info' icon='Save' onClick={formik.handleSubmit}>
-						Save
-					</Button>
-				</ModalFooter>
-			</Modal>
 		</PageWrapper>
 	);
 };

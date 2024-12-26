@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Alert from '../../../components/bootstrap/Alert';
 import Button from '../../../components/bootstrap/Button';
 import Card, {
@@ -31,14 +31,15 @@ import { debounce } from '../../../helpers/helpers';
 import Icon from '../../../components/icon/Icon';
 import Input from '../../../components/bootstrap/forms/Input';
 import axios from 'axios';
-import QuotationDataType from '../../dataTypes/QuotationDataType';
 import QUOTATION_STATUS from '../../../common/data/enumQuotationStatus';
+import {calculateMargin, calculateMarginPercentage } from '../../../common/calculations';
+import AuthContext from '../../../contexts/authContext';
+
 
 import utc from 'dayjs/plugin/utc';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import timezone from 'dayjs/plugin/timezone'
-import {calculateMargin, calculateMarginPercentage } from '../../../common/calculations';
 
 dayjs.extend(utc);
 dayjs.extend(localizedFormat);
@@ -59,6 +60,7 @@ function ReturnBatchColor(state: string) {
 
 const QuotationList = () => {
 	const navigate = useNavigate();
+	const { userData } = useContext(AuthContext);
 	const [isAlertVisible, setIsAlertVisible] = useState(false);
 	const [quotationData, setQuotationData] = useState([]);
 	const [tableData, setTableData] = useState([]);
@@ -227,6 +229,7 @@ const QuotationList = () => {
 									className='float-end'
 									icon='Create'
 									tag='a'
+									hidden={!userData?.write_quotation}
 									onClick={() => goToCreateQuotationPage()}>
 									Create
 								</Button>
@@ -408,6 +411,7 @@ const QuotationList = () => {
 																	shadow='none'
 																	hoverShadow='lg'
 																	tag='a'
+																	hidden={!userData?.view_quotation}
 																	onClick={() =>
 																		goToViewQuotationPage(
 																			item.quotation_rev_id,
@@ -421,6 +425,7 @@ const QuotationList = () => {
 																	shadow='none'
 																	hoverShadow='lg'
 																	tag='a'
+																	hidden={!userData?.write_quotation}
 																	onClick={() =>
 																		goToEditQuotationPage(
 																			item.quotation_rev_id,
