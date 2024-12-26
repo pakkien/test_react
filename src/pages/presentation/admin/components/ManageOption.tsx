@@ -254,17 +254,21 @@ const ManageOption = () => {
 
 	const formikAddOption = useFormik({
 		initialValues: {
-			option_name_dropdown: '',
-			option_name: '',
+			option_name_dropdown: 'PaymentTerms',
+			//option_name: '',
 			option_value: '',
 		},
 		validate: (values) => {
 			const errors: {
-				option_name?: string;
+				//option_name?: string;
+				option_name_dropdown?: string;
 				option_value?: string;
 			} = {};
-			if (!values.option_name && !values.option_name_dropdown) {
-				errors.option_name = 'Required';
+			// if (!values.option_name && !values.option_name_dropdown) {
+			// 	errors.option_name = 'Required';
+			// }
+			if (!values.option_name_dropdown) {
+				errors.option_name_dropdown = 'Required';
 			}
 
 			if (!values.option_value) {
@@ -274,10 +278,12 @@ const ManageOption = () => {
 			return errors;
 		},
 		onSubmit: async (values) => {
-			const option_name = values.option_name_dropdown
-				? values.option_name_dropdown
-				: values.option_name;
-			await handleSubmitAddOption(option_name, values.option_value);
+			// const option_name = values.option_name_dropdown
+			// 	? values.option_name_dropdown
+			// 	: values.option_name;
+			
+			//await handleSubmitAddOption(option_name, values.option_value);
+			await handleSubmitAddOption(values.option_name_dropdown, values.option_value);
 		},
 	});
 
