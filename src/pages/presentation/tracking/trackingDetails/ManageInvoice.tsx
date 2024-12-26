@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useFormContextTrackingDetails } from './TrackingDetailsForm';
 import { useFieldArray } from 'react-hook-form';
 import Accordion, { AccordionItem } from '../../../../components/bootstrap/Accordion';
@@ -12,6 +12,8 @@ import Card, {
 import Button from '../../../../components/bootstrap/Button';
 import FormGroup from '../../../../components/bootstrap/forms/FormGroup';
 import Dropzone from './Dropzone';
+import { default_leadTimeOptions, default_paymentTermsOptions, default_validityOptions } from '../../../../common/getDefaultOptions';
+import axios from 'axios';
 
 const ManageInvoice = () => {
 	const {
@@ -42,6 +44,66 @@ const ManageInvoice = () => {
 
 	const update_attachment_ids = (index: number, ids: string[]) => {
 		setValue(`invoice.${index}.temp_attachment_ids`, ids);
+	};
+
+	const [leadTimeOptions, setLeadTimeOptions] = useState<string[]>();
+	const [paymentTermsOptions, setPaymentTermsOptions] = useState<string[]>();
+	const [validityOptions, setValidityOptions] = useState<string[]>();
+
+	useEffect(() => {
+		getOptionsByName("payment_terms");
+		getOptionsByName("validity");
+		setLeadTimeOptions(default_leadTimeOptions); //TBD
+	}, []);
+	
+	const getOptionsByName = async (option_name: string) => {
+		let res = [];
+	
+		const config = {
+			headers: { Authorization: `${localStorage.getItem('bts_token')}` },
+		};
+	
+		axios
+			.get(import.meta.env.VITE_BASE_URL + `/option/values/${option_name}`, config)
+			.then((response) => {
+				if (response.data.option_values) {
+					for (var i = 0; i < response.data.option_values.length; i++) {
+						res.push(response.data.option_values[i].option_value.toString());
+					}
+				}	
+				//return res;
+				switch (option_name) {
+					case 'payment_terms': {
+						return setPaymentTermsOptions([''].concat(res));
+					}
+					
+					case 'lead_time': {
+						return setLeadTimeOptions([''].concat(res));
+					}
+					case 'validity': {
+						return setValidityOptions([''].concat(res));
+					}
+					default: {
+						break;
+					}
+				}
+			})
+			.catch((errors) => {
+				switch (option_name) {
+					case 'payment_terms': {
+						return default_paymentTermsOptions;
+					}
+					case 'lead_time': {
+						return default_leadTimeOptions;
+					}
+					case 'validity': {
+						return default_validityOptions;
+					}
+					default: {
+						break;
+					}
+				}
+			});
 	};
 
 	fields.sort((a,b) => a.order < b.order ? -1 : a.order > b.order ? 1 : 0);
@@ -207,7 +269,7 @@ const ManageInvoice = () => {
 															<FormGroup
 																id='payment_terms'
 																label='Payment Terms.'>
-																<input
+																<select
 																	id='payment_terms'
 																	className={
 																		'form-control ' +
@@ -219,11 +281,12 @@ const ManageInvoice = () => {
 																	}
 																	{...register(
 																		`invoice.${invoiceIndex}.payment_terms`,
-																	)}
-																	type='text'
-																	placeholder=''
-																	//disabled={isViewMode}
-																/>
+																	)}>
+																	{paymentTermsOptions?.map((op) => (
+																		<option value={op}>{op}</option>
+																	))}
+										
+																</select>
 																<>
 																	{errors.invoice?.[invoiceIndex]
 																		?.payment_terms ? (

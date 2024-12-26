@@ -44,6 +44,7 @@ import AttachmentsView from '../attachmentComponents/AttachmentsView';
 import fileDownload from 'js-file-download';
 import ManageSection from './ManageSection';
 import { calculateGrandTotalAfterDiscountAndSST } from '../../../../common/calculations';
+import { default_leadTimeOptions, default_paymentTermsOptions, default_validityOptions} from '../../../../common/getDefaultOptions';
 
 type QuotationProps = {
 	mode: 'create' | 'view' | 'edit';
@@ -171,26 +172,65 @@ export const Quotation = (props: QuotationProps) => {
 	};
 
 	//OPTIONS
-	const leadTimeOptions = [
-		'',
-		'30 Working days from the date of payment received',
-		'60 Working days from the date of payment received',
-		'90 Working days from the date of payment received',
-	];
+	const [leadTimeOptions, setLeadTimeOptions] = useState<string[]>();
+	const [paymentTermsOptions, setPaymentTermsOptions] = useState<string[]>();
+	const [validityOptions, setValidityOptions] = useState<string[]>();
 
-	const paymentTermsOptions = [
-		'',
-		'30 Days upon Invoice Date',
-		'60 Days upon Invoice Date',
-		'Cash on delivery',
-	];
-
-	const validityOptions = [
-		'',
-		'30 Days from the date of this quotation',
-		'60 Days from the date of this quotation',
-		'90 Days from the date of this quotation',
-	];
+	useEffect(() => {
+		getOptionsByName("payment_terms");
+		getOptionsByName("validity");
+		setLeadTimeOptions(default_leadTimeOptions); //TBD
+	}, []);
+	
+	const getOptionsByName = async (option_name: string) => {
+		let res = [];
+	
+		const config = {
+			headers: { Authorization: `${localStorage.getItem('bts_token')}` },
+		};
+	
+		axios
+			.get(import.meta.env.VITE_BASE_URL + `/option/values/${option_name}`, config)
+			.then((response) => {
+				if (response.data.option_values) {
+					for (var i = 0; i < response.data.option_values.length; i++) {
+						res.push(response.data.option_values[i].option_value.toString());
+					}
+				}	
+				//return res;
+				switch (option_name) {
+					case 'payment_terms': {
+						return setPaymentTermsOptions([''].concat(res));
+					}
+					
+					case 'lead_time': {
+						return setLeadTimeOptions([''].concat(res));
+					}
+					case 'validity': {
+						return setValidityOptions([''].concat(res));
+					}
+					default: {
+						break;
+					}
+				}
+			})
+			.catch((errors) => {
+				switch (option_name) {
+					case 'payment_terms': {
+						return default_paymentTermsOptions;
+					}
+					case 'lead_time': {
+						return default_leadTimeOptions;
+					}
+					case 'validity': {
+						return default_validityOptions;
+					}
+					default: {
+						break;
+					}
+				}
+			});
+	};
 
 	// useEffect(() => {
 	// 	//console.log(formData.status);
@@ -848,7 +888,7 @@ export const Quotation = (props: QuotationProps) => {
 											}
 											{...register('lead_time')}
 											disabled={isViewMode}>
-											{paymentTermsOptions.map((op) => (
+											{leadTimeOptions?.map((op) => (
 												<option value={op}>{op}</option>
 											))}
 										</select>
@@ -874,7 +914,7 @@ export const Quotation = (props: QuotationProps) => {
 											}
 											{...register('payment_terms')}
 											disabled={isViewMode}>
-											{paymentTermsOptions.map((op) => (
+											{paymentTermsOptions?.map((op) => (
 												<option value={op}>{op}</option>
 											))}
 										</select>
@@ -900,7 +940,7 @@ export const Quotation = (props: QuotationProps) => {
 											}
 											{...register('validity')}
 											disabled={isViewMode}>
-											{validityOptions.map((op) => (
+											{validityOptions?.map((op) => (
 												<option value={op}>{op}</option>
 											))}
 										</select>

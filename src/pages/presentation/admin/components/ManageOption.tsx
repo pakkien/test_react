@@ -254,7 +254,7 @@ const ManageOption = () => {
 
 	const formikAddOption = useFormik({
 		initialValues: {
-			option_name_dropdown: 'PaymentTerms',
+			option_name_dropdown: 'payment_terms',
 			//option_name: '',
 			option_value: '',
 		},
@@ -301,8 +301,8 @@ const ManageOption = () => {
 	dropdown_optionNames_view.splice(0, 0, { value: '', text: 'All Option' });
 
 	var dropdown_optionNames_add = [
-		{ value: 'PaymentTerms', text: 'PaymentTerms' },
-		{ value: 'Validity', text: 'Validity' },
+		{ value: 'payment_terms', text: 'payment_terms' },
+		{ value: 'validity', text: 'validity' },
 	];
 
 	//Edit Option
