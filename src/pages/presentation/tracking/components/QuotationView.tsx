@@ -108,7 +108,12 @@ const QuotationView = (qv_props: QuotationViewProps) => {
 			)
 			.then((response) => {
 				//console.log(response.data);
-				fileDownload(response.data, quotation_no + '.pdf');
+				//fileDownload(response.data, quotation_no + '.pdf');
+				const filename = quotation_no + '.pdf';
+				const file = new File([response.data], filename, { type: 'application/pdf' });
+				const fileURL = URL.createObjectURL(file);
+				//window.open(fileURL, "_blank");
+				navigate(`../pdf-viewer`,{state:{files: [{uri: fileURL, name: filename}]}});
 			});
 	};
 

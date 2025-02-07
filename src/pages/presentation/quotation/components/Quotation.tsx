@@ -44,7 +44,11 @@ import AttachmentsView from '../attachmentComponents/AttachmentsView';
 import fileDownload from 'js-file-download';
 import ManageSection from './ManageSection';
 import { calculateGrandTotalAfterDiscountAndSST } from '../../../../common/calculations';
-import { default_leadTimeOptions, default_paymentTermsOptions, default_validityOptions} from '../../../../common/getDefaultOptions';
+import {
+	default_leadTimeOptions,
+	default_paymentTermsOptions,
+	default_validityOptions,
+} from '../../../../common/getDefaultOptions';
 
 type QuotationProps = {
 	mode: 'create' | 'view' | 'edit';
@@ -105,14 +109,14 @@ export const Quotation = (props: QuotationProps) => {
 	const [status, setStatus] = useState<any>(enum_val);
 
 	useEffect(() => {
-		
-		if(props.mode == 'create'){
+		if (props.mode == 'create') {
 			setValue('status', 'Submitted');
 			setAllowStatusUpdate(false);
-		}else{
+		} else {
 			setValue('status', status.name);
 		}
 	}, [status]);
+	
 
 	// upload file
 	const [attachmentIDs, setAttachmentIds] = useState<string[]>();
@@ -177,18 +181,18 @@ export const Quotation = (props: QuotationProps) => {
 	const [validityOptions, setValidityOptions] = useState<string[]>();
 
 	useEffect(() => {
-		getOptionsByName("payment_terms");
-		getOptionsByName("validity");
+		getOptionsByName('payment_terms');
+		getOptionsByName('validity');
 		setLeadTimeOptions(default_leadTimeOptions); //TBD
 	}, []);
-	
+
 	const getOptionsByName = async (option_name: string) => {
 		let res = [];
-	
+
 		const config = {
 			headers: { Authorization: `${localStorage.getItem('bts_token')}` },
 		};
-	
+
 		axios
 			.get(import.meta.env.VITE_BASE_URL + `/option/values/${option_name}`, config)
 			.then((response) => {
@@ -196,13 +200,13 @@ export const Quotation = (props: QuotationProps) => {
 					for (var i = 0; i < response.data.option_values.length; i++) {
 						res.push(response.data.option_values[i].option_value.toString());
 					}
-				}	
+				}
 				//return res;
 				switch (option_name) {
 					case 'payment_terms': {
 						return setPaymentTermsOptions([''].concat(res));
 					}
-					
+
 					case 'lead_time': {
 						return setLeadTimeOptions([''].concat(res));
 					}
@@ -256,7 +260,6 @@ export const Quotation = (props: QuotationProps) => {
 			}
 		}
 
-
 		setValue('total_cost', total);
 
 		gtotal = calculateGrandTotalAfterDiscountAndSST(gtotal, formData.discount, formData.sst);
@@ -281,7 +284,11 @@ export const Quotation = (props: QuotationProps) => {
 			)
 			.then((response) => {
 				//console.log(response.data);
-				fileDownload(response.data, quotation_no + '.pdf');
+				const filename = quotation_no + '.pdf';
+				const file = new File([response.data], filename, { type: 'application/pdf' });
+				const fileURL = URL.createObjectURL(file);
+				//window.open(fileURL, "_blank");
+				navigate(`../pdf-viewer`,{state:{files: [{uri: fileURL, name: filename}]}});
 			});
 	};
 
@@ -458,7 +465,7 @@ export const Quotation = (props: QuotationProps) => {
 												(errors.client_code ? 'is-invalid' : '')
 											}
 											{...register('client_code')}
-											type='text'
+											//type='text'
 											placeholder='client_code'
 											disabled={isViewMode}
 											list='client_code_list'
@@ -1076,12 +1083,11 @@ export const Quotation = (props: QuotationProps) => {
 								</div>
 								<div className='col-md-8'></div>
 								<div className='col-md-4'>
-								<FormGroup id='sst' label='SST' isFloating>
+									<FormGroup id='sst' label='SST' isFloating>
 										<input
 											id='sst'
 											className={
-												'form-control ' +
-												(errors.sst ? 'is-invalid' : '')
+												'form-control ' + (errors.sst ? 'is-invalid' : '')
 											}
 											{...register('sst')}
 											type='text'
@@ -1132,7 +1138,7 @@ export const Quotation = (props: QuotationProps) => {
 									color='dark'
 									icon='Edit'
 									type='submit'
-									hidden={isViewMode || !allowStatusUpdate}
+									hidden={isViewMode || (!allowStatusUpdate && props.mode != 'create')}
 									isDisable={isSubmitting}
 									onClick={() => {
 										setValue('status', 'Draft');

@@ -22,6 +22,7 @@ import Progress from '../../../../components/bootstrap/Progress';
 import { useForceUpdate } from 'framer-motion';
 import axios, { AxiosProgressEvent } from 'axios';
 import fileDownload from 'js-file-download';
+import { useNavigate } from 'react-router-dom';
 
 const MAX_FILE_COUNT = 10;
 
@@ -42,8 +43,8 @@ type AttachmentFileType = {
 
 const Dropzone = (props: DropZoneProps) => {
 
-
-//Previous Attachment from quotation_rev_id
+	const navigate = useNavigate();
+	//Previous Attachment from quotation_rev_id
 	const [prevFiles, setPrevFiles] = useState<AttachmentFileType[]>([]);
 
 	
@@ -71,7 +72,12 @@ const Dropzone = (props: DropZoneProps) => {
 		.get(import.meta.env.VITE_BASE_URL + `/quotation/attachment/${attachment_id}`, {responseType: 'blob', headers: { Authorization: `${localStorage.getItem('bts_token')}` }})
 		.then((response) => {
 			//console.log(response.data);
-			fileDownload(response.data, file_name);
+			//fileDownload(response.data, file_name);
+
+			const file = new File([response.data], file_name, { type: 'application/pdf' });
+			const fileURL = URL.createObjectURL(file);
+			//window.open(fileURL, "_blank");
+			navigate(`../pdf-viewer`,{state:{files: [{uri: fileURL, name: file_name}]}});
 		});
 	}
 

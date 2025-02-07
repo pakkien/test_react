@@ -10,6 +10,7 @@ import Progress from '../../../../components/bootstrap/Progress';
 import Tooltips from '../../../../components/bootstrap/Tooltips';
 import Icon from '../../../../components/icon/Icon';
 import { UseFormSetValue } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
 type DropzoneProps = {
     //quotation_id: string;
@@ -32,6 +33,7 @@ type AttachmentFileType = {
 const MAX_FILE_COUNT = 10;
 
 const Dropzone = (props: DropzoneProps) => {
+	const navigate = useNavigate();
     const [prevFiles, setPrevFiles] = useState<AttachmentFileType[]>([]);
 
 	useEffect(() => {
@@ -44,7 +46,11 @@ const Dropzone = (props: DropzoneProps) => {
 		.get(import.meta.env.VITE_BASE_URL + `/tracking_list/attachment/${attachment_type}/${attachment_id}`, {responseType: 'blob', headers: { Authorization: `${localStorage.getItem('bts_token')}` }})
 		.then((response) => {
 			//console.log(response.data);
-			fileDownload(response.data, file_name);
+			//fileDownload(response.data, file_name);
+			const file = new File([response.data], file_name, { type: 'application/pdf' });
+			const fileURL = URL.createObjectURL(file);
+			//window.open(fileURL, "_blank");
+			navigate(`../pdf-viewer`,{state:{files: [{uri: fileURL, name: file_name}]}});
 		});
 	}
 

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import fileDownload from 'js-file-download';
 import Tooltips from '../../../../components/bootstrap/Tooltips';
 import { xcode } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import { useNavigate } from 'react-router-dom';
 
 type AttachmentsViewProps = {
 	quotation_id?: string;
@@ -27,6 +28,7 @@ type AttachmentFileType = {
 };
 
 const AttachmentsView = (props: AttachmentsViewProps) => {
+	const navigate = useNavigate();
 	const [revisionData, setRevisionData] = useState<QuotationRevDataType[]>([]);
 	const [displayData, setDisplayData] = useState<({data: QuotationRevDataType, attachment_list: AttachmentFileType[]})[]>([]); 
 
@@ -86,7 +88,12 @@ const AttachmentsView = (props: AttachmentsViewProps) => {
 				headers: { Authorization: `${localStorage.getItem('bts_token')}` },
 			})
 			.then((response) => {
-				fileDownload(response.data, file_name);
+				//fileDownload(response.data, file_name);
+				const file = new File([response.data], file_name, { type: 'application/pdf' });
+				const fileURL = URL.createObjectURL(file);
+				//window.open(fileURL, "_blank");
+				navigate(`../pdf-viewer`,{state:{files: [{uri: fileURL, name: file_name}]}});
+				
 			});
 	};
 

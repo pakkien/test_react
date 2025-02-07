@@ -34,6 +34,10 @@ const QUOTATION = {
 	CREATE_QUOTATION_PAGE: lazy(() => import('../pages/presentation/quotation/CreateQuotation')),
 };
 
+const PDF_VIEWER = {
+	PDF_VIEWER_PAGE: lazy(() => import('../pages/presentation/pdf-viewer/PdfViewer')),
+};
+
 const AUTH = {
 	PAGE_404: lazy(() => import('../pages/presentation/auth/Page404')),
 	PAGE_403: lazy(() => import('../pages/presentation/auth/Page403')),
@@ -67,6 +71,10 @@ const presentation = [
 	{
 		path: quotationMenu.quotation.path,
 		element: <ProtectedRouteUser><QUOTATION.QUOTATION_LIST_PAGE /></ProtectedRouteUser>,
+	},
+	{
+		path: 'pdf-viewer',
+		element: <ProtectedRouteUser view_quotation={true}><PDF_VIEWER.PDF_VIEWER_PAGE /></ProtectedRouteUser>,
 	},
 	{
 		path: 'quotation/view/:quotation_rev_id',
