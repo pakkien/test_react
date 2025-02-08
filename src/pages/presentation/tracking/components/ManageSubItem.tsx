@@ -80,7 +80,7 @@ const ManageSubItem = (props: SubItemProps) => {
 												</div>
 												<div className='col-md-8'>
 													<div className='row'>
-														<div className='col-3'>
+														<div className='col-4'>
 															<FormGroup
 																id='quantity'
 																label='Quantity'
@@ -91,7 +91,7 @@ const ManageSubItem = (props: SubItemProps) => {
 																/>
 															</FormGroup>
 														</div>
-														<div className='col-3'>
+														<div className='col-4'>
 															<FormGroup
 																id='unit'
 																label='Unit'
@@ -110,19 +110,6 @@ const ManageSubItem = (props: SubItemProps) => {
 																<Input
 																	value={sub_item.unit_cost}
 																	disabled
-																/>
-															</FormGroup>
-														</div>
-														<div className='col-2 d-flex align-items-center'>
-															<FormGroup
-																id='estimated_cost'
-																label='Estimated Cost'>
-																<Checks
-																	checked={
-																		sub_item.estimated_cost
-																	}
-																	disabled
-																	type='checkbox'
 																/>
 															</FormGroup>
 														</div>
@@ -188,6 +175,47 @@ const ManageSubItem = (props: SubItemProps) => {
 															disabled
 														/>
 													</FormGroup>
+												</div>
+												<div className='col-md-8'>
+												<div className='row'>
+														<div className='col-md-4'>
+															<FormGroup
+																id='lead_time'
+																label='Lead Time'
+																isFloating>
+																<Input
+																	value={sub_item.lead_time}
+																	disabled
+																/>
+															</FormGroup>
+														</div>
+														<div className='col-2 d-flex align-items-center'>
+															<FormGroup
+																id='by_others'
+																label='By others'
+																className='form-check form-check-inline'>
+																<input
+																	checked={sub_item.by_others}
+																	disabled
+																	type='checkbox'
+																	className='form-check-input'
+																/>
+															</FormGroup>
+														</div>
+														<div className='col-2 d-flex align-items-center'>
+															<FormGroup
+																id='inclusive'
+																label='Inclusive'
+																className='form-check form-check-inline'>
+																<input
+																	checked={sub_item.inclusive}
+																	disabled
+																	type='checkbox'
+																	className='form-check-input'
+																/>
+															</FormGroup>
+														</div>
+													</div>
 												</div>
 												<div className='col-md-12'></div>
 											</div>

@@ -460,7 +460,7 @@ const ManageItem = (props: ItemProps) => {
 															label='By others'
 															className='form-check form-check-inline'>
 															<input
-																id='estimated_cost'
+																id='by_others'
 																className={
 																	'form-check-input ' +
 																	(errors.sections?.[sectionIndex]?.items?.[itemIndex]?.by_others

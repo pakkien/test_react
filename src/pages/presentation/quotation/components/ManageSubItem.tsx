@@ -551,7 +551,7 @@ const ManageSubItem = (props: SubItemProps) => {
 															label='By others'
 															className='form-check form-check-inline'>
 															<input
-																id='estimated_cost'
+																id='by_others'
 																className={
 																	'form-check-input ' +
 																	(errors.sections?.[sectionIndex]?.items?.[itemIndex]?.sub_items?.[subItemIndex]?.by_others
