@@ -56,11 +56,14 @@ const ManageItem = (props: ItemProps) => {
 			total_cost: 0,
 			margin: 0,
 			margin_percentage: 0,
-			estimated_cost: false,
+			//estimated_cost: false,
 			unit_price: 0,
 			total_price: 0,
 			order: 0,
 			sub_items: [],
+			lead_time: 0,
+			by_others: false,
+			inclusive: false,
 		});
 	};
 
@@ -202,7 +205,7 @@ const ManageItem = (props: ItemProps) => {
 											</div>
 											<div className='col-md-8'>
 												<div className='row'>
-													<div className='col-3'>
+													<div className='col-4'>
 														<FormGroup
 															id='quantity'
 															label='Quantity'
@@ -230,7 +233,7 @@ const ManageItem = (props: ItemProps) => {
 															</div>
 														</FormGroup>
 													</div>
-													<div className='col-3'>
+													<div className='col-4'>
 														<FormGroup id='unit' label='Unit' isFloating>
 															<input
 																id='unit'
@@ -282,34 +285,7 @@ const ManageItem = (props: ItemProps) => {
 															</div>
 														</FormGroup>
 													</div>
-													<div className='col-2 d-flex align-items-center'>
-														<FormGroup
-															id='estimated_cost'
-															label='Estimated Cost'
-															className='form-check form-check-inline'
-															//isFloating
-															>
-															<input
-																id='estimated_cost'
-																className={
-																	'form-check-input'
-																}
-																{...register(
-																	`sections.${sectionIndex}.items.${itemIndex}.estimated_cost`,
-																)}
-																type='checkbox'
-																placeholder='estimated_cost'
-																disabled={props.isViewMode}
-															/>
-															{/* <label className='form-check label'>Estimated Cost</label> */}
-															<div className='invalid-feedback'>
-																{
-																	errors.sections?.[sectionIndex]?.items?.[itemIndex]?.estimated_cost
-																		?.message
-																}
-															</div>
-														</FormGroup>
-													</div>
+													
 												</div>
 											</div>
 											<div className='col-md-4'>
@@ -423,7 +399,8 @@ const ManageItem = (props: ItemProps) => {
 													</div>
 												</FormGroup>
 											</div>
-											</div></div>
+											</div>
+											</div>
 											<div className='col-md-4'>
 												<FormGroup
 													id='total_price'
@@ -451,18 +428,120 @@ const ManageItem = (props: ItemProps) => {
 													</div>
 												</FormGroup>
 											</div>
+											<div className='col-md-8'>
+												<div className='row'>
+													<div className='col-md-4'>
+													<FormGroup id='lead_time' label='Lead Time' isFloating>
+															<input
+																id='lead_time'
+																className={
+																	'form-control ' +
+																	(errors.sections?.[sectionIndex]?.items?.[itemIndex]?.lead_time
+																		? 'is-invalid'
+																		: '')
+																}
+																{...register(`sections.${sectionIndex}.items.${itemIndex}.lead_time`)}
+																type='text'
+																placeholder='lead_time'
+																disabled={props.isViewMode}
+															/>
+															<div className='invalid-feedback'>
+																{
+																	errors.sections?.[sectionIndex]?.items?.[itemIndex]?.lead_time
+																		?.message
+																}
+															</div>
+														</FormGroup>
+													</div>
+
+													<div className='col-2 d-flex align-items-center'>
+														<FormGroup
+															id='by_others'
+															label='By others'
+															className='form-check form-check-inline'>
+															<input
+																id='estimated_cost'
+																className={
+																	'form-check-input ' +
+																	(errors.sections?.[sectionIndex]?.items?.[itemIndex]?.by_others
+																		? 'is-invalid'
+																		: '')
+																}
+																{...register(
+																	`sections.${sectionIndex}.items.${itemIndex}.by_others`,
+																)}
+																type='checkbox'
+																placeholder='by_others'
+																disabled={props.isViewMode}
+																onChange={
+																	(e) => {
+																		//console.log(e.target.checked);
+																		if(e.target.checked){
+																			setValue(`sections.${sectionIndex}.items.${itemIndex}.by_others`, true);
+																			if(formData.sections?.[sectionIndex]?.items?.[itemIndex]?.inclusive){
+																				setValue(`sections.${sectionIndex}.items.${itemIndex}.inclusive`, false);
+																			}
+																		}else{
+																			setValue(`sections.${sectionIndex}.items.${itemIndex}.by_others`, false);
+																		}
+																	}
+																}
+															/>
+															<div className='invalid-feedback'>
+																{
+																	errors.sections?.[sectionIndex]?.items?.[itemIndex]						
+																		?.by_others?.message
+																}
+															</div>
+														</FormGroup>
+													</div>
+													<div className='col-2 d-flex align-items-center'>
+														<FormGroup
+															id='inclusive'
+															label='Inclusive'
+															className='form-check form-check-inline'>
+															<input
+																id='inclusive'
+																className={
+																	'form-check-input ' +
+																	(errors.sections?.[sectionIndex]?.items?.[itemIndex]?.inclusive
+																		? 'is-invalid'
+																		: '')
+																}
+																{...register(
+																	`sections.${sectionIndex}.items.${itemIndex}.inclusive`,
+																)}
+																type='checkbox'
+																placeholder='inclusive'
+																disabled={props.isViewMode}
+																onChange={
+																	(e) => {
+																		//console.log(e.target.checked);
+																		if(e.target.checked){
+																			setValue(`sections.${sectionIndex}.items.${itemIndex}.inclusive`, true);
+																			if(formData.sections?.[sectionIndex]?.items?.[itemIndex]?.by_others){
+																				setValue(`sections.${sectionIndex}.items.${itemIndex}.by_others`, false);
+																			}
+																		}else{
+																			setValue(`sections.${sectionIndex}.items.${itemIndex}.inclusive`, false);
+																		}
+																	}
+																	
+																}
+															/>
+															<div className='invalid-feedback'>
+																{
+																	errors.sections?.[sectionIndex]?.items?.[itemIndex]						
+																		?.inclusive?.message
+																}
+															</div>
+														</FormGroup>
+													</div>
+												</div>
+											</div>
+
 											
-											{/* <div className='col-md-12'>
-												<Button
-													color='info'
-													icon='Add'
-													tag='a'
-													onClick={addItem}
-													className='float-end'
-													hidden={props.isViewMode}>
-													Add Item					
-												</Button>
-											</div> */}
+											
 
 											<div className='col-md-12'></div>
 										</div>

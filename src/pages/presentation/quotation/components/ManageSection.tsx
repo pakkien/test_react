@@ -51,11 +51,14 @@ const ManageSection = (props: SectionProps) => {
 			total_cost: 0,
 			margin: 0,
 			margin_percentage: 0,
-			estimated_cost: false,
+			//estimated_cost: false,
 			unit_price: 0,
 			total_price: 0,
 			order: 0,
 			sub_items: [],
+			lead_time: 0,
+			by_others: false,
+			inclusive: false,
 		};
 
 		append({

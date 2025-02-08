@@ -59,11 +59,14 @@ namespace QuotationDataType {
 		total_cost: number;
 		margin: number;
 		margin_percentage: number;
-		estimated_cost: boolean;
+		//estimated_cost: boolean;
 		unit_price: number;
 		total_price: number;
 		sub_items: Sub_item[];
 		order: number;
+		lead_time: number;
+		by_others: boolean;
+		inclusive: boolean;
 	};
 
 	export type Sub_item = {
@@ -79,10 +82,13 @@ namespace QuotationDataType {
 		total_cost: number;
 		margin: number;
 		margin_percentage: number;
-		estimated_cost: boolean;
+		//estimated_cost: boolean;
 		unit_price: number;
 		total_price: number;
 		order: number;
+		lead_time: number;
+		by_others: boolean;
+		inclusive: boolean;
 	};
 
 }

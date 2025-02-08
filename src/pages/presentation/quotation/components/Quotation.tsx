@@ -251,20 +251,28 @@ export const Quotation = (props: QuotationProps) => {
 
 		for (const section of formData.sections) {
 			for (const item of section.items) {
-				total += item.total_cost;
-				gtotal += item.total_price;
+				if(!item.by_others && !item.inclusive){
+					//ignore if by_others or inclusive is true
+					total += item.total_cost;
+					gtotal += item.total_price;
+				}
+				
 				for (const sub_item of item.sub_items) {
-					total += sub_item.total_cost;
-					gtotal += sub_item.total_price;
+					if(!sub_item.by_others && !sub_item.inclusive){
+						//ignore if by_others or inclusive is true
+						total += sub_item.total_cost;
+						gtotal += sub_item.total_price;
+					}
+					
 				}
 			}
 		}
 
 		setValue('total_cost', total);
-
 		gtotal = calculateGrandTotalAfterDiscountAndSST(gtotal, formData.discount, formData.sst);
 		setValue('grand_total', gtotal);
 	}, [JSON.stringify(formData.sections), formData.discount, formData.sst]);
+
 
 	const handleDownloadPDF = async (
 		quotation_id?: string,
