@@ -36,6 +36,7 @@ import axios from 'axios';
 import fileDownload from 'js-file-download';
 import ManageSection from './ManageSection';
 import TrackingDetailsView from './TrackingDetailsView';
+import {decode as base64_decode, encode as base64_encode} from 'base-64';
 
 type QuotationViewProps = {
 	data: any;
@@ -97,14 +98,15 @@ const QuotationView = (qv_props: QuotationViewProps) => {
         with_watermark?: boolean
 	) => {
 		axios
-			.get(
+			.post(
 				import.meta.env.VITE_BASE_URL +
-					`/quotation/${quotation_id}/pdf/${quotation_revision_id}`,
-				{
-					responseType: 'blob',
-					headers: { Authorization: `${localStorage.getItem('bts_token')}` },
-                    params: {with_watermark: `${with_watermark}`}
-				},
+					`/quotation/${quotation_id}/pdf/${quotation_revision_id}`, 
+					{},
+					{
+						headers: { Authorization: `${localStorage.getItem('bts_token')}`},
+						params: { with_watermark: `${with_watermark}` },
+						responseType: 'blob'				
+					}
 			)
 			.then((response) => {
 				//console.log(response.data);
@@ -112,8 +114,9 @@ const QuotationView = (qv_props: QuotationViewProps) => {
 				const filename = quotation_no + '.pdf';
 				const file = new File([response.data], filename, { type: 'application/pdf' });
 				const fileURL = URL.createObjectURL(file);
-				//window.open(fileURL, "_blank");
-				navigate(`../pdf-viewer`,{state:{files: [{uri: fileURL, name: filename}]}});
+				let encoded_file_url = base64_encode(fileURL);
+				let encoded_file_name = base64_encode(filename);
+				window.open(`../../../pdf-viewer/${encoded_file_url}/${encoded_file_name}`, "_blank");
 			});
 	};
 

@@ -44,6 +44,7 @@ import AttachmentsView from '../attachmentComponents/AttachmentsView';
 import fileDownload from 'js-file-download';
 import ManageSection from './ManageSection';
 import { calculateGrandTotalAfterDiscountAndSST } from '../../../../common/calculations';
+import {decode as base64_decode, encode as base64_encode} from 'base-64';
 
 type QuotationProps = {
 	mode: 'create' | 'view' | 'edit';
@@ -203,6 +204,38 @@ export const Quotation = (props: QuotationProps) => {
 		setValue('grand_total', gtotal);
 	}, [JSON.stringify(formData.sections), formData.discount, formData.sst]);
 
+	// const fetchClientData = async () => {
+	// 	const config = {
+	// 		headers: { Authorization: `${localStorage.getItem('bts_token')}` },
+	// 	};
+
+	// 	axios.get(import.meta.env.VITE_BASE_URL + '/quotation/clients', config).then((response) => {
+	// 		setClientData(response.data.clients);
+	// 	});
+	// };
+
+	const [isPreview, setIsPreview] = useState(false);
+
+	const handlePreviewPDF = async (payload: any) => {
+		axios
+		.post(
+			import.meta.env.VITE_BASE_URL + `/quotation/preview_pdf`,
+			payload,
+			{
+				headers: { Authorization: `${localStorage.getItem('bts_token')}`},
+				responseType: 'blob'				
+			}			
+		)
+		.then((response) => {
+			//console.log(response.data);
+			const filename = "QUOTATION-(PREVIEW_PURPOSE_ONLY)" + '.pdf';
+			const file = new File([response.data], filename, { type: 'application/pdf' });
+			const fileURL = URL.createObjectURL(file);
+			let encoded_file_url = base64_encode(fileURL);
+			let encoded_file_name = base64_encode(filename);
+			window.open(`../../pdf-viewer/${encoded_file_url}/${encoded_file_name}`, "_blank");
+		});
+	};
 
 	const handleDownloadPDF = async (
 		quotation_id?: string,
@@ -211,22 +244,23 @@ export const Quotation = (props: QuotationProps) => {
 		with_watermark?: boolean,
 	) => {
 		axios
-			.get(
-				import.meta.env.VITE_BASE_URL +
-					`/quotation/${quotation_id}/pdf/${quotation_revision_id}`,
+			.post(
+				import.meta.env.VITE_BASE_URL + `/quotation/${quotation_id}/pdf/${quotation_revision_id}`,
+				{},
 				{
-					responseType: 'blob',
-					headers: { Authorization: `${localStorage.getItem('bts_token')}` },
+					headers: { Authorization: `${localStorage.getItem('bts_token')}`},
 					params: { with_watermark: `${with_watermark}` },
-				},
+					responseType: 'blob'				
+				}			
 			)
 			.then((response) => {
 				//console.log(response.data);
 				const filename = quotation_no + '.pdf';
 				const file = new File([response.data], filename, { type: 'application/pdf' });
 				const fileURL = URL.createObjectURL(file);
-				//window.open(fileURL, "_blank");
-				navigate(`../pdf-viewer`,{state:{files: [{uri: fileURL, name: filename}]}});
+				let encoded_file_url = base64_encode(fileURL);
+				let encoded_file_name = base64_encode(filename);
+				window.open(`../../pdf-viewer/${encoded_file_url}/${encoded_file_name}`, "_blank");
 			});
 	};
 
@@ -375,7 +409,12 @@ export const Quotation = (props: QuotationProps) => {
 							data,
 						);
 
-						if (props.quotation_id) {
+						if(isPreview){
+							//console.log("PREVIEWONLY");
+							setIsPreview(false);
+							handlePreviewPDF(payload);
+						}
+						else if (props.quotation_id) {
 							//update only since quotation_id exists
 							postUpdateQuotation(props.quotation_id, payload);
 						} else {
@@ -731,6 +770,22 @@ export const Quotation = (props: QuotationProps) => {
 													</DropdownItem>
 												</DropdownMenu>
 											</Dropdown>
+										
+											<Button
+												color='info'
+												isLight
+												//icon='Download'
+												hidden={isViewMode} //for create and edit mode 
+												type='submit'
+												onClick={() => {
+													//console.log("debug");
+													setIsPreview(true);
+													}
+												}
+												>
+												Preview PDF
+											</Button>
+										
 										</div>
 
 										<div className='col-md-6 d-flex justify-content-end'>
@@ -1057,6 +1112,7 @@ export const Quotation = (props: QuotationProps) => {
 									isDisable={isSubmitting}
 									onClick={() => {
 										setValue('status', 'Draft');
+										setIsPreview(false);
 									}}>
 									{isSubmitting ? (
 										<Spinner isSmall inButton='onlyIcon' />
@@ -1070,7 +1126,7 @@ export const Quotation = (props: QuotationProps) => {
 									icon={isCreateVariation ? 'null' : 'Save'}
 									hidden={isViewMode}
 									isDisable={isSubmitting}
-									//nClick={() => console.log("hihi")}
+									onClick={() => setIsPreview(false)}
 								>
 									{isSubmitting ? (
 										<Spinner isSmall inButton='onlyIcon' />

@@ -4,6 +4,7 @@ import fileDownload from 'js-file-download';
 import Tooltips from '../../../../components/bootstrap/Tooltips';
 import { xcode } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import { useNavigate } from 'react-router-dom';
+import {decode as base64_decode, encode as base64_encode} from 'base-64';
 
 type AttachmentsViewProps = {
 	quotation_id?: string;
@@ -91,8 +92,9 @@ const AttachmentsView = (props: AttachmentsViewProps) => {
 				//fileDownload(response.data, file_name);
 				const file = new File([response.data], file_name, { type: 'application/pdf' });
 				const fileURL = URL.createObjectURL(file);
-				//window.open(fileURL, "_blank");
-				navigate(`../pdf-viewer`,{state:{files: [{uri: fileURL, name: file_name}]}});
+				let encoded_file_url = base64_encode(fileURL);
+				let encoded_file_name = base64_encode(file_name);
+				window.open(`../../../pdf-viewer/${encoded_file_url}/${encoded_file_name}`, "_blank");
 				
 			});
 	};

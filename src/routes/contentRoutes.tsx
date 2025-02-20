@@ -73,7 +73,7 @@ const presentation = [
 		element: <ProtectedRouteUser><QUOTATION.QUOTATION_LIST_PAGE /></ProtectedRouteUser>,
 	},
 	{
-		path: 'pdf-viewer',
+		path: 'pdf-viewer/:file_url/:file_name',
 		element: <ProtectedRouteUser view_quotation={true}><PDF_VIEWER.PDF_VIEWER_PAGE /></ProtectedRouteUser>,
 	},
 	{

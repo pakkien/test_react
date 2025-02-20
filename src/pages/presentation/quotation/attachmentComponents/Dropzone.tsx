@@ -1,7 +1,7 @@
 //import Image from 'next/image'
 import { MouseEventHandler, useCallback, useEffect, useState } from 'react';
 import { DropEvent, FileRejection, useDropzone } from 'react-dropzone';
-//import { ArrowUpTrayIcon, XMarkIcon } from '@heroicons/react/24/solid'
+import {decode as base64_decode, encode as base64_encode} from 'base-64';
 
 import { Dispatch, SetStateAction } from 'react';
 import { blob } from 'stream/consumers';
@@ -76,8 +76,9 @@ const Dropzone = (props: DropZoneProps) => {
 
 			const file = new File([response.data], file_name, { type: 'application/pdf' });
 			const fileURL = URL.createObjectURL(file);
-			//window.open(fileURL, "_blank");
-			navigate(`../pdf-viewer`,{state:{files: [{uri: fileURL, name: file_name}]}});
+			let encoded_file_url = base64_encode(fileURL);
+			let encoded_file_name = base64_encode(file_name);
+			window.open(`../../pdf-viewer/${encoded_file_url}/${encoded_file_name}`, "_blank");
 		});
 	}
 
