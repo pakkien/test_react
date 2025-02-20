@@ -204,11 +204,11 @@ const ManageSubItem = (props: SubItemProps) => {
 														</div>
 														<div className='col-2 d-flex align-items-center'>
 															<FormGroup
-																id='inclusive'
-																label='Inclusive'
+																id='by_inclusive'
+																label='By Inclusive'
 																className='form-check form-check-inline'>
 																<input
-																	checked={sub_item.inclusive}
+																	checked={sub_item.by_inclusive}
 																	disabled
 																	type='checkbox'
 																	className='form-check-input'

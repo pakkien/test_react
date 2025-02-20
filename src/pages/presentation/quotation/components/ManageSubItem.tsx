@@ -54,10 +54,10 @@ const ManageSubItem = (props: SubItemProps) => {
 			//estimated_cost: false,
 			unit_price: 0,
 			total_price: 0,
-			order: 0,
+			order: fields.length + 1,
 			lead_time: 0,
 			by_others: false,
-			inclusive: false,
+			by_inclusive: false,
 		});
 	};
 
@@ -569,8 +569,8 @@ const ManageSubItem = (props: SubItemProps) => {
 																		//console.log(e.target.checked);
 																		if(e.target.checked){
 																			setValue(`sections.${sectionIndex}.items.${itemIndex}.sub_items.${subItemIndex}.by_others`, true);
-																			if(formData.sections?.[sectionIndex]?.items?.[itemIndex]?.sub_items?.[subItemIndex]?.inclusive){
-																				setValue(`sections.${sectionIndex}.items.${itemIndex}.sub_items.${subItemIndex}.inclusive`, false);
+																			if(formData.sections?.[sectionIndex]?.items?.[itemIndex]?.sub_items?.[subItemIndex]?.by_inclusive){
+																				setValue(`sections.${sectionIndex}.items.${itemIndex}.sub_items.${subItemIndex}.by_inclusive`, false);
 																			}
 																		}else{
 																			setValue(`sections.${sectionIndex}.items.${itemIndex}.sub_items.${subItemIndex}.by_others`, false);
@@ -588,33 +588,33 @@ const ManageSubItem = (props: SubItemProps) => {
 													</div>
 													<div className='col-2 d-flex align-items-center'>
 														<FormGroup
-															id='inclusive'
-															label='Inclusive'
+															id='by_inclusive'
+															label='By Inclusive'
 															className='form-check form-check-inline'>
 															<input
 																id='inclusive'
 																className={
 																	'form-check-input ' +
-																	(errors.sections?.[sectionIndex]?.items?.[itemIndex]?.sub_items?.[subItemIndex]?.inclusive
+																	(errors.sections?.[sectionIndex]?.items?.[itemIndex]?.sub_items?.[subItemIndex]?.by_inclusive
 																		? 'is-invalid'
 																		: '')
 																}
 																{...register(
-																	`sections.${sectionIndex}.items.${itemIndex}.sub_items.${subItemIndex}.inclusive`,
+																	`sections.${sectionIndex}.items.${itemIndex}.sub_items.${subItemIndex}.by_inclusive`,
 																)}
 																type='checkbox'
-																placeholder='inclusive'
+																placeholder='by inclusive'
 																disabled={props.isViewMode}
 																onChange={
 																	(e) => {
 																		//console.log(e.target.checked);
 																		if(e.target.checked){
-																			setValue(`sections.${sectionIndex}.items.${itemIndex}.sub_items.${subItemIndex}.inclusive`, true);
+																			setValue(`sections.${sectionIndex}.items.${itemIndex}.sub_items.${subItemIndex}.by_inclusive`, true);
 																			if(formData.sections?.[sectionIndex]?.items?.[itemIndex]?.sub_items?.[subItemIndex]?.by_others){
 																				setValue(`sections.${sectionIndex}.items.${itemIndex}.sub_items.${subItemIndex}.by_others`, false);
 																			}
 																		}else{
-																			setValue(`sections.${sectionIndex}.items.${itemIndex}.sub_items.${subItemIndex}.inclusive`, false);
+																			setValue(`sections.${sectionIndex}.items.${itemIndex}.sub_items.${subItemIndex}.by_inclusive`, false);
 																		}
 																	}
 																}
@@ -622,7 +622,7 @@ const ManageSubItem = (props: SubItemProps) => {
 															<div className='invalid-feedback'>
 																{
 																	errors.sections?.[sectionIndex]?.items?.[itemIndex]?.sub_items?.[subItemIndex]						
-																		?.inclusive?.message
+																		?.by_inclusive?.message
 																}
 															</div>
 														</FormGroup>

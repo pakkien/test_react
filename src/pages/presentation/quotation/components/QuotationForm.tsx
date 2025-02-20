@@ -16,14 +16,13 @@ const schemaSubItem = z.object({
 	margin: z.coerce.number(),
 	margin_percentage: z.coerce.number(),
 	//estimated_cost: z.boolean(),
-	lead_time: z.coerce.number().int().min(0),
+	lead_time: z.coerce.number().int().min(0), //nullable, min 0
 	by_others: z.boolean(),
-	inclusive: z.boolean(),
+	by_inclusive: z.boolean(),
 	unit_price: z.coerce.number().min(0),
 	total_price: z.coerce.number().min(0),
 	order: z.number(),
 });
-
 const schemaItem = z.object({
 	product_description: z.string().min(3),
 	brand: z.string(),
@@ -35,10 +34,9 @@ const schemaItem = z.object({
 	total_cost: z.coerce.number().min(0),
 	margin: z.coerce.number(),
 	margin_percentage: z.coerce.number(),
-	//estimated_cost: z.boolean(),
-	lead_time: z.coerce.number().int().min(0),
+	lead_time: z.coerce.number().int().min(0), //nullable, min 0
 	by_others: z.boolean(),
-	inclusive: z.boolean(),
+	by_inclusive: z.boolean(),
 	unit_price: z.coerce.number().min(0),
 	total_price: z.coerce.number().min(0),
 	order: z.number(),
@@ -80,9 +78,8 @@ export const schemaQuotation = z.object({
 	sections: z.array(schemaSection),
 
 	//options
-	lead_time: z.string(),
-	payment_terms: z.string(),
-	validity: z.string()
+	payment_terms: z.coerce.number().min(0), //nullable, min 0
+	validity: z.coerce.number().min(1).optional().or(z.literal('')) //nullable or min > 0
 });
 
 export type FormTypeQuotation = z.infer<typeof schemaQuotation>
@@ -125,7 +122,6 @@ export const useFormQuotation = (props: QuotationFormProps) =>
 		discount: props.data.discount,
 		
 		//options:
-		lead_time: props.data.lead_time,
 		payment_terms: props.data.payment_terms,
 		validity: props.data.validity
 

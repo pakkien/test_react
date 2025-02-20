@@ -123,7 +123,8 @@ const QuotationList = () => {
 				//item.percent.toFixed(2).toString().toLowerCase().includes(search_string) ||
 				item.status.toLowerCase().includes(search_string) ||
 				item.site_location.toLowerCase().includes(search_string) ||
-				item.building.toLowerCase().includes(search_string)
+				item.building.toLowerCase().includes(search_string) ||
+				item.project_reference.toLowerCase().includes(search_string)
 			);
 		});
 	};
@@ -369,6 +370,16 @@ const QuotationList = () => {
 													icon='FilterList'
 												/>
 											</th>
+											<th
+												onClick={() => requestSort('project_reference')}
+												className='cursor-pointer text-decoration-underline'>
+												Project Reference
+												<Icon
+													size='lg'
+													className={getClassNamesFor('project_reference')}
+													icon='FilterList'
+												/>
+											</th>
 											<th>Action</th>
 										</tr>
 									</thead>
@@ -402,6 +413,7 @@ const QuotationList = () => {
 													</td>
 													<td>{item.site_location}</td>
 													<td>{item.building}</td>
+													<td>{item.project_reference}</td>
 													<td>
 														<div className='row'>
 															<div className='col-auto'>

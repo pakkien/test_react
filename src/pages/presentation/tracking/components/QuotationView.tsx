@@ -381,19 +381,14 @@ const QuotationView = (qv_props: QuotationViewProps) => {
 						</CardHeader>
 						<CardBody className='pb-0'>
 							<div className='row g-4'>
-								<div className='col-md-4'>
-									<FormGroup id='lead_time' label='Lead Time'>
-										<Input value={props.lead_time} disabled />
-									</FormGroup>
-								</div>
 
-								<div className='col-md-4'>
+								<div className='col-md-2'>
 									<FormGroup id='payment_terms' label='Payment Terms'>
 										<Input value={props.payment_terms} disabled />
 									</FormGroup>
 								</div>
 
-								<div className='col-md-4'>
+								<div className='col-md-2'>
 									<FormGroup id='validity' label='Validity'>
 										<Input value={props.validity} disabled />
 									</FormGroup>

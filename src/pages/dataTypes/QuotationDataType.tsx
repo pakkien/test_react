@@ -32,9 +32,8 @@ namespace QuotationDataType {
 		sst: number;
 
 		//options fields
-		lead_time: string;
-		payment_terms: string;
-		validity: string;
+		payment_terms: number;
+		validity: number;
 	};
 
 
@@ -66,7 +65,7 @@ namespace QuotationDataType {
 		order: number;
 		lead_time: number;
 		by_others: boolean;
-		inclusive: boolean;
+		by_inclusive: boolean;
 	};
 
 	export type Sub_item = {
@@ -88,7 +87,7 @@ namespace QuotationDataType {
 		order: number;
 		lead_time: number;
 		by_others: boolean;
-		inclusive: boolean;
+		by_inclusive: boolean;
 	};
 
 }

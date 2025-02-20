@@ -44,11 +44,6 @@ import AttachmentsView from '../attachmentComponents/AttachmentsView';
 import fileDownload from 'js-file-download';
 import ManageSection from './ManageSection';
 import { calculateGrandTotalAfterDiscountAndSST } from '../../../../common/calculations';
-import {
-	default_leadTimeOptions,
-	default_paymentTermsOptions,
-	default_validityOptions,
-} from '../../../../common/getDefaultOptions';
 
 type QuotationProps = {
 	mode: 'create' | 'view' | 'edit';
@@ -175,71 +170,6 @@ export const Quotation = (props: QuotationProps) => {
 			});
 	};
 
-	//OPTIONS
-	const [leadTimeOptions, setLeadTimeOptions] = useState<string[]>();
-	const [paymentTermsOptions, setPaymentTermsOptions] = useState<string[]>();
-	const [validityOptions, setValidityOptions] = useState<string[]>();
-
-	useEffect(() => {
-		getOptionsByName('payment_terms');
-		getOptionsByName('validity');
-		setLeadTimeOptions(default_leadTimeOptions); //TBD
-	}, []);
-
-	const getOptionsByName = async (option_name: string) => {
-		let res = [];
-
-		const config = {
-			headers: { Authorization: `${localStorage.getItem('bts_token')}` },
-		};
-
-		axios
-			.get(import.meta.env.VITE_BASE_URL + `/option/values/${option_name}`, config)
-			.then((response) => {
-				if (response.data.option_values) {
-					for (var i = 0; i < response.data.option_values.length; i++) {
-						res.push(response.data.option_values[i].option_value.toString());
-					}
-				}
-				//return res;
-				switch (option_name) {
-					case 'payment_terms': {
-						return setPaymentTermsOptions([''].concat(res));
-					}
-
-					case 'lead_time': {
-						return setLeadTimeOptions([''].concat(res));
-					}
-					case 'validity': {
-						return setValidityOptions([''].concat(res));
-					}
-					default: {
-						break;
-					}
-				}
-			})
-			.catch((errors) => {
-				switch (option_name) {
-					case 'payment_terms': {
-						return default_paymentTermsOptions;
-					}
-					case 'lead_time': {
-						return default_leadTimeOptions;
-					}
-					case 'validity': {
-						return default_validityOptions;
-					}
-					default: {
-						break;
-					}
-				}
-			});
-	};
-
-	// useEffect(() => {
-	// 	//console.log(formData.status);
-	// 	setStatus(formData.status);
-	// }, [formData.status]);
 
 	const [activeTab, setActiveTab] = useState('Quotation');
 
@@ -251,15 +181,15 @@ export const Quotation = (props: QuotationProps) => {
 
 		for (const section of formData.sections) {
 			for (const item of section.items) {
-				if(!item.by_others && !item.inclusive){
-					//ignore if by_others or inclusive is true
+				if(!item.by_others && !item.by_inclusive){
+					//ignore if by_others or by_inclusive is true
 					total += item.total_cost;
 					gtotal += item.total_price;
 				}
 				
 				for (const sub_item of item.sub_items) {
-					if(!sub_item.by_others && !sub_item.inclusive){
-						//ignore if by_others or inclusive is true
+					if(!sub_item.by_others && !sub_item.by_inclusive){
+						//ignore if by_others or by_inclusive is true
 						total += sub_item.total_cost;
 						gtotal += sub_item.total_price;
 					}
@@ -893,46 +823,22 @@ export const Quotation = (props: QuotationProps) => {
 						</CardHeader>
 						<CardBody className='pb-0'>
 							<div className='row g-4'>
-								<div className='col-md-4'>
-									<FormGroup id='lead_time' label='Lead Time'>
-										<select
-											id='lead_time'
-											className={
-												'form-control ' +
-												(errors.lead_time ? 'is-invalid' : '')
-											}
-											{...register('lead_time')}
-											disabled={isViewMode}>
-											{leadTimeOptions?.map((op) => (
-												<option value={op}>{op}</option>
-											))}
-										</select>
-										<>
-											{errors.lead_time ? (
-												<div className='invalid-feedback'>
-													{errors.lead_time.message}
-												</div>
-											) : (
-												''
-											)}
-										</>
-									</FormGroup>
-								</div>
 
-								<div className='col-md-4'>
+								<div className='col-md-2'>
 									<FormGroup id='payment_terms' label='Payment Terms'>
-										<select
+										<input
 											id='payment_terms'
 											className={
 												'form-control ' +
-												(errors.lead_time ? 'is-invalid' : '')
+												(errors.payment_terms
+													? 'is-invalid'
+													: '')
 											}
-											{...register('payment_terms')}
-											disabled={isViewMode}>
-											{paymentTermsOptions?.map((op) => (
-												<option value={op}>{op}</option>
-											))}
-										</select>
+											{...register(`payment_terms`)}
+											type='text'
+											placeholder='payment_terms'
+											disabled={isViewMode}
+										/>
 										<>
 											{errors.payment_terms ? (
 												<div className='invalid-feedback'>
@@ -945,20 +851,21 @@ export const Quotation = (props: QuotationProps) => {
 									</FormGroup>
 								</div>
 
-								<div className='col-md-4'>
+								<div className='col-md-2'>
 									<FormGroup id='validity' label='Validity'>
-										<select
+									<input
 											id='validity'
 											className={
 												'form-control ' +
-												(errors.validity ? 'is-invalid' : '')
+												(errors.validity
+													? 'is-invalid'
+													: '')
 											}
-											{...register('validity')}
-											disabled={isViewMode}>
-											{validityOptions?.map((op) => (
-												<option value={op}>{op}</option>
-											))}
-										</select>
+											{...register(`validity`)}
+											type='text'
+											placeholder='validity'
+											disabled={isViewMode}
+										/>
 										<>
 											{errors.validity ? (
 												<div className='invalid-feedback'>

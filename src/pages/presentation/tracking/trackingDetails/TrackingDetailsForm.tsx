@@ -37,7 +37,7 @@ export const schemaInvoice= z.object({
     invoice_no: z.string(),
     invoice_date: z.string(),
     invoice_amount: z.coerce.number(),
-    payment_terms: z.string(),
+    payment_terms: z.coerce.number(),
     invoice_attachments: z.array(schemaAttachment),
     temp_attachment_ids: z.array(z.string()),
     order: z.number(),

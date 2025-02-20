@@ -58,12 +58,12 @@ const ManageSection = (props: SectionProps) => {
 			sub_items: [],
 			lead_time: 0,
 			by_others: false,
-			inclusive: false,
+			by_inclusive: false,
 		};
 
 		append({
 			name: 'New Section ' + (fields.length + 1),
-			order: 0,
+			order: fields.length + 1,
 			items: isSectionValid? [] : [item],
 			is_section_valid: isSectionValid,
 		});
