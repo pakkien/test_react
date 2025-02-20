@@ -37,6 +37,8 @@ import fileDownload from 'js-file-download';
 import ManageSection from './ManageSection';
 import TrackingDetailsView from './TrackingDetailsView';
 import {decode as base64_decode, encode as base64_encode} from 'base-64';
+import Icon from '../../../../components/icon/Icon';
+import showNotification from '../../../../components/extras/showNotification';
 
 type QuotationViewProps = {
 	data: any;
@@ -54,6 +56,7 @@ const QuotationView = (qv_props: QuotationViewProps) => {
 	// });
 
 	const [currentVariance, setCurrentVariance] = useState(Number(qv_props.variance));
+	const [currentQuotationRevId, setCurentQuotationRevId] = useState();
 
 	const [props, setProps] = useState<any>(qv_props.data[0]);
 
@@ -63,12 +66,18 @@ const QuotationView = (qv_props: QuotationViewProps) => {
 				(x: any) => x.variance == currentVariance,
 			)[0];
 			//console.log(JSON.stringify(props));
+
+			const key = curentQuotationRev.status.toUpperCase() as keyof typeof QUOTATION_STATUS;
+			var enum_val = QUOTATION_STATUS[key];
+			if (enum_val == null) {
+				enum_val = QUOTATION_STATUS.NONE;
+			}
 			setStatus(
-				QUOTATION_STATUS[
-					curentQuotationRev.status.toUpperCase() as keyof typeof QUOTATION_STATUS
-				],
+				enum_val
 			);
 			//console.log("curr" + JSON.stringify(curentQuotationRev));
+
+			setCurentQuotationRevId(curentQuotationRev.quotation_revision_id);
 		}
 	}, [currentVariance]);
 
@@ -81,6 +90,35 @@ const QuotationView = (qv_props: QuotationViewProps) => {
 		enum_val = QUOTATION_STATUS.NONE;
 	}
 	const [status, setStatus] = useState<any>(enum_val);
+
+	//to trigger status overwrite of the QuotationRev if user changed the status
+	const handleStatusOverwrite = async (status: any) => {
+		console.log("status changed to: " + status.name);
+		axios
+			.put(
+				import.meta.env.VITE_BASE_URL +
+					`/quotation/update_status/${currentQuotationRevId}`, 
+					{
+						status: status.name
+					},
+					{
+						headers: { Authorization: `${localStorage.getItem('bts_token')}`},			
+					}
+			)
+			.then((response) => {
+				console.log("success");
+				showNotification(
+					<span className='d-flex align-items-center'>
+						<Icon icon='Info' size='lg' className='me-1' />
+						<span>Quotation saved</span>
+					</span>,
+					'Quotation status overwrite successfully',
+				);
+				//navigate(`../tracking/view/${qv_props.quotation_id}/${currentVariance}`);
+				navigate(`../tracking`);
+			});
+
+	};
 
 	//tab
 	const [activeTab, setActiveTab] = useState('Quotation');
@@ -353,7 +391,45 @@ const QuotationView = (qv_props: QuotationViewProps) => {
 											</DropdownMenu>
 										</Dropdown>
 									</div>
+							
 									<div className='col-md-6 d-flex justify-content-end'>
+									<Dropdown>
+												<DropdownToggle hasIcon={false}>
+													<Button
+														isLink
+														color={status.color}
+														icon='Circle'
+														className='text-nowrap order-0 float-end'
+														//isDisable={isViewMode}
+														//hidden={!allowStatusUpdate}
+														>
+														{status.name}
+													</Button>
+												</DropdownToggle>
+												<DropdownMenu>
+													{Object.keys(QUOTATION_STATUS).map((key) => (
+														<DropdownItem
+															key={key}
+															onClick={() => {
+																setStatus(QUOTATION_STATUS[key]);
+																handleStatusOverwrite(QUOTATION_STATUS[key]);
+															}
+															}>
+															<div>
+																<Icon
+																	icon='Circle'
+																	color={
+																		QUOTATION_STATUS[key].color
+																	}
+																/>
+																{QUOTATION_STATUS[key].name}
+															</div>
+														</DropdownItem>
+													))}
+												</DropdownMenu>
+											</Dropdown>
+
+											<div className='order-2 float-end'>&nbsp;&nbsp;&nbsp;&nbsp;</div>
 										<Button
 											color='info'
 											className='order-2 float-end'

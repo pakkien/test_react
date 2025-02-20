@@ -15,7 +15,7 @@ const PdfViewer = () => {
 	const docs = [{ uri: base64_decode(file_url? file_url:""), name: base64_decode(file_name? file_name:"") }];
 
 	return (
-		<PageWrapper title='PDF Preview'>
+		<PageWrapper title={docs[0].name}>
 			{/* <SubHeader>
 				<SubHeaderLeft>
 					<Button color='info' isLink icon='ArrowBack' onClick={() => navigate(-1)}>
