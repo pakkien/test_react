@@ -244,7 +244,7 @@ const ManageInvoice = () => {
 														</div>
 														<div className='col-md-12'>
 															<Dropzone
-																attachment_type='purchase_order'
+																attachment_type='invoice'
 																attachment_list={
 																	formData.invoice[invoiceIndex]
 																		.invoice_attachments

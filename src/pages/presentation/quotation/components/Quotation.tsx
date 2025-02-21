@@ -223,6 +223,7 @@ export const Quotation = (props: QuotationProps) => {
 			payload,
 			{
 				headers: { Authorization: `${localStorage.getItem('bts_token')}`},
+				params: { with_watermark: false },
 				responseType: 'blob'				
 			}			
 		)

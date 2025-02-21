@@ -131,7 +131,7 @@ const TrackingDetails = (props: TrackingDetailsProps) => {
 							invoice_date: convertToUTC(data.invoice[i].invoice_date),
 							invoice_amount: data.invoice[i].invoice_amount,
 							payment_terms: data.invoice[i].payment_terms,
-							po_attachments: data.invoice[i].temp_attachment_ids,
+							invoice_attachments: data.invoice[i].temp_attachment_ids,
 							order: i + 1,
 						});
 						invoice_list.push(invoice);
