@@ -79,7 +79,8 @@ export const schemaQuotation = z.object({
 
 	//options
 	payment_terms: z.coerce.number().min(0), //nullable, min 0
-	validity: z.coerce.number().min(1).optional().or(z.literal('')) //nullable or min > 0
+	validity: z.coerce.number().min(0), //nullable, min 0
+
 });
 
 export type FormTypeQuotation = z.infer<typeof schemaQuotation>
