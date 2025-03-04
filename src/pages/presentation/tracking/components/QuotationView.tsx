@@ -39,6 +39,16 @@ import TrackingDetailsView from './TrackingDetailsView';
 import {decode as base64_decode, encode as base64_encode} from 'base-64';
 import Icon from '../../../../components/icon/Icon';
 import showNotification from '../../../../components/extras/showNotification';
+import dayjs, { Dayjs } from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+import timezone from 'dayjs/plugin/timezone'
+
+dayjs.extend(utc);
+dayjs.extend(localizedFormat);
+dayjs.extend(customParseFormat);
+dayjs.extend(timezone);
 
 type QuotationViewProps = {
 	data: any;
@@ -148,8 +158,8 @@ const QuotationView = (qv_props: QuotationViewProps) => {
 			)
 			.then((response) => {
 				//console.log(response.data);
-				//fileDownload(response.data, quotation_no + '.pdf');
-				const filename = quotation_no + '.pdf';
+				var timestamp = dayjs.utc().local().format('DDMMYY');
+				const filename = quotation_no? quotation_no + '.pdf' : `draft_${timestamp}_${props.client}.pdf`;
 				const file = new File([response.data], filename, { type: 'application/pdf' });
 				const fileURL = URL.createObjectURL(file);
 				let encoded_file_url = base64_encode(fileURL);

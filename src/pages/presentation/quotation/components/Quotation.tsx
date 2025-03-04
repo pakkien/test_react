@@ -46,6 +46,18 @@ import ManageSection from './ManageSection';
 import { calculateGrandTotalAfterDiscountAndSST } from '../../../../common/calculations';
 import {decode as base64_decode, encode as base64_encode} from 'base-64';
 
+import dayjs, { Dayjs } from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+import timezone from 'dayjs/plugin/timezone'
+
+dayjs.extend(utc);
+dayjs.extend(localizedFormat);
+dayjs.extend(customParseFormat);
+dayjs.extend(timezone);
+
+
 type QuotationProps = {
 	mode: 'create' | 'view' | 'edit';
 	quotation_id?: string;
@@ -229,7 +241,8 @@ export const Quotation = (props: QuotationProps) => {
 		)
 		.then((response) => {
 			//console.log(response.data);
-			const filename = "QUOTATION-(PREVIEW_PURPOSE_ONLY)" + '.pdf';
+			var timestamp = dayjs.utc().local().format('DDMMYY');
+			const filename = `preview_${timestamp}_${formData.client}` + '.pdf';
 			const file = new File([response.data], filename, { type: 'application/pdf' });
 			const fileURL = URL.createObjectURL(file);
 			let encoded_file_url = base64_encode(fileURL);
@@ -256,7 +269,8 @@ export const Quotation = (props: QuotationProps) => {
 			)
 			.then((response) => {
 				//console.log(response.data);
-				const filename = quotation_no + '.pdf';
+				var timestamp = dayjs.utc().local().format('DDMMYY');
+				const filename = quotation_no? quotation_no + '.pdf' : `draft_${timestamp}_${formData.client}.pdf`;
 				const file = new File([response.data], filename, { type: 'application/pdf' });
 				const fileURL = URL.createObjectURL(file);
 				let encoded_file_url = base64_encode(fileURL);
