@@ -18,9 +18,9 @@ export function ProtectedRouteUser(props: UserAccessProps) {
     const navigate = useNavigate();
 
     useEffect(() => {
-        //console.log("userData:" + JSON.stringify(userData));
         var refresh_token = localStorage.getItem('bts_refreshtoken') || '';
         var token = localStorage.getItem('bts_token') || '';
+
 
         if(!userData || !refresh_token || !token){
             navigate('/auth-pages/login', {replace: true});
@@ -42,7 +42,7 @@ export function ProtectedRouteUser(props: UserAccessProps) {
             navigate('/auth-pages/page403', {replace: true});
         }
 
-    }, [navigate, userData])
+    }, [navigate])
     
 
     return props.children;
@@ -53,7 +53,6 @@ export function ProtectedRouteAdmin({children}: ProtectedRouteProps) {
     const navigate = useNavigate();
 
     useEffect(() => {
-        //console.log("userData:" + JSON.stringify(userData));
         var refresh_token = localStorage.getItem('bts_refreshtoken') || '';
         var token = localStorage.getItem('bts_token') || '';
 
@@ -66,7 +65,7 @@ export function ProtectedRouteAdmin({children}: ProtectedRouteProps) {
         }
 
 
-    }, [navigate, userData])
+    }, [navigate])
     
 
     return children;

@@ -8,7 +8,7 @@ import { demoPagesMenu } from '../../../menu';
 
 const Page403 = () => {
 	return (
-		<PageWrapper title="404 Page">
+		<PageWrapper title="403 Page">
 			<Page>
 				<div className='row d-flex align-items-center h-100'>
 					<div className='col-12 d-flex flex-column justify-content-center align-items-center'>

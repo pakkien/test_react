@@ -31,22 +31,35 @@ export const AuthContextProvider: FC<IAuthContextProviderProps> = ({ children })
 	const [userData, setUserData] = useState<UserDataType>();
 
 	useEffect(() => {
-		//console.log('This is first refresh');
-		handleRefresh();
+		//set userData from user storage
+		var userData_cached = localStorage.getItem('bts_userData') || '';
+		var userData = JSON.parse(userData_cached);
+		if (userData != null) {
+			setUserData({
+				refresh_token: userData.refresh_token,
+				token: userData.token,
+				email: userData.email,
+				id: userData.id,
+				mobile: userData.mobile,
+				name: userData.name,
+				role: userData.role,
+				view_mccr: userData.view_mccr,
+				view_quotation: userData.view_quotation,
+				write_mccr: userData.write_mccr,
+				write_quotation: userData.write_quotation,
+			});
+		}
 
 		const interval = setInterval(() => {
-			//console.log('This will be called every 5 s');
-
 			handleRefresh();
 
-			console.log(JSON.stringify(userData));
-		}, 30 * 60 * 1000);
+		}, 30 * 60 * 1000); //30min refresh interval
 		return () => clearInterval(interval);
 	}, []);
 
 	const handleRefresh = async () => {
+		console.log('refresh is called');
 		var refresh_token = localStorage.getItem('bts_refreshtoken') || '';
-
 
 		if (refresh_token != '') {
 			refreshTokenAPICall(refresh_token);
@@ -66,6 +79,24 @@ export const AuthContextProvider: FC<IAuthContextProviderProps> = ({ children })
 				localStorage.setItem('bts_UserEmail', response.data.user.email);
 				localStorage.setItem('bts_token', response.data.token);
 				localStorage.setItem('bts_refreshtoken', response.data.refresh_token);
+
+				var userData = {
+					refresh_token: response.data.refresh_token,
+					token: response.data.token,
+					email: response.data.user.email,
+					id: response.data.user.id,
+					mobile: response.data.user.mobile,
+					name: response.data.user.name,
+					role: response.data.user.role,
+					view_mccr: response.data.user.view_mccr,
+					view_quotation: response.data.user.view_quotation,
+					write_mccr: response.data.user.write_mccr,
+					write_quotation: response.data.user.write_quotation,
+				};
+
+				localStorage.setItem('bts_userData', JSON.stringify(userData));
+
+				//set for UI elements
 				setUserData({
 					refresh_token: response.data.refresh_token,
 					token: response.data.token,
@@ -79,14 +110,12 @@ export const AuthContextProvider: FC<IAuthContextProviderProps> = ({ children })
 					write_mccr: response.data.user.write_mccr,
 					write_quotation: response.data.user.write_quotation,
 				});
-
 			})
 			.catch((error) => {
 				setUserData(undefined);
 			});
 	};
 
-	//TODO: add refresh token
 	return (
 		<AuthContext.Provider value={{ userData, setUserData }}>{children}</AuthContext.Provider>
 	);
