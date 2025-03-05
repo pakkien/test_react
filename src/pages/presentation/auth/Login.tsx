@@ -55,10 +55,10 @@ const Login: FC<ILoginProps> = ({ isSignUp }) => {
 	const handleOnClick = useCallback(() => navigate('/'), [navigate]);
 
 	//remove 
-	// localStorage.removeItem('bts_UserEmail');
-	// localStorage.removeItem('bts_token');
-	// localStorage.removeItem('bts_refreshtoken');
-	// localStorage.removeItem('bts_userData');
+	localStorage.removeItem('bts_UserEmail');
+	localStorage.removeItem('bts_token');
+	localStorage.removeItem('bts_refreshtoken');
+	localStorage.removeItem('bts_userData');
 
 	const loginApiCall = async (email: string, password: string) => {
 		const payload = {
