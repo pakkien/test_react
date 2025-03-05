@@ -31,22 +31,22 @@ export const AuthContextProvider: FC<IAuthContextProviderProps> = ({ children })
 	const [userData, setUserData] = useState<UserDataType>();
 
 	useEffect(() => {
-		//set userData from user storage
-		var userData_cached = localStorage.getItem('bts_userData') || '';
-		var userData = JSON.parse(userData_cached);
-		if (userData != null) {
+		//set userData from local storage
+		var userData_cached = localStorage.getItem('bts_userData') || '';	
+		if (userData_cached != null) {
+			var userData_cached2 = JSON.parse(userData_cached);
 			setUserData({
-				refresh_token: userData.refresh_token,
-				token: userData.token,
-				email: userData.email,
-				id: userData.id,
-				mobile: userData.mobile,
-				name: userData.name,
-				role: userData.role,
-				view_mccr: userData.view_mccr,
-				view_quotation: userData.view_quotation,
-				write_mccr: userData.write_mccr,
-				write_quotation: userData.write_quotation,
+				refresh_token: userData_cached2.refresh_token,
+				token: userData_cached2.token,
+				email: userData_cached2.email,
+				id: userData_cached2.id,
+				mobile: userData_cached2.mobile,
+				name: userData_cached2.name,
+				role: userData_cached2.role,
+				view_mccr: userData_cached2.view_mccr,
+				view_quotation: userData_cached2.view_quotation,
+				write_mccr: userData_cached2.write_mccr,
+				write_quotation: userData_cached2.write_quotation,
 			});
 		}
 
