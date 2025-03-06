@@ -52,6 +52,7 @@
 		"i18next-http-backend": "^2.4.2",
 		"js-file-download": "^0.4.12",
 		"jsx-to-string": "^1.4.0",
+		"jwt-decode": "^4.0.0",
 		"pascalcase": "^2.0.0",
 		"payment": "^2.4.6",
 		"prismjs": "^1.29.0",

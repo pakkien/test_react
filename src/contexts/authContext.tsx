@@ -2,6 +2,8 @@ import React, { createContext, FC, ReactNode, useEffect, useMemo, useState } fro
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { jwtDecode } from "jwt-decode";
+import dayjs from 'dayjs';
 
 export interface IAuthContextProps {
 	userData: UserDataType | undefined;
@@ -35,6 +37,16 @@ export const AuthContextProvider: FC<IAuthContextProviderProps> = ({ children })
 		var userData_cached = localStorage.getItem('bts_userData') || '';	
 		if (userData_cached != '') {
 			var userData_cached2 = JSON.parse(userData_cached);
+
+			const decoded = jwtDecode(userData_cached2.token);
+			const iat = decoded.iat || 0;
+			//console.log("iat + 30*60:" + (iat + 30*60));
+			//console.log(dayjs().unix());
+			if(dayjs().unix() > (iat + 30*60)){
+				//force refresh if token was issued more than 30min ago
+				handleRefresh();
+			}
+			else{
 			setUserData({
 				refresh_token: userData_cached2.refresh_token,
 				token: userData_cached2.token,
@@ -48,6 +60,7 @@ export const AuthContextProvider: FC<IAuthContextProviderProps> = ({ children })
 				write_mccr: userData_cached2.write_mccr,
 				write_quotation: userData_cached2.write_quotation,
 			});
+			}
 		}
 
 		const interval = setInterval(() => {
