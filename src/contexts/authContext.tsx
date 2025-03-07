@@ -35,7 +35,10 @@ export const AuthContextProvider: FC<IAuthContextProviderProps> = ({ children })
 	useEffect(() => {
 		//set userData from local storage
 		var userData_cached = localStorage.getItem('bts_userData') || '';	
-		if (userData_cached != '') {
+		if (userData_cached == '') {
+			handleRefresh();
+		}
+		else{
 			var userData_cached2 = JSON.parse(userData_cached);
 
 			const decoded = jwtDecode(userData_cached2.token);
