@@ -80,10 +80,11 @@ const ManageSubItem = (props: SubItemProps) => {
 		<>
 			<div
 				className='col-md-12'
-				hidden={props.isViewMode || fields.length > 0 ? true : false}>
+				hidden={props.isViewMode}>
 				<Button color='info' icon='Add' tag='a' onClick={addSubItem} className='float-end'>
 					Add Sub Item
 				</Button>
+				<br />
 				<br />
 				<br />
 			</div>
@@ -633,7 +634,7 @@ const ManageSubItem = (props: SubItemProps) => {
 											<div className='col-md-12'></div>
 										</div>
 									</CardBody>
-									<CardFooter>
+									{/* <CardFooter>
 										<CardFooterRight>
 											<Button
 												color='info'
@@ -644,7 +645,7 @@ const ManageSubItem = (props: SubItemProps) => {
 												Add Sub-Item
 											</Button>
 										</CardFooterRight>
-									</CardFooter>
+									</CardFooter> */}
 								</Card>
 							))}
 						</AccordionItem>
