@@ -4,6 +4,8 @@ import { Quotation } from './components/Quotation';
 import axios from 'axios';
 import { useLocation, useParams } from 'react-router-dom';
 import QuotationDataType from '../../dataTypes/QuotationDataType';
+import showNotification from '../../../components/extras/showNotification';
+import Icon from '../../../components/icon/Icon';
 
 // const QuotationData = {
 // 	quotation_id: 'ad399d47-a038-4fb4-9f31-2f142c143611',
@@ -259,6 +261,14 @@ const ViewQuotation = () => {
 			.then((response) => {
 				//console.log(response.data);
 				setQuotationRevData(response.data);
+			}).catch((err) => {
+				showNotification(
+					<span className='d-flex align-items-center'>
+						<Icon icon='Info' size='lg' className='me-1' />
+						<span>Error</span>
+					</span>,
+					'Error: ' + err,
+				);
 			});
 	};
 

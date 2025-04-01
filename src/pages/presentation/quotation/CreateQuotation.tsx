@@ -31,9 +31,8 @@ const QuotationData: QuotationDataType.QuotationData = {
 	sst: 0,
 
 	//options
-	lead_time: '',
-	payment_terms: '',
-	validity: ''
+	payment_terms: 0,
+	validity: 0
 
 };
 

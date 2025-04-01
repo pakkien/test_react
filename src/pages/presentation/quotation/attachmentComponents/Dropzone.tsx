@@ -23,6 +23,7 @@ import { useForceUpdate } from 'framer-motion';
 import axios, { AxiosProgressEvent } from 'axios';
 import fileDownload from 'js-file-download';
 import { useNavigate } from 'react-router-dom';
+import showNotification from '../../../../components/extras/showNotification';
 
 const MAX_FILE_COUNT = 10;
 
@@ -57,6 +58,14 @@ const Dropzone = (props: DropZoneProps) => {
 			.then((response) => {
 				//console.log(response.data);
 				setPrevFiles(response.data.attachments);
+			}).catch((err) => {
+				showNotification(
+					<span className='d-flex align-items-center'>
+						<Icon icon='Info' size='lg' className='me-1' />
+						<span>Error</span>
+					</span>,
+					'Error: ' + err,
+				);
 			});
 	};
 
@@ -79,6 +88,15 @@ const Dropzone = (props: DropZoneProps) => {
 			let encoded_file_url = base64_encode(fileURL);
 			let encoded_file_name = base64_encode(file_name);
 			window.open(`../../pdf-viewer/${encoded_file_url}/${encoded_file_name}`, "_blank");
+		})
+		.catch((err) => {
+			showNotification(
+				<span className='d-flex align-items-center'>
+					<Icon icon='Info' size='lg' className='me-1' />
+					<span>Error</span>
+				</span>,
+				'Error: ' + err,
+			);
 		});
 	}
 

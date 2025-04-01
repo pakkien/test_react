@@ -51,6 +51,7 @@ import localizedFormat from 'dayjs/plugin/localizedFormat';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import timezone from 'dayjs/plugin/timezone';
 import {calculateMargin, calculateMarginPercentage} from '../../../common/calculations';
+import showNotification from '../../../components/extras/showNotification';
 
 dayjs.extend(utc);
 dayjs.extend(localizedFormat);
@@ -279,6 +280,14 @@ const TrackingList = () => {
 				setQuotationData(response.data.quotations);
 				setTableData(response.data.quotations);
 				//console.log(response.data.quotations);
+			}).catch((err) => {
+				showNotification(
+					<span className='d-flex align-items-center'>
+						<Icon icon='Info' size='lg' className='me-1' />
+						<span>Error</span>
+					</span>,
+					'Error: ' + err,
+				);
 			});
 	};
 

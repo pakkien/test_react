@@ -31,6 +31,8 @@ import Dropdown, {
 } from '../../../components/bootstrap/Dropdown';
 import QuotationDataType from '../../dataTypes/QuotationDataType';
 import QuotationView from './components/QuotationView';
+import showNotification from '../../../components/extras/showNotification';
+import Icon from '../../../components/icon/Icon';
 
 // const Quotation = { 
 // 	quotation_id: 'ad399d47-a038-4fb4-9f31-2f142c143611',
@@ -195,6 +197,14 @@ const ViewQuotation = () => {
 			.then((response) => {
 				//console.log(response.data.data);
 				setTrackingData(response.data.data);
+			}).catch((err) => {
+				showNotification(
+					<span className='d-flex align-items-center'>
+						<Icon icon='Info' size='lg' className='me-1' />
+						<span>Error</span>
+					</span>,
+					'Error: ' + err,
+				);
 			});
 	};
 

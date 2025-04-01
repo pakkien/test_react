@@ -5,40 +5,39 @@ import { z } from 'zod';
 import QuotationDataType from '../../../dataTypes/QuotationDataType';
 
 const schemaSubItem = z.object({
-	product_description: z.string().min(3),
-	brand: z.string(),
-	model: z.string(),
-	remarks: z.string(),
-	quantity: z.coerce.number().int().min(0),
-	unit: z.string(),
-	unit_cost: z.coerce.number().min(0),
-	total_cost: z.coerce.number().min(0),
-	margin: z.coerce.number(),
-	margin_percentage: z.coerce.number(),
-	//estimated_cost: z.boolean(),
-	lead_time: z.coerce.number().int().min(0), //nullable, min 0
+	product_description: z.string().min(3).max(200),
+	brand: z.string().max(200),
+	model: z.string().max(200),
+	remarks: z.string().max(200),
+	quantity: z.coerce.number().int().min(0).max(2147480000),
+	unit: z.string().max(200),
+	unit_cost: z.coerce.number().min(0).max(2147480000),
+	total_cost: z.coerce.number().min(0).max(2147480000),
+	margin: z.coerce.number().max(2147480000),
+	margin_percentage: z.coerce.number().max(2147480000),
+	lead_time: z.coerce.number().int().min(0).max(2147480000),
 	by_others: z.boolean(),
 	by_inclusive: z.boolean(),
-	unit_price: z.coerce.number().min(0),
-	total_price: z.coerce.number().min(0),
+	unit_price: z.coerce.number().min(0).max(2147480000),
+	total_price: z.coerce.number().min(0).max(2147480000),
 	order: z.number(),
 });
 const schemaItem = z.object({
-	product_description: z.string().min(3),
-	brand: z.string(),
-	model: z.string(),
-	remarks: z.string(),
-	quantity: z.coerce.number().int().min(0),
-	unit: z.string(),
-	unit_cost: z.coerce.number().min(0),
-	total_cost: z.coerce.number().min(0),
-	margin: z.coerce.number(),
-	margin_percentage: z.coerce.number(),
-	lead_time: z.coerce.number().int().min(0), //nullable, min 0
+	product_description: z.string().min(3).max(200),
+	brand: z.string().max(200),
+	model: z.string().max(200),
+	remarks: z.string().max(200),
+	quantity: z.coerce.number().int().min(0).max(2147480000),
+	unit: z.string().max(200),
+	unit_cost: z.coerce.number().min(0).max(2147480000),
+	total_cost: z.coerce.number().min(0).max(2147480000),
+	margin: z.coerce.number().max(2147480000),
+	margin_percentage: z.coerce.number().max(2147480000),
+	lead_time: z.coerce.number().int().min(0).max(2147480000),
 	by_others: z.boolean(),
 	by_inclusive: z.boolean(),
-	unit_price: z.coerce.number().min(0),
-	total_price: z.coerce.number().min(0),
+	unit_price: z.coerce.number().min(0).max(2147480000),
+	total_price: z.coerce.number().min(0).max(2147480000),
 	order: z.number(),
 	sub_items: z.array(schemaSubItem)
 
@@ -53,33 +52,30 @@ const schemaSection = z.object({
 });
 
 export const schemaQuotation = z.object({
-	client: z.string().min(3),
-	client_code: z.string().min(3),	
-	end_user: z.string().min(3),
-	site_location: z.string().min(3),
-	building: z.string().min(3),
-	pic: z.string().min(3),
+	client: z.string().min(3).max(200),
+	client_code: z.string().min(3).max(200),
+	end_user: z.string().min(3).max(200),
+	site_location: z.string().min(3).max(200),
+	building: z.string().min(3).max(200),
+	pic: z.string().min(3).max(200),
 	pic_email: z.string().email(),
-	pic_contact_number: z.string().min(3),
-	project_reference: z.string(),
+	pic_contact_number: z.string().min(3).max(200),
+	project_reference: z.string().max(200),
 	status: z.string().min(3),
 
 	//Summary
-	reference_status: z.string(),
-	note: z.string(),
-	total_cost: z.coerce.number().min(0),
-	grand_total: z.coerce.number().min(0),
+	reference_status: z.string().max(200),
+	note: z.string().max(1000),
+	total_cost: z.coerce.number().min(0).max(2147480000),
+	grand_total: z.coerce.number().min(0).max(2147480000),
 	sst: z.coerce.number().min(0).max(100),
-	discount: z.coerce.number().min(0),
+	discount: z.coerce.number().min(0).max(2147480000),
 
-	//items: z.array(schemaItem)
-	//items: z.array(schemaItem).min(1, { message: 'must contain at least one item.' }),
-	//attachment_list: z.string().array(),
 	sections: z.array(schemaSection),
 
 	//options
-	payment_terms: z.coerce.number().min(0), //nullable, min 0
-	validity: z.coerce.number().min(0), //nullable, min 0
+	payment_terms: z.coerce.number().min(0).max(2147480000), //nullable, min 0
+	validity: z.coerce.number().min(0).max(2147480000), //nullable, min 0
 
 });
 

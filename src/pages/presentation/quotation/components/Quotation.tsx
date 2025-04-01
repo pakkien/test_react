@@ -135,14 +135,36 @@ export const Quotation = (props: QuotationProps) => {
 
 	const navigate = useNavigate();
 
-	const showSuccessNotification = () => {
-		showNotification(
-			<span className='d-flex align-items-center'>
-				<Icon icon='Info' size='lg' className='me-1' />
-				<span>Quotation saved</span>
-			</span>,
-			'Quotation saved successfully',
-		);
+	// const showSuccessNotification = () => {
+	// 	showNotification(
+	// 		<span className='d-flex align-items-center'>
+	// 			<Icon icon='Info' size='lg' className='me-1' />
+	// 			<span>Quotation saved</span>
+	// 		</span>,
+	// 		'Quotation saved successfully',
+	// 	);
+	// };
+
+	const makeNotification = (isSuccess:boolean, message:string) => {
+		
+		if (isSuccess) {
+			showNotification(
+				<span className='d-flex align-items-center'>
+					<Icon icon='Check' size='lg' className='me-1' />
+					<span>Success</span>
+				</span>,
+				message
+			);
+		}
+		else{
+			showNotification(
+				<span className='d-flex align-items-center'>
+					<Icon icon='Error' size='lg' className='me-1' />
+					<span>Error</span>
+				</span>,
+				'Error: ' + message,
+			);
+		}
 	};
 
 	const goToViewQuotationListPage = () => {
@@ -164,8 +186,11 @@ export const Quotation = (props: QuotationProps) => {
 			.post(import.meta.env.VITE_BASE_URL + `/quotation/`, payload, config)
 			.then((response) => {
 				//console.log(response.data);
-				showSuccessNotification();
+				makeNotification(true, "Quotation saved.");
 				goToViewQuotationListPage();
+			})
+			.catch((err) => {
+				makeNotification(false, err);	
 			});
 	};
 
@@ -178,8 +203,11 @@ export const Quotation = (props: QuotationProps) => {
 			)
 			.then((response) => {
 				//console.log(response.data);
-				showSuccessNotification();
+				makeNotification(true, "Quotation saved.");
 				goToViewQuotationListPage();
+			})
+			.catch((err) => {
+				makeNotification(false, err);	
 			});
 	};
 
@@ -248,6 +276,9 @@ export const Quotation = (props: QuotationProps) => {
 			let encoded_file_url = base64_encode(fileURL);
 			let encoded_file_name = base64_encode(filename);
 			window.open(`../../pdf-viewer/${encoded_file_url}/${encoded_file_name}`, "_blank");
+		})
+		.catch((err) => {
+			makeNotification(false, err);	
 		});
 	};
 
@@ -276,6 +307,9 @@ export const Quotation = (props: QuotationProps) => {
 				let encoded_file_url = base64_encode(fileURL);
 				let encoded_file_name = base64_encode(filename);
 				window.open(`../../pdf-viewer/${encoded_file_url}/${encoded_file_name}`, "_blank");
+			})
+			.catch((err) => {
+				makeNotification(false, err);	
 			});
 	};
 
@@ -290,6 +324,9 @@ export const Quotation = (props: QuotationProps) => {
 
 		axios.get(import.meta.env.VITE_BASE_URL + '/quotation/clients', config).then((response) => {
 			setClientData(response.data.clients);
+		})
+		.catch((err) => {
+			makeNotification(false, err);	
 		});
 	};
 
@@ -300,6 +337,9 @@ export const Quotation = (props: QuotationProps) => {
 
 		axios.get(import.meta.env.VITE_BASE_URL + '/quotation/pic', config).then((response) => {
 			setPicData(response.data.pics);
+		})
+		.catch((err) => {
+			makeNotification(false, err);	
 		});
 	};
 

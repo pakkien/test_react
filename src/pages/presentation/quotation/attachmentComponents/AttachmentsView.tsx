@@ -5,6 +5,8 @@ import Tooltips from '../../../../components/bootstrap/Tooltips';
 import { xcode } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import { useNavigate } from 'react-router-dom';
 import {decode as base64_decode, encode as base64_encode} from 'base-64';
+import showNotification from '../../../../components/extras/showNotification';
+import Icon from '../../../../components/icon/Icon';
 
 type AttachmentsViewProps = {
 	quotation_id?: string;
@@ -42,6 +44,14 @@ const AttachmentsView = (props: AttachmentsViewProps) => {
 			.get(import.meta.env.VITE_BASE_URL + `/quotation/revisions/${quotation_id}`, config)
 			.then((response) => {
 				setRevisionData(response.data.data);
+			}).catch((err) => {
+				showNotification(
+					<span className='d-flex align-items-center'>
+						<Icon icon='Info' size='lg' className='me-1' />
+						<span>Error</span>
+					</span>,
+					'Error: ' + err,
+				);
 			});
 	};
 
@@ -71,7 +81,16 @@ const AttachmentsView = (props: AttachmentsViewProps) => {
 					displayData?.push(item);
 				}
 				
+			}).catch((err) => {
+				showNotification(
+					<span className='d-flex align-items-center'>
+						<Icon icon='Info' size='lg' className='me-1' />
+						<span>Error</span>
+					</span>,
+					'Error: ' + err,
+				);
 			});
+			
 	};
 
 	const handleDownload = async (attachment_id: string, file_name: string) => {
@@ -88,6 +107,14 @@ const AttachmentsView = (props: AttachmentsViewProps) => {
 				let encoded_file_name = base64_encode(file_name);
 				window.open(`../../pdf-viewer/${encoded_file_url}/${encoded_file_name}`, "_blank");
 				
+			}).catch((err) => {
+				showNotification(
+					<span className='d-flex align-items-center'>
+						<Icon icon='Info' size='lg' className='me-1' />
+						<span>Error</span>
+					</span>,
+					'Error: ' + err,
+				);
 			});
 	};
 

@@ -12,6 +12,7 @@ import Icon from '../../../../components/icon/Icon';
 import { UseFormSetValue } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import {decode as base64_decode, encode as base64_encode} from 'base-64';
+import showNotification from '../../../../components/extras/showNotification';
 
 type DropzoneProps = {
     //quotation_id: string;
@@ -53,6 +54,15 @@ const Dropzone = (props: DropzoneProps) => {
 			let encoded_file_url = base64_encode(fileURL);
 			let encoded_file_name = base64_encode(file_name);
 			window.open(`../../../pdf-viewer/${encoded_file_url}/${encoded_file_name}`, "_blank");
+		})
+		.catch((err) => {
+			showNotification(
+				<span className='d-flex align-items-center'>
+					<Icon icon='Info' size='lg' className='me-1' />
+					<span>Error</span>
+				</span>,
+				'Error: ' + err,
+			);
 		});
 	}
 

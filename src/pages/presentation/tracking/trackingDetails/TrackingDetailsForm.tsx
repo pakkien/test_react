@@ -15,9 +15,9 @@ export const schemaAttachment = z.object({
 
 export const schemaPurchaseOrder = z.object({
     //id: z.string(),
-    po_no: z.string().min(3),
+    po_no: z.string().min(3).max(200),
     po_date: z.string(),
-    po_amount: z.coerce.number(),
+    po_amount: z.coerce.number().max(2147480000),
     po_attachments: z.array(schemaAttachment),
     temp_attachment_ids: z.array(z.string()),
     order: z.number(),
@@ -25,7 +25,7 @@ export const schemaPurchaseOrder = z.object({
 });
 
 export const schemaSaleOrder = z.object({
-    so_no: z.string(),
+    so_no: z.string().max(200),
     so_date: z.string(),
     so_attachments: z.array(schemaAttachment),
     temp_attachment_ids: z.array(z.string()),
@@ -34,10 +34,10 @@ export const schemaSaleOrder = z.object({
 });
 
 export const schemaInvoice= z.object({
-    invoice_no: z.string(),
+    invoice_no: z.string().max(200),
     invoice_date: z.string(),
-    invoice_amount: z.coerce.number(),
-    payment_terms: z.coerce.number().min(0),
+    invoice_amount: z.coerce.number().max(2147480000),
+    payment_terms: z.coerce.number().min(0).max(2147480000),
     invoice_attachments: z.array(schemaAttachment),
     temp_attachment_ids: z.array(z.string()),
     order: z.number(),

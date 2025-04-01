@@ -68,12 +68,21 @@ const TrackingDetails = (props: TrackingDetailsProps) => {
 			.then((response) => {
 				showNotification(
 					<span className='d-flex align-items-center'>
-						<Icon icon='Info' size='lg' className='me-1' />
+						<Icon icon='Check' size='lg' className='me-1' />
 						<span>Tracking Data saved</span>
 					</span>,
 					'Tracking Data saved successfully',
 				);
 				props.refresh_func();
+			})
+			.catch((err) => {
+				showNotification(
+					<span className='d-flex align-items-center'>
+						<Icon icon='Info' size='lg' className='me-1' />
+						<span>Error</span>
+					</span>,
+					'Error: ' + err,
+				);
 			});
 	};
 
